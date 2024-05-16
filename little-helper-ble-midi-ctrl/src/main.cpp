@@ -142,7 +142,7 @@ void btn_longclick(Button2 &btn)
   if(btn.getPin() == FUNCTION_STOP){
     _function_prev_next_btn_state = !_function_prev_next_btn_state;
     if (_function_prev_next_btn_state == FUNCTION_IS_PLAYHEAD) {
-      log_i("Function stop state: FUNCTION_IS_STOP");
+      log_i("Function stop state: FUNCTION_IS_PLAYHEAD");
     } else if (_function_prev_next_btn_state == FUNCTION_IS_SELECTTRACK) {
       log_i("Function stop state: FUNCTION_IS_SELECTTRACK");
     }
