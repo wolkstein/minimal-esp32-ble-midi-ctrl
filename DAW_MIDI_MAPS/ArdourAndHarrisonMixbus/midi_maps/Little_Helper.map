@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ArdourMIDIBindings version="1.1.0" name="Little_Helper">
+    <DeviceInfo bank-size="1"/>
+    <Binding channel="1" ctl="41" function="transport-roll"/>
+    <Binding channel="1" ctl="42" function="transport-stop"/>
+    <Binding channel="1" ctl="20" action="Transport/Rewind"/>
+    <Binding channel="1" ctl="21" action="Transport/Forward"/>
+    <Binding channel="1" ctl="43" action="Common/jump-backward-to-mark"/>
+    <Binding channel="1" ctl="44" action="Common/jump-forward-to-mark"/>
+    <Binding channel="1" ctl="45" function="toggle-rec-enable"/>
+    <Binding channel="1" ctl="46" function="loop-toggle"/>
+    <Binding channel="1" ctl="111" action="Editor/select-prev-route"/>
+    <Binding channel="1" ctl="112" action="Editor/select-next-route"/>
+    <Binding channel="1" ctl="64" uri="/route/recenable S1"/>
+ </ArdourMIDIBindings>
