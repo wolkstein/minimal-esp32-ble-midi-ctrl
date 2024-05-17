@@ -4,7 +4,7 @@
  * @brief Simple example for a BLE MIDI controller with 5 buttons
  * @version 0.1
  * @date 2024-05-16
- * 
+ *
  * @copyright (C) 2024 Michael Wolkstein m.wolkstein@gmx.de
  *
  * This program is free software: you can redistribute it and/or modify
@@ -19,12 +19,13 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- * 
+ *
  */
 
 #include <Arduino.h>
 #include <BLEMidi.h>
 #include <Button2.h>
+#include <FastLED.h>
 
 // MIDI channel
 #define MIDICHANNEL 0
@@ -36,12 +37,29 @@
 #define REC_ENABLED 22
 #define PLAY_PAUSE 23
 
+// WS28xx LED pin
+#define WS28XX_LED_PIN 32
+#define NUM_LEDS  1
+#define BRIGHTNESS 15
+
+// LED Strucutre
+CRGB myWS28XXLED[NUM_LEDS];
+
+
 // Selected function states
 #define FUNCTION_IS_PLAYHEAD 0
 #define FUNCTION_IS_SELECTTRACK 1
 
+
+
 // State of the function buttons
 bool _function_prev_next_btn_state = FUNCTION_IS_PLAYHEAD;
+
+// Longpressed Buttuns
+bool _longpressed_prev_rev = false;
+bool _longpressed_function_stop = false;
+bool _longpressed_next_fwd = false;
+bool _longpressed_rec_enabled = false;
 
 // Button objects
 Button2 _prev_rev, _function_stop, _next_fwd, _rec_enabled, _play_pause;
@@ -49,98 +67,138 @@ Button2 _prev_rev, _function_stop, _next_fwd, _rec_enabled, _play_pause;
 // Callbacks
 /**
  * @brief onNoteOn callback
- * 
- * @param channel 
- * @param note 
- * @param velocity 
- * @param timestamp 
+ *
+ * @param channel
+ * @param note
+ * @param velocity
+ * @param timestamp
  */
-void onNoteOn(uint8_t channel, uint8_t note, uint8_t velocity, uint16_t timestamp)
-{
+void onNoteOn(uint8_t channel, uint8_t note, uint8_t velocity,
+              uint16_t timestamp) {
   // Print received note on
-  log_i("Received note on : channel %d, note %d, velocity %d (timestamp %dms)\n", channel, note, velocity, timestamp);
+  log_i(
+      "Received note on : channel %d, note %d, velocity %d (timestamp %dms)\n",
+      channel, note, velocity, timestamp);
 }
 
 /**
  * @brief onNoteOff callback
- * 
- * @param channel 
- * @param note 
- * @param velocity 
- * @param timestamp 
+ *
+ * @param channel
+ * @param note
+ * @param velocity
+ * @param timestamp
  */
-void onNoteOff(uint8_t channel, uint8_t note, uint8_t velocity, uint16_t timestamp)
-{
+void onNoteOff(uint8_t channel, uint8_t note, uint8_t velocity,
+               uint16_t timestamp) {
   // Print received note off
-  log_i("Received note off : channel %d, note %d, velocity %d (timestamp %dms)\n", channel, note, velocity, timestamp);
+  log_i(
+      "Received note off : channel %d, note %d, velocity %d (timestamp %dms)\n",
+      channel, note, velocity, timestamp);
 }
 
 /**
  * @brief onControlChange callback
- * 
- * @param channel 
- * @param controller 
- * @param value 
- * @param timestamp 
+ *
+ * @param channel
+ * @param controller
+ * @param value
+ * @param timestamp
  */
-void onControlChange(uint8_t channel, uint8_t controller, uint8_t value, uint16_t timestamp)
-{
-    log_i("Received control change : channel %d, controller %d, value %d (timestamp %dms)\n", channel, controller, value, timestamp);
+void onControlChange(uint8_t channel, uint8_t controller, uint8_t value,
+                     uint16_t timestamp) {
+  log_i(
+      "Received control change : channel %d, controller %d, value %d "
+      "(timestamp %dms)\n",
+      channel, controller, value, timestamp);
 }
 
 /**
  * @brief connected callback
- * 
+ *
  */
-void connected()
-{
-  log_i("Connected");
-}
+void connected() { log_i("Connected"); }
 
 /**
- * @brief btn_pressed callback
- * 
- * @param btn 
+ * @brief btn_released callback
+ *
+ * @param btn
  */
-void btn_pressed(Button2 &btn)
-{
-  log_i("Button %d pressed\n", btn.getPin());
-  
+void btn_released(Button2 &btn) {
   // if connected send midi
-  if(BLEMidiServer.isConnected()){
-    if(btn.getPin() == PREV_REV){
-      if(_function_prev_next_btn_state == FUNCTION_IS_PLAYHEAD){
+  if (BLEMidiServer.isConnected()) {
+    // check which button was pressed
+    // and send midi command
+
+    // check for prev/rev button
+    if (btn.getPin() == PREV_REV) {
+      // check if button was longpressed
+      if (_longpressed_prev_rev) {
+        _longpressed_prev_rev = false;
+        return;
+      }
+      // toggle function state of prev/rev button
+      if (_function_prev_next_btn_state == FUNCTION_IS_PLAYHEAD) {
         BLEMidiServer.controlChange(MIDICHANNEL, 43, 127);
-      } else if(_function_prev_next_btn_state == FUNCTION_IS_SELECTTRACK){
+      } else if (_function_prev_next_btn_state == FUNCTION_IS_SELECTTRACK) {
         BLEMidiServer.controlChange(MIDICHANNEL, 111, 127);
       }
-    } else if(btn.getPin() == FUNCTION_STOP){
+    }
+    // check for stop button
+    else if (btn.getPin() == FUNCTION_STOP) {
+      // check if button was longpressed
+      if (_longpressed_function_stop) {
+        _longpressed_function_stop = false;
+        return;
+      }
+      // send stop command
       BLEMidiServer.controlChange(MIDICHANNEL, 42, 127);
-    } else if(btn.getPin() == NEXT_FWD){
-      if(_function_prev_next_btn_state == FUNCTION_IS_PLAYHEAD){
+    }
+    // check for next/fwd button
+    else if (btn.getPin() == NEXT_FWD) {
+      // check if button was longpressed
+      if (_longpressed_next_fwd) {
+        _longpressed_next_fwd = false;
+        return;
+      }
+      if (_function_prev_next_btn_state == FUNCTION_IS_PLAYHEAD) {
         BLEMidiServer.controlChange(MIDICHANNEL, 44, 127);
-      } else if(_function_prev_next_btn_state == FUNCTION_IS_SELECTTRACK){
+      } else if (_function_prev_next_btn_state == FUNCTION_IS_SELECTTRACK) {
         BLEMidiServer.controlChange(MIDICHANNEL, 112, 127);
       }
-    } else if(btn.getPin() == REC_ENABLED){
+    }
+    // check for rec enabled button
+    else if (btn.getPin() == REC_ENABLED) {
+      // check if button was longpressed
+      if (_longpressed_rec_enabled) {
+        _longpressed_rec_enabled = false;
+        return;
+      }
       BLEMidiServer.controlChange(MIDICHANNEL, 64, 127);
-    } else if(btn.getPin() == PLAY_PAUSE){
+    } else if (btn.getPin() == PLAY_PAUSE) {
       BLEMidiServer.controlChange(MIDICHANNEL, 41, 127);
     }
   }
+
+  log_i("Button %d pressed\n", btn.getPin());
 }
 
 /**
  * @brief btn_longclick callback
- * 
- * @param btn 
+ *
+ * @param btn
  */
-void btn_longclick(Button2 &btn)
-{
+void btn_longclick(Button2 &btn) {
+  // _longpressed_prev_rev = false;
+  // _longpressed_function_stop = false;
+  // _longpressed_next_fwd = false;
+  // _longpressed_rec_enabled = false;
+
   log_i("Button %d longclick\n", btn.getPin());
 
-  if(btn.getPin() == FUNCTION_STOP){
+  if (btn.getPin() == FUNCTION_STOP) {
     _function_prev_next_btn_state = !_function_prev_next_btn_state;
+    _longpressed_function_stop = true;
     if (_function_prev_next_btn_state == FUNCTION_IS_PLAYHEAD) {
       log_i("Function stop state: FUNCTION_IS_PLAYHEAD");
     } else if (_function_prev_next_btn_state == FUNCTION_IS_SELECTTRACK) {
@@ -149,16 +207,19 @@ void btn_longclick(Button2 &btn)
   }
 
   // if connected send midi
-  if(BLEMidiServer.isConnected()){
-    if(btn.getPin() == REC_ENABLED){
+  if (BLEMidiServer.isConnected()) {
+    if (btn.getPin() == REC_ENABLED) {
+      _longpressed_rec_enabled = true;
       BLEMidiServer.controlChange(MIDICHANNEL, 45, 127);
     }
 
-    if(btn.getPin() == PREV_REV){
+    if (btn.getPin() == PREV_REV) {
+      _longpressed_prev_rev = true;
       BLEMidiServer.controlChange(MIDICHANNEL, 20, 127);
     }
 
-    if(btn.getPin() == NEXT_FWD){
+    if (btn.getPin() == NEXT_FWD) {
+      _longpressed_next_fwd = true;
       BLEMidiServer.controlChange(MIDICHANNEL, 21, 127);
     }
   }
@@ -166,17 +227,24 @@ void btn_longclick(Button2 &btn)
 
 /**
  * @brief arduino setup
- * 
+ *
  */
 void setup() {
 
+  // initialize WS28xx LED in GRB order
+  FastLED.addLeds<WS2812B, WS28XX_LED_PIN, GRB>(myWS28XXLED, NUM_LEDS);
+  FastLED.setBrightness(BRIGHTNESS);
+  myWS28XXLED[0] = CRGB::Red;
+  FastLED.show();
+
+  // initialize serial
   Serial.begin(57600);
   // wait for serial connection
   int timoutcounter = 0;
-  while(!Serial){
+  while (!Serial) {
     delay(1000);
     timoutcounter++;
-    if(timoutcounter > 10){
+    if (timoutcounter > 10) {
       break;
     }
   }
@@ -193,40 +261,36 @@ void setup() {
   _rec_enabled.setDebounceTime(20);
   _play_pause.setDebounceTime(20);
   // set calbacks
-  _prev_rev.setPressedHandler(btn_pressed);
+  // _prev_rev.setReleasedHandler(btn_released);
+  _prev_rev.setReleasedHandler(btn_released);
   _prev_rev.setLongClickDetectedHandler(btn_longclick);
-  _function_stop.setPressedHandler(btn_pressed);
+  _function_stop.setReleasedHandler(btn_released);
   _function_stop.setLongClickDetectedHandler(btn_longclick);
-  _next_fwd.setPressedHandler(btn_pressed);
+  _next_fwd.setReleasedHandler(btn_released);
   _next_fwd.setLongClickDetectedHandler(btn_longclick);
-  _rec_enabled.setPressedHandler(btn_pressed);
+  _rec_enabled.setReleasedHandler(btn_released);
   _rec_enabled.setLongClickDetectedHandler(btn_longclick);
-  _play_pause.setPressedHandler(btn_pressed);
+  _play_pause.setReleasedHandler(btn_released);
 
   // initialize BLE MIDI server
   BLEMidiServer.begin("Little_Helper");
   // set Midi callbacks
   BLEMidiServer.setOnConnectCallback(connected);
-  BLEMidiServer.setOnDisconnectCallback([](){
-    log_i("Disconnected");
-  });
+  BLEMidiServer.setOnDisconnectCallback([]() { log_i("Disconnected"); });
   BLEMidiServer.setNoteOnCallback(onNoteOn);
   BLEMidiServer.setNoteOffCallback(onNoteOff);
   BLEMidiServer.setControlChangeCallback(onControlChange);
-
 }
 
 /**
  * @brief ardunio main loop
- * 
+ *
  */
 void loop() {
-
   // check for button presses
   _prev_rev.loop();
   _function_stop.loop();
   _next_fwd.loop();
   _rec_enabled.loop();
   _play_pause.loop();
-
 }
