@@ -117,7 +117,28 @@ void onControlChange(uint8_t channel, uint8_t controller, uint8_t value,
  * @brief connected callback
  *
  */
-void connected() { log_i("Connected"); }
+void connected() {
+  // device is BLE MIDI connected
+  log_i("Connected");
+  if (_function_prev_next_btn_state == FUNCTION_IS_PLAYHEAD) {
+    myWS28XXLED[0] = CRGB::Green;
+    FastLED.show();
+  } else if (_function_prev_next_btn_state == FUNCTION_IS_SELECTTRACK) {
+    myWS28XXLED[0] = CRGB::Purple;
+    FastLED.show();
+  }
+}
+
+/**
+ * @brief disconnected callback
+ * 
+ */
+void disconected() {
+  // device is BLE MIDI disconnected
+  log_i("Disconnected");
+  myWS28XXLED[0] = CRGB::Red;
+  FastLED.show();
+}
 
 /**
  * @brief btn_released callback
@@ -174,8 +195,11 @@ void btn_released(Button2 &btn) {
         _longpressed_rec_enabled = false;
         return;
       }
+      // send rec enabled command
       BLEMidiServer.controlChange(MIDICHANNEL, 64, 127);
-    } else if (btn.getPin() == PLAY_PAUSE) {
+    }
+    // check for play/pause button
+    else if (btn.getPin() == PLAY_PAUSE) {
       BLEMidiServer.controlChange(MIDICHANNEL, 41, 127);
     }
   }
@@ -189,35 +213,38 @@ void btn_released(Button2 &btn) {
  * @param btn
  */
 void btn_longclick(Button2 &btn) {
-  // _longpressed_prev_rev = false;
-  // _longpressed_function_stop = false;
-  // _longpressed_next_fwd = false;
-  // _longpressed_rec_enabled = false;
-
+  // check which button was longpressed
   log_i("Button %d longclick\n", btn.getPin());
-
+  // check for prev/rev button
   if (btn.getPin() == FUNCTION_STOP) {
     _function_prev_next_btn_state = !_function_prev_next_btn_state;
     _longpressed_function_stop = true;
+    // check function state and set LED color
     if (_function_prev_next_btn_state == FUNCTION_IS_PLAYHEAD) {
       log_i("Function stop state: FUNCTION_IS_PLAYHEAD");
+      myWS28XXLED[0] = CRGB::Green;
+      FastLED.show();
     } else if (_function_prev_next_btn_state == FUNCTION_IS_SELECTTRACK) {
       log_i("Function stop state: FUNCTION_IS_SELECTTRACK");
+      myWS28XXLED[0] = CRGB::Purple;
+      FastLED.show();
     }
   }
 
   // if connected send midi
   if (BLEMidiServer.isConnected()) {
+    // check which button was longpressed
+    // btn rec enabled
     if (btn.getPin() == REC_ENABLED) {
       _longpressed_rec_enabled = true;
       BLEMidiServer.controlChange(MIDICHANNEL, 45, 127);
     }
-
+    // btn prev/rev
     if (btn.getPin() == PREV_REV) {
       _longpressed_prev_rev = true;
       BLEMidiServer.controlChange(MIDICHANNEL, 20, 127);
     }
-
+    // btn next/fwd
     if (btn.getPin() == NEXT_FWD) {
       _longpressed_next_fwd = true;
       BLEMidiServer.controlChange(MIDICHANNEL, 21, 127);
@@ -257,6 +284,7 @@ void setup() {
   // set debounce time
   _prev_rev.setDebounceTime(20);
   _function_stop.setDebounceTime(20);
+  _function_stop.setLongClickTime(750);
   _next_fwd.setDebounceTime(20);
   _rec_enabled.setDebounceTime(20);
   _play_pause.setDebounceTime(20);
@@ -276,7 +304,7 @@ void setup() {
   BLEMidiServer.begin("Little_Helper");
   // set Midi callbacks
   BLEMidiServer.setOnConnectCallback(connected);
-  BLEMidiServer.setOnDisconnectCallback([]() { log_i("Disconnected"); });
+  BLEMidiServer.setOnDisconnectCallback(disconected);
   BLEMidiServer.setNoteOnCallback(onNoteOn);
   BLEMidiServer.setNoteOffCallback(onNoteOff);
   BLEMidiServer.setControlChangeCallback(onControlChange);
