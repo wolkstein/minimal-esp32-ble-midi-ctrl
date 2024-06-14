@@ -5048,16 +5048,6 @@
 	)
 	(wire
 		(pts
-			(xy 22.86 127) (xy 22.86 134.62)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "589150e2-6ddb-4d05-9a3c-4352e8a5dc3f")
-	)
-	(wire
-		(pts
 			(xy 77.47 45.72) (xy 77.47 54.61)
 		)
 		(stroke
@@ -5655,16 +5645,6 @@
 			(type default)
 		)
 		(uuid "d60045de-9703-4572-b0ea-a4a80a8f4fcc")
-	)
-	(wire
-		(pts
-			(xy 22.86 111.76) (xy 22.86 119.38)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "d699c58a-2f8e-4043-99a0-bf1d8a5ca3db")
 	)
 	(wire
 		(pts
@@ -8927,72 +8907,6 @@
 		)
 	)
 	(symbol
-		(lib_id "power:+3.3V")
-		(at 22.86 111.76 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(fields_autoplaced yes)
-		(uuid "71ac5878-3a6b-41b3-9b02-d238344e9b9e")
-		(property "Reference" "#PWR07"
-			(at 22.86 115.57 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Value" "+3.3V"
-			(at 22.86 106.68 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" ""
-			(at 22.86 111.76 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" ""
-			(at 22.86 111.76 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Power symbol creates a global label with name \"+3.3V\""
-			(at 22.86 111.76 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "16941471-c841-4ee3-b88c-e17d757118b4")
-		)
-		(instances
-			(project "Little_Helper"
-				(path "/be456eed-bb99-4947-8d6f-815aa9683d71"
-					(reference "#PWR07")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
 		(lib_id "Device:R")
 		(at 139.7 30.48 0)
 		(unit 1)
@@ -10082,75 +9996,6 @@
 		)
 	)
 	(symbol
-		(lib_id "PCM_Capacitor_AKL:C_0603")
-		(at 22.86 123.19 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "b405b2e0-5ba3-44c7-b97f-787a81b0956c")
-		(property "Reference" "C2"
-			(at 26.67 121.9199 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Value" "10uF"
-			(at 25.4 125.73 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
-			(at 23.8252 127 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "~"
-			(at 22.86 123.19 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "SMD 0603 MLCC capacitor, Alternate KiCad Library"
-			(at 22.86 123.19 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "2"
-			(uuid "902e273a-271e-4e85-8363-1aceaa99112b")
-		)
-		(pin "1"
-			(uuid "1b11b5d9-e92b-47bb-b175-dd33aa58d77e")
-		)
-		(instances
-			(project "Little_Helper"
-				(path "/be456eed-bb99-4947-8d6f-815aa9683d71"
-					(reference "C2")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
 		(lib_id "ba_diode:BAS16")
 		(at 76.2 25.4 0)
 		(unit 1)
@@ -10766,7 +10611,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
+		(property "Footprint" "Capacitor_SMD:C_0805_2012Metric"
 			(at 258.7752 101.6 0)
 			(effects
 				(font
@@ -11611,72 +11456,6 @@
 			(project "Little_Helper"
 				(path "/be456eed-bb99-4947-8d6f-815aa9683d71"
 					(reference "#PWR016")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "power:GND")
-		(at 22.86 134.62 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(fields_autoplaced yes)
-		(uuid "f355fb38-c8e0-41bd-b46f-193954921540")
-		(property "Reference" "#PWR014"
-			(at 22.86 140.97 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Value" "GND"
-			(at 22.86 139.7 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" ""
-			(at 22.86 134.62 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" ""
-			(at 22.86 134.62 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
-			(at 22.86 134.62 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "bccec16d-5773-4126-84e1-e0b9330ad80a")
-		)
-		(instances
-			(project "Little_Helper"
-				(path "/be456eed-bb99-4947-8d6f-815aa9683d71"
-					(reference "#PWR014")
 					(unit 1)
 				)
 			)
