@@ -6143,6 +6143,15 @@
 				(hide yes)
 			)
 		)
+		(property "LCSC" "C1592"
+			(at 275.59 96.5199 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "1"
 			(uuid "c9d01d4e-7c38-47af-8ab7-010f27387e47")
 		)
@@ -6803,6 +6812,15 @@
 				(hide yes)
 			)
 		)
+		(property "LCSC" "C149504"
+			(at 21.59 43.1799 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "1"
 			(uuid "f39104c8-bcad-4e14-ad81-d15084b09408")
 		)
@@ -7342,6 +7360,15 @@
 				(hide yes)
 			)
 		)
+		(property "LCSC" "C1713"
+			(at 151.13 43.1799 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "2"
 			(uuid "5c6c6a46-5113-4de6-908f-a51c394176be")
 		)
@@ -7412,6 +7439,15 @@
 				(hide yes)
 			)
 		)
+		(property "LCSC" "C17414"
+			(at 144.78 163.8299 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "2"
 			(uuid "6b79a828-6c04-498b-a14d-4bc4d69b4a97")
 		)
@@ -7475,6 +7511,15 @@
 		)
 		(property "Description" "Resistor"
 			(at 52.07 165.1 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C17414"
+			(at 54.61 163.8299 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -7611,6 +7656,15 @@
 		)
 		(property "Description" "Generic connector, single row, 01x02, script generated"
 			(at 64.77 119.38 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C145970"
+			(at 66.04 116.8399 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -7820,6 +7874,15 @@
 		)
 		(property "Description" "RF Module, ESP32-S3 SoC, Wi-Fi 802.11b/g/n, Bluetooth, BLE, 32-bit, 3.3V, SMD, onboard antenna"
 			(at 196.85 8.89 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C2913206"
+			(at 199.0441 19.05 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -8260,6 +8323,15 @@
 				)
 			)
 		)
+		(property "LCSC" "C505111"
+			(at 240.03 20.32 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "1"
 			(uuid "3f85e383-436c-455a-81f3-360fc03d2eb0")
 		)
@@ -8339,6 +8411,15 @@
 				(hide yes)
 			)
 		)
+		(property "LCSC" "C2286"
+			(at 133.35 38.1 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "1"
 			(uuid "c97f34a5-8754-47b8-9220-365380489c44")
 		)
@@ -8401,6 +8482,15 @@
 		)
 		(property "Description" "SMD 0603 MLCC capacitor, Alternate KiCad Library"
 			(at 88.9 44.45 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C1713"
+			(at 92.71 43.1799 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -8472,6 +8562,15 @@
 		)
 		(property "Description" "Single cell, Li-Ion/Li-Po charge management controller, 4.20V, Tri-State Status Output, in SOT23-5 package"
 			(at 118.11 38.1 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C424093"
+			(at 106.68 29.21 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -8624,6 +8723,15 @@
 				(hide yes)
 			)
 		)
+		(property "LCSC" "C17414"
+			(at 83.82 163.8299 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "2"
 			(uuid "9d38da9d-3061-4019-bd1c-62df97620578")
 		)
@@ -8686,6 +8794,15 @@
 		)
 		(property "Description" "SMD 0603 MLCC capacitor, Alternate KiCad Library"
 			(at 41.91 44.45 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C1713"
+			(at 34.29 43.18 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -8891,6 +9008,15 @@
 				(hide yes)
 			)
 		)
+		(property "LCSC" "C115316"
+			(at 140.97 91.44 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "2"
 			(uuid "f0aa8ba8-2fad-4fad-b560-3f92f84cd743")
 		)
@@ -8951,6 +9077,15 @@
 		)
 		(property "Description" "Resistor"
 			(at 139.7 30.48 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C115316"
+			(at 137.16 30.48 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -9231,6 +9366,15 @@
 				(hide yes)
 			)
 		)
+		(property "LCSC" "C1592"
+			(at 147.32 104.1399 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "1"
 			(uuid "2c4aff0b-9631-4eb0-bcd7-6d16d01fd785")
 		)
@@ -9291,6 +9435,15 @@
 		)
 		(property "Description" "SOD-123 Schottky diode, 40V, 0.5A, Alternate KiCAD Library"
 			(at 26.67 35.56 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C78545"
+			(at 26.67 33.02 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -9704,6 +9857,15 @@
 				(hide yes)
 			)
 		)
+		(property "LCSC" "C51118"
+			(at 77.47 29.21 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "5"
 			(uuid "b84b0887-1318-4415-885b-af81e41373ac")
 		)
@@ -9914,6 +10076,15 @@
 				(hide yes)
 			)
 		)
+		(property "LCSC" "C1713"
+			(at 43.18 121.9199 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "2"
 			(uuid "07313d17-2253-48ff-83b1-418b15eeda7e")
 		)
@@ -10098,6 +10269,15 @@
 			(effects
 				(font
 					(size 1.524 1.524)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C79997"
+			(at 76.2 19.05 0)
+			(effects
+				(font
+					(size 1.27 1.27)
 				)
 				(hide yes)
 			)
@@ -10638,6 +10818,15 @@
 				(hide yes)
 			)
 		)
+		(property "LCSC" "C1713"
+			(at 261.62 96.5199 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "2"
 			(uuid "ce3efbdf-d065-4500-9fd5-c9f157073b2e")
 		)
@@ -10701,6 +10890,15 @@
 		)
 		(property "Description" "Resistor"
 			(at 113.03 165.1 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C17414"
+			(at 115.57 163.8299 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -10976,6 +11174,15 @@
 				(hide yes)
 			)
 		)
+		(property "LCSC" "C149504"
+			(at 66.04 39.3699 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "2"
 			(uuid "8595d4ee-0b03-4b64-81f5-145bf25c9e74")
 		)
@@ -11039,6 +11246,15 @@
 		)
 		(property "Description" "Resistor"
 			(at 25.4 165.1 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C17414"
+			(at 27.94 163.8299 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -11314,6 +11530,15 @@
 				(hide yes)
 			)
 		)
+		(property "LCSC" "C1713"
+			(at 246.38 96.5199 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "1"
 			(uuid "d9faa023-97d4-4cd9-9b27-4b841042e526")
 		)
@@ -11582,6 +11807,15 @@
 				(hide yes)
 			)
 		)
+		(property "LCSC" "C2843785"
+			(at 217.17 115.6014 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "3"
 			(uuid "3bb20703-9263-41f7-b694-bc0f82ba7dd8")
 		)
@@ -11648,6 +11882,15 @@
 		)
 		(property "Description" "Resistor"
 			(at 107.95 48.26 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C115316"
+			(at 107.95 45.72 0)
 			(effects
 				(font
 					(size 1.27 1.27)
