@@ -345,7 +345,7 @@
 				)
 			)
 		)
-		(symbol "Connector:USB_B_Micro"
+		(symbol "Connector_USB_WOLKE:USB_B_Micro_Molex_1050171001_JLCPCB_C505111"
 			(pin_names
 				(offset 1.016)
 			)
@@ -361,7 +361,7 @@
 					(justify left)
 				)
 			)
-			(property "Value" "USB_B_Micro"
+			(property "Value" "USB_B_Micro_Molex_1050171001_JLCPCB_C505111"
 				(at -5.08 8.89 0)
 				(effects
 					(font
@@ -370,7 +370,7 @@
 					(justify left)
 				)
 			)
-			(property "Footprint" ""
+			(property "Footprint" "Connector_USB:USB_Micro-B_Molex-105017-0001"
 				(at 3.81 -1.27 0)
 				(effects
 					(font
@@ -379,7 +379,7 @@
 					(hide yes)
 				)
 			)
-			(property "Datasheet" "~"
+			(property "Datasheet" "https://wmsc.lcsc.com/wmsc/upload/file/pdf/v2/lcsc/2004301811_MOLEX-1050171001_C505111.pdf"
 				(at 3.81 -1.27 0)
 				(effects
 					(font
@@ -395,6 +395,50 @@
 						(size 1.27 1.27)
 					)
 					(hide yes)
+				)
+			)
+			(property "MPN" "1050171001"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "MN" "Molex"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "S3N" "JLCPCB"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "S3PN" "C505111"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "LCSC Part #" "C505111"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
 				)
 			)
 			(property "ki_keywords" "connector USB micro"
@@ -415,10 +459,10 @@
 					(hide yes)
 				)
 			)
-			(symbol "USB_B_Micro_0_1"
+			(symbol "USB_B_Micro_Molex_1050171001_JLCPCB_C505111_0_1"
 				(rectangle
-					(start -5.08 -7.62)
-					(end 5.08 7.62)
+					(start -5.08 7.62)
+					(end 5.08 -7.62)
 					(stroke
 						(width 0.254)
 						(type default)
@@ -589,7 +633,7 @@
 					)
 				)
 			)
-			(symbol "USB_B_Micro_1_1"
+			(symbol "USB_B_Micro_Molex_1050171001_JLCPCB_C505111_1_1"
 				(pin power_out line
 					(at 7.62 5.08 180)
 					(length 2.54)
@@ -4557,6 +4601,10 @@
 		(uuid "692f1078-c3bc-4709-8bbc-041a4eb8e50d")
 	)
 	(no_connect
+		(at 250.19 40.64)
+		(uuid "7a6be6e2-56f6-4011-9e77-5062092b5bff")
+	)
+	(no_connect
 		(at 212.09 54.61)
 		(uuid "7a9e49c7-acde-4496-91a6-de5c000971fd")
 	)
@@ -8136,6 +8184,130 @@
 		)
 	)
 	(symbol
+		(lib_id "Connector_USB_WOLKE:USB_B_Micro_Molex_1050171001_JLCPCB_C505111")
+		(at 240.03 35.56 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "4b278cce-4ed4-4cbf-b4d1-3e86182decf4")
+		(property "Reference" "J1"
+			(at 240.03 20.32 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "USB_B_Micro_Molex_1050171001_JLCPCB_C505111"
+			(at 240.03 22.86 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Connector_USB:USB_Micro-B_Molex-105017-0001"
+			(at 243.84 36.83 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "https://wmsc.lcsc.com/wmsc/upload/file/pdf/v2/lcsc/2004301811_MOLEX-1050171001_C505111.pdf"
+			(at 243.84 36.83 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "USB Micro Type B connector"
+			(at 240.03 35.56 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "1050171001"
+			(at 240.03 35.56 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MN" "Molex"
+			(at 240.03 35.56 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "S3N" "JLCPCB"
+			(at 240.03 35.56 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "S3PN" "C505111"
+			(at 240.03 35.56 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC Part #" "C505111"
+			(at 240.03 25.4 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "3f85e383-436c-455a-81f3-360fc03d2eb0")
+		)
+		(pin "3"
+			(uuid "5797ec60-2ec7-4fee-ba66-e278f9a5441a")
+		)
+		(pin "5"
+			(uuid "e117584d-ccd3-44eb-93f4-6f69c72bccee")
+		)
+		(pin "2"
+			(uuid "9c2725fc-748d-473a-b130-2322318f54c0")
+		)
+		(pin "6"
+			(uuid "cf5a9b65-b9b4-49dc-9d8b-f9c0726cbd42")
+		)
+		(pin "4"
+			(uuid "18c2e5c2-2226-419a-bb38-e344094b359b")
+		)
+		(instances
+			(project ""
+				(path "/be456eed-bb99-4947-8d6f-815aa9683d71"
+					(reference "J1")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "Device:LED")
 		(at 134.62 40.64 0)
 		(unit 1)
@@ -9637,86 +9809,6 @@
 			(project "Little_Helper"
 				(path "/be456eed-bb99-4947-8d6f-815aa9683d71"
 					(reference "U1")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "Connector:USB_B_Micro")
-		(at 240.03 35.56 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(fields_autoplaced yes)
-		(uuid "a4f29e3d-524f-45f7-92db-1461401c87a1")
-		(property "Reference" "J1"
-			(at 240.03 22.86 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Value" "USB_B_Micro"
-			(at 240.03 25.4 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" "Connector_USB:USB_Micro-B_Wuerth_629105150521_CircularHoles"
-			(at 243.84 36.83 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "~"
-			(at 243.84 36.83 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "USB Micro Type B connector"
-			(at 240.03 35.56 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "6"
-			(uuid "1356cccc-90d1-4ec4-97ad-45bb57f2c3e4")
-		)
-		(pin "2"
-			(uuid "e32fbddd-211b-49ba-8dc4-45729df9f9eb")
-		)
-		(pin "1"
-			(uuid "62656976-b3ef-4cc3-a705-4df9884e065f")
-		)
-		(pin "4"
-			(uuid "1e6a2003-c7a7-4d9d-b810-be05d885c7ab")
-		)
-		(pin "3"
-			(uuid "4eb948e5-6d52-4439-b3cf-900e4f6167a6")
-		)
-		(pin "5"
-			(uuid "fc0a7145-178c-49d8-8091-6a58a4858969")
-		)
-		(instances
-			(project "Little_Helper"
-				(path "/be456eed-bb99-4947-8d6f-815aa9683d71"
-					(reference "J1")
 					(unit 1)
 				)
 			)
@@ -11251,73 +11343,6 @@
 			(project "Little_Helper"
 				(path "/be456eed-bb99-4947-8d6f-815aa9683d71"
 					(reference "#PWR030")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "power:GND")
-		(at 250.19 40.64 90)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(fields_autoplaced yes)
-		(uuid "eed65173-4445-4dfb-8f32-c60209ef69a9")
-		(property "Reference" "#PWR08"
-			(at 256.54 40.64 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Value" "GND"
-			(at 254 40.6399 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify right)
-			)
-		)
-		(property "Footprint" ""
-			(at 250.19 40.64 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" ""
-			(at 250.19 40.64 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
-			(at 250.19 40.64 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "267d3477-41f5-46d3-bfbb-36929c8d9d22")
-		)
-		(instances
-			(project "Little_Helper"
-				(path "/be456eed-bb99-4947-8d6f-815aa9683d71"
-					(reference "#PWR08")
 					(unit 1)
 				)
 			)
