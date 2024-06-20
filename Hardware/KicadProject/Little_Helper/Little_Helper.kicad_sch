@@ -185,166 +185,6 @@
 				)
 			)
 		)
-		(symbol "Connector:Conn_01x02_Pin"
-			(pin_names
-				(offset 1.016) hide)
-			(exclude_from_sim no)
-			(in_bom yes)
-			(on_board yes)
-			(property "Reference" "J"
-				(at 0 2.54 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-				)
-			)
-			(property "Value" "Conn_01x02_Pin"
-				(at 0 -5.08 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-				)
-			)
-			(property "Footprint" ""
-				(at 0 0 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
-				)
-			)
-			(property "Datasheet" "~"
-				(at 0 0 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
-				)
-			)
-			(property "Description" "Generic connector, single row, 01x02, script generated"
-				(at 0 0 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
-				)
-			)
-			(property "ki_locked" ""
-				(at 0 0 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-				)
-			)
-			(property "ki_keywords" "connector"
-				(at 0 0 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
-				)
-			)
-			(property "ki_fp_filters" "Connector*:*_1x??_*"
-				(at 0 0 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
-				)
-			)
-			(symbol "Conn_01x02_Pin_1_1"
-				(polyline
-					(pts
-						(xy 1.27 -2.54) (xy 0.8636 -2.54)
-					)
-					(stroke
-						(width 0.1524)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-				(polyline
-					(pts
-						(xy 1.27 0) (xy 0.8636 0)
-					)
-					(stroke
-						(width 0.1524)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-				(rectangle
-					(start 0.8636 -2.413)
-					(end 0 -2.667)
-					(stroke
-						(width 0.1524)
-						(type default)
-					)
-					(fill
-						(type outline)
-					)
-				)
-				(rectangle
-					(start 0.8636 0.127)
-					(end 0 -0.127)
-					(stroke
-						(width 0.1524)
-						(type default)
-					)
-					(fill
-						(type outline)
-					)
-				)
-				(pin passive line
-					(at 5.08 0 180)
-					(length 3.81)
-					(name "Pin_1"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "1"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-				)
-				(pin passive line
-					(at 5.08 -2.54 180)
-					(length 3.81)
-					(name "Pin_2"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "2"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-				)
-			)
-		)
 		(symbol "Connector_USB_WOLKE:USB_B_Micro_Molex_1050171001_JLCPCB_C505111"
 			(pin_names
 				(offset 1.016)
@@ -1034,6 +874,186 @@
 				)
 			)
 		)
+		(symbol "Diode_JLCPCB:BAS16"
+			(pin_names
+				(offset 1.016) hide)
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(property "Reference" "D"
+				(at 2.286 2.794 90)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Value" "BAS16"
+				(at -4.572 -2.032 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Footprint" "ba_sot:sot_23"
+				(at 9.779 5.461 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Datasheet" "https://wmsc.lcsc.com/wmsc/upload/file/pdf/v2/lcsc/2304140030_Nexperia-BAS16-215_C79997.pdf"
+				(at 0.762 -6.35 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Description" "BAS16 SMT Small Signal Fast Switching Diode in SOT-23 80V 215mA"
+				(at 0.762 -4.318 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "MPN" "BAS16,215"
+				(at 7.62 10.16 0)
+				(effects
+					(font
+						(size 1.524 1.524)
+					)
+					(hide yes)
+				)
+			)
+			(property "MN" "Nexperia"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "LCSC Part#" "C79997"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "ki_keywords" "diode"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(symbol "BAS16_0_1"
+				(polyline
+					(pts
+						(xy -1.27 1.27) (xy -1.27 -1.27)
+					)
+					(stroke
+						(width 0.2032)
+						(type solid)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 1.27 0) (xy -1.27 0)
+					)
+					(stroke
+						(width 0)
+						(type solid)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 1.27 1.27) (xy 1.27 -1.27) (xy -1.27 0) (xy 1.27 1.27)
+					)
+					(stroke
+						(width 0.2032)
+						(type solid)
+					)
+					(fill
+						(type none)
+					)
+				)
+			)
+			(symbol "BAS16_1_1"
+				(pin passive line
+					(at 3.81 0 180)
+					(length 2.54)
+					(name "A"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin free line
+					(at 0 5.08 270)
+					(length 2.54)
+					(name "2"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "2"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at -3.81 0 0)
+					(length 2.54)
+					(name "K"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "3"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+			)
+		)
 		(symbol "LED:WS2812B"
 			(pin_names
 				(offset 0.254)
@@ -1705,13 +1725,13 @@
 				)
 			)
 		)
-		(symbol "PCM_Transistor_MOSFET_AKL:DMG3415U"
+		(symbol "PCM_Transistor_MOSFET_JLCPCB:DMG3415U"
 			(pin_names hide)
 			(exclude_from_sim no)
 			(in_bom yes)
 			(on_board yes)
-			(property "Reference" "Q"
-				(at 5.08 1.27 0)
+			(property "Reference" "Q1"
+				(at -7.62 5.588 0)
 				(effects
 					(font
 						(size 1.27 1.27)
@@ -1720,7 +1740,7 @@
 				)
 			)
 			(property "Value" "DMG3415U"
-				(at 5.08 -1.27 0)
+				(at 3.556 5.08 0)
 				(effects
 					(font
 						(size 1.27 1.27)
@@ -1728,8 +1748,8 @@
 					(justify left)
 				)
 			)
-			(property "Footprint" "Package_TO_SOT_SMD_AKL:SOT-23"
-				(at 5.08 -2.54 0)
+			(property "Footprint" "Package_TO_SOT_SMD:SOT-23"
+				(at -0.508 0 0)
 				(effects
 					(font
 						(size 1.27 1.27)
@@ -1738,7 +1758,7 @@
 				)
 			)
 			(property "Datasheet" "https://www.tme.eu/Document/236093ecb8447f8a47174c5983185a9e/DMG3415U.pdf"
-				(at 0 0 0)
+				(at -1.27 0.254 0)
 				(effects
 					(font
 						(size 1.27 1.27)
@@ -1747,7 +1767,16 @@
 				)
 			)
 			(property "Description" "SOT-23 P-MOSFET enchancement mode transistor, 20V, 4A, 0.9W, Alternate KiCAD Library"
-				(at 0 0 0)
+				(at 1.524 0.254 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "LCSC Part#" "C96616"
+				(at 7.112 2.794 0)
 				(effects
 					(font
 						(size 1.27 1.27)
@@ -1767,7 +1796,19 @@
 			(symbol "DMG3415U_0_1"
 				(polyline
 					(pts
-						(xy 0.254 -1.905) (xy 0.254 1.905)
+						(xy -2.286 -1.27) (xy -5.08 -1.27)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy -2.286 1.905) (xy -2.286 -1.905)
 					)
 					(stroke
 						(width 0.254)
@@ -1779,7 +1820,7 @@
 				)
 				(polyline
 					(pts
-						(xy 0.254 1.27) (xy -2.54 1.27)
+						(xy -1.778 -1.778) (xy 0 -1.778)
 					)
 					(stroke
 						(width 0)
@@ -1791,7 +1832,7 @@
 				)
 				(polyline
 					(pts
-						(xy 0.762 -2.286) (xy 0.762 -1.27)
+						(xy -1.778 -1.27) (xy -1.778 -2.286)
 					)
 					(stroke
 						(width 0.254)
@@ -1803,19 +1844,7 @@
 				)
 				(polyline
 					(pts
-						(xy 0.762 -1.778) (xy 2.54 -1.778)
-					)
-					(stroke
-						(width 0)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-				(polyline
-					(pts
-						(xy 0.762 -0.508) (xy 0.762 0.508)
+						(xy -1.778 0.508) (xy -1.778 -0.508)
 					)
 					(stroke
 						(width 0.254)
@@ -1827,7 +1856,19 @@
 				)
 				(polyline
 					(pts
-						(xy 0.762 1.27) (xy 0.762 2.286)
+						(xy -1.778 1.778) (xy 0 1.778)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy -1.778 2.286) (xy -1.778 1.27)
 					)
 					(stroke
 						(width 0.254)
@@ -1839,7 +1880,7 @@
 				)
 				(polyline
 					(pts
-						(xy 0.762 1.778) (xy 2.54 1.778)
+						(xy 0 2.54) (xy 0 1.778)
 					)
 					(stroke
 						(width 0)
@@ -1851,7 +1892,7 @@
 				)
 				(polyline
 					(pts
-						(xy 2.54 -2.54) (xy 2.54 -1.778)
+						(xy 0 -2.54) (xy 0 0) (xy -1.778 0)
 					)
 					(stroke
 						(width 0)
@@ -1863,19 +1904,7 @@
 				)
 				(polyline
 					(pts
-						(xy 2.54 2.54) (xy 2.54 0) (xy 0.762 0)
-					)
-					(stroke
-						(width 0)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-				(polyline
-					(pts
-						(xy 2.286 0) (xy 1.27 -0.381) (xy 1.27 0.381) (xy 2.286 0)
+						(xy -0.254 0) (xy -1.27 0.381) (xy -1.27 -0.381) (xy -0.254 0)
 					)
 					(stroke
 						(width 0)
@@ -1888,7 +1917,7 @@
 			)
 			(symbol "DMG3415U_1_1"
 				(circle
-					(center 1.651 0)
+					(center -0.889 0)
 					(radius 2.794)
 					(stroke
 						(width 0.254)
@@ -1899,7 +1928,7 @@
 					)
 				)
 				(circle
-					(center 2.54 1.778)
+					(center 0 -1.778)
 					(radius 0.1778)
 					(stroke
 						(width 0)
@@ -1910,7 +1939,7 @@
 					)
 				)
 				(pin input line
-					(at -3.81 1.27 0)
+					(at -6.35 -1.27 0)
 					(length 2.54)
 					(name "G"
 						(effects
@@ -1928,7 +1957,7 @@
 					)
 				)
 				(pin passive line
-					(at 2.54 5.08 270)
+					(at 0 -5.08 90)
 					(length 2.54)
 					(name "S"
 						(effects
@@ -1946,7 +1975,7 @@
 					)
 				)
 				(pin passive line
-					(at 2.54 -5.08 90)
+					(at 0 5.08 270)
 					(length 2.54)
 					(name "D"
 						(effects
@@ -3392,6 +3421,187 @@
 				)
 			)
 		)
+		(symbol "SW_Tactile_Small_1"
+			(pin_numbers hide)
+			(pin_names
+				(offset 1.016) hide)
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(property "Reference" "SW"
+				(at 1.27 2.54 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(justify left)
+				)
+			)
+			(property "Value" "SW_Tactile_Small"
+				(at 0.254 -2.286 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Footprint" "Button_Switch_SMD:SW_SPST_B3U-1000P"
+				(at 0 5.08 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Datasheet" "https://wmsc.lcsc.com/wmsc/upload/file/pdf/v2/lcsc/2304140030_XUNPU-TS-1088-AR02016_C720477.pdf"
+				(at -4.826 6.096 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Description" "TS-1088 single pole normally-open tactile switch"
+				(at 0.254 -6.096 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "MN" "XUNPU"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "MPN" "TS-1088-AR02016"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "LCSC Part #" "C720477"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "ki_keywords" "switch normally-open pushbutton push-button"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "ki_fp_filters" "SW*MEC*5G*"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(symbol "SW_Tactile_Small_1_0_1"
+				(circle
+					(center -2.032 0)
+					(radius 0.508)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 0 1.27) (xy 0 3.048)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 2.54 1.27) (xy -2.54 1.27)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(circle
+					(center 2.032 0)
+					(radius 0.508)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(pin passive line
+					(at -5.08 0 0)
+					(length 2.54)
+					(name "A"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at 5.08 0 180)
+					(length 2.54)
+					(name "A"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "2"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+			)
+		)
 		(symbol "Switch:SW_Push"
 			(pin_numbers hide)
 			(pin_names
@@ -3537,29 +3747,29 @@
 				)
 			)
 		)
-		(symbol "Switch:SW_SPST"
+		(symbol "Switch_Wolke:SW_On_On"
 			(pin_names
 				(offset 0) hide)
 			(exclude_from_sim no)
 			(in_bom yes)
 			(on_board yes)
 			(property "Reference" "SW"
-				(at 0 3.175 0)
+				(at 0 5.08 0)
 				(effects
 					(font
 						(size 1.27 1.27)
 					)
 				)
 			)
-			(property "Value" "SW_SPST"
-				(at 0 -2.54 0)
+			(property "Value" "SW_On_On"
+				(at 0 -5.08 0)
 				(effects
 					(font
 						(size 1.27 1.27)
 					)
 				)
 			)
-			(property "Footprint" ""
+			(property "Footprint" "Button_Switch_SMD:SW_SPDT_PCM12"
 				(at 0 0 0)
 				(effects
 					(font
@@ -3568,7 +3778,25 @@
 					(hide yes)
 				)
 			)
-			(property "Datasheet" "~"
+			(property "Datasheet" "https://www.ckswitches.com/media/1424/pcm.pdf"
+				(at 6.096 1.016 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Description" "Slide Switch"
+				(at 0 8.128 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Datasheet2" "https://wmsc.lcsc.com/wmsc/upload/file/pdf/v2/lcsc/2012062037_G-Switch-MK-12C02-G020_C963206.pdf"
 				(at 0 0 0)
 				(effects
 					(font
@@ -3577,7 +3805,7 @@
 					(hide yes)
 				)
 			)
-			(property "Description" "Single Pole Single Throw (SPST) switch"
+			(property "MN" "G-Switch"
 				(at 0 0 0)
 				(effects
 					(font
@@ -3586,7 +3814,7 @@
 					(hide yes)
 				)
 			)
-			(property "ki_keywords" "switch lever"
+			(property "MPN" "MK-12C02-G020"
 				(at 0 0 0)
 				(effects
 					(font
@@ -3595,7 +3823,237 @@
 					(hide yes)
 				)
 			)
-			(symbol "SW_SPST_0_0"
+			(property "LCSC Part #" "C963206"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "ki_keywords" "switch single-pole double-throw spdt ON-ON"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(symbol "SW_On_On_0_0"
+				(circle
+					(center -2.032 0)
+					(radius 0.508)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(circle
+					(center 2.032 -2.54)
+					(radius 0.508)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+			)
+			(symbol "SW_On_On_0_1"
+				(polyline
+					(pts
+						(xy -1.524 0.2032) (xy 2.3368 1.9812)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(circle
+					(center 2.032 2.54)
+					(radius 0.508)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+			)
+			(symbol "SW_On_On_1_1"
+				(rectangle
+					(start -3.175 3.81)
+					(end 3.175 -3.81)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type background)
+					)
+				)
+				(pin passive line
+					(at 5.08 2.54 180)
+					(length 2.54)
+					(name "A"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at -5.08 0 0)
+					(length 2.54)
+					(name "B"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "2"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at 5.08 -2.54 180)
+					(length 2.54)
+					(name "C"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "3"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+			)
+		)
+		(symbol "Switch_Wolke:SW_Tactile_Small"
+			(pin_numbers hide)
+			(pin_names
+				(offset 1.016) hide)
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(property "Reference" "SW"
+				(at 1.27 2.54 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(justify left)
+				)
+			)
+			(property "Value" "SW_Tactile_Small"
+				(at 0.254 -2.286 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Footprint" "Button_Switch_SMD:SW_SPST_B3U-1000P"
+				(at 0 5.08 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Datasheet" "https://wmsc.lcsc.com/wmsc/upload/file/pdf/v2/lcsc/2304140030_XUNPU-TS-1088-AR02016_C720477.pdf"
+				(at -4.826 6.096 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Description" "TS-1088 single pole normally-open tactile switch"
+				(at 0.254 -6.096 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "MN" "XUNPU"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "MPN" "TS-1088-AR02016"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "LCSC Part #" "C720477"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "ki_keywords" "switch normally-open pushbutton push-button"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "ki_fp_filters" "SW*MEC*5G*"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(symbol "SW_Tactile_Small_0_1"
 				(circle
 					(center -2.032 0)
 					(radius 0.508)
@@ -3609,7 +4067,19 @@
 				)
 				(polyline
 					(pts
-						(xy -1.524 0.254) (xy 1.524 1.778)
+						(xy 0 1.27) (xy 0 3.048)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 2.54 1.27) (xy -2.54 1.27)
 					)
 					(stroke
 						(width 0)
@@ -3630,8 +4100,6 @@
 						(type none)
 					)
 				)
-			)
-			(symbol "SW_SPST_1_1"
 				(pin passive line
 					(at -5.08 0 0)
 					(length 2.54)
@@ -3653,7 +4121,7 @@
 				(pin passive line
 					(at 5.08 0 180)
 					(length 2.54)
-					(name "B"
+					(name "A"
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -3670,30 +4138,23 @@
 				)
 			)
 		)
-		(symbol "ba_diode:BAS16"
+		(symbol "ba_connector:SOLDER_CON_5x2_TOP"
+			(pin_numbers hide)
 			(pin_names
 				(offset 1.016) hide)
 			(exclude_from_sim no)
 			(in_bom yes)
 			(on_board yes)
-			(property "Reference" "D"
-				(at 0 2.54 0)
+			(property "Reference" "J"
+				(at 3.81 0 0)
 				(effects
 					(font
 						(size 1.27 1.27)
 					)
 				)
 			)
-			(property "Value" "BAS16"
-				(at 0 -2.54 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-				)
-			)
-			(property "Footprint" "ba_sot:sot_23"
-				(at 9.779 5.461 0)
+			(property "Value" "SOLDER_CON_5x2_TOP"
+				(at 7.62 -2.54 0)
 				(effects
 					(font
 						(size 1.27 1.27)
@@ -3701,7 +4162,16 @@
 					(hide yes)
 				)
 			)
-			(property "Datasheet" "http://www.vishay.com/docs/85539/bas16.pdf"
+			(property "Footprint" "ba_connector:solder_con_5x2_top"
+				(at 1.27 -2.54 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Datasheet" ""
 				(at 0 0 0)
 				(effects
 					(font
@@ -3710,70 +4180,7 @@
 					(hide yes)
 				)
 			)
-			(property "Description" "BAS16 SMT Small Signal Fast Switching Diode in SOT-23 75V 150mA"
-				(at 17.78 20.32 0)
-				(effects
-					(font
-						(size 1.524 1.524)
-					)
-					(hide yes)
-				)
-			)
-			(property "MPN" "BAS16"
-				(at 7.62 10.16 0)
-				(effects
-					(font
-						(size 1.524 1.524)
-					)
-					(hide yes)
-				)
-			)
-			(property "S1PN" "BAS16"
-				(at 12.7 15.24 0)
-				(effects
-					(font
-						(size 1.524 1.524)
-					)
-					(hide yes)
-				)
-			)
-			(property "S2N" "Mouser"
-				(at 15.24 17.78 0)
-				(effects
-					(font
-						(size 1.524 1.524)
-					)
-					(hide yes)
-				)
-			)
-			(property "N_A" "N"
-				(at 0 0 0)
-				(effects
-					(font
-						(size 1.524 1.524)
-					)
-					(hide yes)
-				)
-			)
-			(property "S1N" "Schukat"
-				(at 10.16 12.7 0)
-				(effects
-					(font
-						(size 1.524 1.524)
-					)
-					(hide yes)
-				)
-			)
-			(property "MN" "VISHAY"
-				(at 5.08 7.62 0)
-				(effects
-					(font
-						(size 1.524 1.524)
-					)
-					(hide yes)
-				)
-			)
-			(property "ki_keywords" "diode"
+			(property "Description" "SMT Solder onnector"
 				(at 0 0 0)
 				(effects
 					(font
@@ -3782,22 +4189,142 @@
 					(hide yes)
 				)
 			)
-			(symbol "BAS16_0_1"
-				(polyline
-					(pts
-						(xy -1.27 1.27) (xy -1.27 -1.27)
+			(property "N_A" "Y"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.524 1.524)
 					)
+					(hide yes)
+				)
+			)
+			(property "ki_keywords" "connector smt solder"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(symbol "SOLDER_CON_5x2_TOP_0_1"
+				(rectangle
+					(start -1.27 0.127)
+					(end 0.254 -0.127)
 					(stroke
-						(width 0.2032)
+						(width 0)
 						(type solid)
 					)
 					(fill
 						(type none)
 					)
 				)
+				(rectangle
+					(start -1.27 1.27)
+					(end 1.27 -1.27)
+					(stroke
+						(width 0)
+						(type solid)
+					)
+					(fill
+						(type none)
+					)
+				)
+			)
+			(symbol "SOLDER_CON_5x2_TOP_1_1"
+				(pin passive line
+					(at -5.08 0 0)
+					(length 3.81)
+					(name "P1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+			)
+		)
+		(symbol "ba_mechanic:fit_3_1"
+			(pin_names
+				(offset 1.016)
+			)
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(property "Reference" "MH"
+				(at -3.429 -3.683 0)
+				(effects
+					(font
+						(size 1.524 1.524)
+					)
+				)
+			)
+			(property "Value" "fit_3_1"
+				(at 6.223 3.81 0)
+				(effects
+					(font
+						(size 1.524 1.524)
+					)
+					(hide yes)
+				)
+			)
+			(property "Footprint" "ba_mechanic:fit_3_1"
+				(at 19.685 0.508 0)
+				(effects
+					(font
+						(size 1.524 1.524)
+					)
+					(hide yes)
+				)
+			)
+			(property "Datasheet" ""
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.524 1.524)
+					)
+					(hide yes)
+				)
+			)
+			(property "Description" "M3 Mechanical Hole D3.0mm"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "N_A" "Y"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.524 1.524)
+					)
+					(hide yes)
+				)
+			)
+			(property "ki_keywords" "Hole M3"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(symbol "fit_3_1_0_1"
 				(polyline
 					(pts
-						(xy 1.27 0) (xy -1.27 0)
+						(xy -1.651 -1.651) (xy 1.651 1.651)
 					)
 					(stroke
 						(width 0)
@@ -3807,220 +4334,15 @@
 						(type none)
 					)
 				)
-				(polyline
-					(pts
-						(xy 1.27 1.27) (xy 1.27 -1.27) (xy -1.27 0) (xy 1.27 1.27)
-					)
+				(circle
+					(center 0 0)
+					(radius 2.413)
 					(stroke
-						(width 0.2032)
+						(width 0)
 						(type solid)
 					)
 					(fill
 						(type none)
-					)
-				)
-			)
-			(symbol "BAS16_1_1"
-				(pin passive line
-					(at 3.81 0 180)
-					(length 2.54)
-					(name "A"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "1"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-				)
-				(pin passive line
-					(at -3.81 0 0)
-					(length 2.54)
-					(name "K"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "3"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-				)
-			)
-		)
-		(symbol "ba_res2012:R2012_100K"
-			(pin_numbers hide)
-			(pin_names
-				(offset 0)
-			)
-			(exclude_from_sim no)
-			(in_bom yes)
-			(on_board yes)
-			(property "Reference" "R"
-				(at -2.54 0 90)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-				)
-			)
-			(property "Value" "R2012_100K"
-				(at 2.54 0 90)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-				)
-			)
-			(property "Footprint" "ba_res:r2012"
-				(at 5.08 2.54 90)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
-				)
-			)
-			(property "Datasheet" "https://www.vishay.com/docs/20035/dcrcwe3.pdf"
-				(at 2.032 0 90)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
-				)
-			)
-			(property "Description" "Resistor SMT 2012 1% 0.125W"
-				(at 19.812 17.78 90)
-				(effects
-					(font
-						(size 1.524 1.524)
-					)
-					(hide yes)
-				)
-			)
-			(property "S1PN" "RL0805K100-1"
-				(at 14.732 12.7 90)
-				(effects
-					(font
-						(size 1.524 1.524)
-					)
-					(hide yes)
-				)
-			)
-			(property "MPN" "CRCW0805100KFKTABC"
-				(at 9.652 7.62 90)
-				(effects
-					(font
-						(size 1.524 1.524)
-					)
-					(hide yes)
-				)
-			)
-			(property "S2N" "Mouser"
-				(at 17.272 15.24 90)
-				(effects
-					(font
-						(size 1.524 1.524)
-					)
-					(hide yes)
-				)
-			)
-			(property "N_A" "N"
-				(at 12.7 0 0)
-				(effects
-					(font
-						(size 1.524 1.524)
-					)
-					(hide yes)
-				)
-			)
-			(property "S1N" "Schukat"
-				(at 12.192 10.16 90)
-				(effects
-					(font
-						(size 1.524 1.524)
-					)
-					(hide yes)
-				)
-			)
-			(property "MN" "VISHAY"
-				(at 7.112 5.08 90)
-				(effects
-					(font
-						(size 1.524 1.524)
-					)
-					(hide yes)
-				)
-			)
-			(property "ki_keywords" "r res resistor"
-				(at 0 0 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
-				)
-			)
-			(symbol "R2012_100K_0_1"
-				(rectangle
-					(start -1.016 -2.54)
-					(end 1.016 2.54)
-					(stroke
-						(width 0.254)
-						(type solid)
-					)
-					(fill
-						(type none)
-					)
-				)
-			)
-			(symbol "R2012_100K_1_1"
-				(pin passive line
-					(at 0 3.81 270)
-					(length 1.27)
-					(name "~"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "1"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-				)
-				(pin passive line
-					(at 0 -3.81 90)
-					(length 1.27)
-					(name "~"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "2"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
 					)
 				)
 			)
@@ -4675,6 +4997,12 @@
 		(uuid "a36a717b-dcd4-49d4-a28e-0619524c9aad")
 	)
 	(junction
+		(at 143.51 100.33)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "bdb93052-8bea-4d3f-80ba-276fc6f3099d")
+	)
+	(junction
 		(at 41.91 35.56)
 		(diameter 0)
 		(color 0 0 0 0)
@@ -4735,6 +5063,10 @@
 	(no_connect
 		(at 212.09 69.85)
 		(uuid "692f1078-c3bc-4709-8bbc-041a4eb8e50d")
+	)
+	(no_connect
+		(at 53.34 96.52)
+		(uuid "78b184a3-567a-4841-9695-f1180743d300")
 	)
 	(no_connect
 		(at 250.19 40.64)
@@ -4854,26 +5186,6 @@
 	)
 	(wire
 		(pts
-			(xy 133.35 97.79) (xy 133.35 100.33)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "0dae0a11-983d-489d-be09-a220fd1288ef")
-	)
-	(wire
-		(pts
-			(xy 59.69 109.22) (xy 59.69 116.84)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "0f4207b0-4a7d-4f3a-bcb4-fd66e1e9f366")
-	)
-	(wire
-		(pts
 			(xy 19.05 21.59) (xy 19.05 30.48)
 		)
 		(stroke
@@ -4884,7 +5196,7 @@
 	)
 	(wire
 		(pts
-			(xy 143.51 97.79) (xy 143.51 101.6)
+			(xy 143.51 97.79) (xy 143.51 100.33)
 		)
 		(stroke
 			(width 0)
@@ -4921,6 +5233,16 @@
 			(type default)
 		)
 		(uuid "18a0b973-ac1c-4fd7-a2ef-28e98d92a0bc")
+	)
+	(wire
+		(pts
+			(xy 57.15 96.52) (xy 57.15 99.06)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "1b455708-0d4e-4216-8da0-f71d29d6e698")
 	)
 	(wire
 		(pts
@@ -4974,7 +5296,7 @@
 	)
 	(wire
 		(pts
-			(xy 143.51 97.79) (xy 133.35 97.79)
+			(xy 143.51 100.33) (xy 130.81 100.33)
 		)
 		(stroke
 			(width 0)
@@ -5131,6 +5453,16 @@
 			(type default)
 		)
 		(uuid "4a210f51-0a35-4eda-b244-a7bfb8f56596")
+	)
+	(wire
+		(pts
+			(xy 53.34 96.52) (xy 57.15 96.52)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "4adbc10e-825a-4b5f-8e4b-3838d11d6dd7")
 	)
 	(wire
 		(pts
@@ -5344,6 +5676,16 @@
 	)
 	(wire
 		(pts
+			(xy 59.69 127) (xy 59.69 135.89)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "80b83aa1-b302-4f97-ba65-6c39c880562d")
+	)
+	(wire
+		(pts
 			(xy 81.28 187.96) (xy 81.28 184.15)
 		)
 		(stroke
@@ -5414,7 +5756,7 @@
 	)
 	(wire
 		(pts
-			(xy 80.01 25.4) (xy 88.9 25.4)
+			(xy 81.28 25.4) (xy 88.9 25.4)
 		)
 		(stroke
 			(width 0)
@@ -5481,6 +5823,16 @@
 			(type default)
 		)
 		(uuid "a3184582-40ee-4229-9b09-0eba9b2b36ea")
+	)
+	(wire
+		(pts
+			(xy 62.23 93.98) (xy 62.23 99.06)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "a33bed74-1816-4874-845c-9ba224e5a3db")
 	)
 	(wire
 		(pts
@@ -5584,6 +5936,16 @@
 	)
 	(wire
 		(pts
+			(xy 59.69 111.76) (xy 59.69 109.22)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "ad6b7fcb-9216-4e13-8342-38ab6d1fb0c9")
+	)
+	(wire
+		(pts
 			(xy 212.09 36.83) (xy 218.44 36.83)
 		)
 		(stroke
@@ -5594,7 +5956,7 @@
 	)
 	(wire
 		(pts
-			(xy 133.35 110.49) (xy 133.35 113.03)
+			(xy 130.81 110.49) (xy 130.81 113.03)
 		)
 		(stroke
 			(width 0)
@@ -5624,16 +5986,6 @@
 	)
 	(wire
 		(pts
-			(xy 59.69 88.9) (xy 59.69 99.06)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "b3b03674-9d20-4e52-9823-aefbd59973c5")
-	)
-	(wire
-		(pts
 			(xy 271.78 88.9) (xy 271.78 93.98)
 		)
 		(stroke
@@ -5641,16 +5993,6 @@
 			(type default)
 		)
 		(uuid "b4c6e144-7378-4c36-a530-0229d1de58c9")
-	)
-	(wire
-		(pts
-			(xy 59.69 119.38) (xy 59.69 135.89)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "b5516737-9441-4123-bdeb-567e1cdef42b")
 	)
 	(wire
 		(pts
@@ -5681,6 +6023,16 @@
 			(type default)
 		)
 		(uuid "b8b1ddc4-38e6-4b15-89dd-89c547e41307")
+	)
+	(wire
+		(pts
+			(xy 143.51 100.33) (xy 143.51 101.6)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "b9083ab0-d9b4-4676-8af9-4af6c5920429")
 	)
 	(wire
 		(pts
@@ -5784,7 +6136,7 @@
 	)
 	(wire
 		(pts
-			(xy 63.5 25.4) (xy 72.39 25.4)
+			(xy 63.5 25.4) (xy 73.66 25.4)
 		)
 		(stroke
 			(width 0)
@@ -5934,7 +6286,7 @@
 	)
 	(wire
 		(pts
-			(xy 133.35 113.03) (xy 143.51 113.03)
+			(xy 130.81 113.03) (xy 143.51 113.03)
 		)
 		(stroke
 			(width 0)
@@ -6502,6 +6854,103 @@
 		)
 	)
 	(symbol
+		(lib_id "Diode_JLCPCB:BAS16")
+		(at 77.47 25.4 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "1782b4a7-5d73-44e0-b994-3ee41f1c017f")
+		(property "Reference" "D4"
+			(at 78.74 19.05 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "BAS16"
+			(at 83.82 25.4 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "ba_sot:sot_23"
+			(at 87.249 19.939 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "https://wmsc.lcsc.com/wmsc/upload/file/pdf/v2/lcsc/2304140030_Nexperia-BAS16-215_C79997.pdf"
+			(at 78.232 31.75 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "BAS16 SMT Small Signal Fast Switching Diode in SOT-23 80V 215mA"
+			(at 78.232 29.718 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "BAS16,215"
+			(at 85.09 15.24 0)
+			(effects
+				(font
+					(size 1.524 1.524)
+				)
+				(hide yes)
+			)
+		)
+		(property "MN" "Nexperia"
+			(at 77.47 25.4 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C79997"
+			(at 77.47 25.4 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "2"
+			(uuid "407113a6-2b4d-4c9d-908c-6ab8e1339fa9")
+		)
+		(pin "1"
+			(uuid "64026015-0212-4ae4-aa90-dbfa0f3505ea")
+		)
+		(pin "3"
+			(uuid "43928fdb-403e-4321-9c80-9ab7c36e56a8")
+		)
+		(instances
+			(project ""
+				(path "/be456eed-bb99-4947-8d6f-815aa9683d71"
+					(reference "D4")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "power:+3.3V")
 		(at 113.03 158.75 0)
 		(unit 1)
@@ -6705,76 +7154,6 @@
 		)
 	)
 	(symbol
-		(lib_id "Switch:SW_Push")
-		(at 133.35 105.41 90)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(fields_autoplaced yes)
-		(uuid "1e2a096e-02f3-4f56-9420-df88fbfd244d")
-		(property "Reference" "SW7"
-			(at 134.62 104.1399 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify right)
-			)
-		)
-		(property "Value" "SW_Push"
-			(at 134.62 106.6799 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify right)
-			)
-		)
-		(property "Footprint" "Button_Switch_SMD:SW_SPST_CK_RS282G05A3"
-			(at 128.27 105.41 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "~"
-			(at 128.27 105.41 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Push button switch, generic, two pins"
-			(at 133.35 105.41 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "175b3322-caf3-4a62-937f-2b2a35e3b891")
-		)
-		(pin "2"
-			(uuid "434bf784-8f8c-46ee-853c-07de408b1985")
-		)
-		(instances
-			(project "Little_Helper"
-				(path "/be456eed-bb99-4947-8d6f-815aa9683d71"
-					(reference "SW7")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
 		(lib_id "power:GND")
 		(at 77.47 54.61 0)
 		(unit 1)
@@ -6835,138 +7214,6 @@
 			(project "Little_Helper"
 				(path "/be456eed-bb99-4947-8d6f-815aa9683d71"
 					(reference "#PWR011")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "ba_res2012:R2012_100K")
-		(at 19.05 44.45 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "25e95119-5cd6-42a3-b08d-f5cb275b8376")
-		(property "Reference" "R3"
-			(at 21.59 43.1799 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Value" "R2012_100K"
-			(at 21.59 45.7199 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Footprint" "ba_res:r2012"
-			(at 24.13 41.91 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "https://www.vishay.com/docs/20035/dcrcwe3.pdf"
-			(at 21.082 44.45 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Resistor SMT 2012 1% 0.125W"
-			(at 38.862 26.67 90)
-			(effects
-				(font
-					(size 1.524 1.524)
-				)
-				(hide yes)
-			)
-		)
-		(property "S1PN" "RL0805K100-1"
-			(at 33.782 31.75 90)
-			(effects
-				(font
-					(size 1.524 1.524)
-				)
-				(hide yes)
-			)
-		)
-		(property "MPN" "CRCW0805100KFKTABC"
-			(at 28.702 36.83 90)
-			(effects
-				(font
-					(size 1.524 1.524)
-				)
-				(hide yes)
-			)
-		)
-		(property "S2N" "Mouser"
-			(at 36.322 29.21 90)
-			(effects
-				(font
-					(size 1.524 1.524)
-				)
-				(hide yes)
-			)
-		)
-		(property "N_A" "N"
-			(at 31.75 44.45 0)
-			(effects
-				(font
-					(size 1.524 1.524)
-				)
-				(hide yes)
-			)
-		)
-		(property "S1N" "Schukat"
-			(at 31.242 34.29 90)
-			(effects
-				(font
-					(size 1.524 1.524)
-				)
-				(hide yes)
-			)
-		)
-		(property "MN" "VISHAY"
-			(at 26.162 39.37 90)
-			(effects
-				(font
-					(size 1.524 1.524)
-				)
-				(hide yes)
-			)
-		)
-		(property "LCSC" "C149504"
-			(at 21.59 43.1799 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "f39104c8-bcad-4e14-ad81-d15084b09408")
-		)
-		(pin "2"
-			(uuid "22fd0446-de55-4233-b716-99ea8c4e3c1e")
-		)
-		(instances
-			(project "Little_Helper"
-				(path "/be456eed-bb99-4947-8d6f-815aa9683d71"
-					(reference "R3")
 					(unit 1)
 				)
 			)
@@ -7667,85 +7914,6 @@
 		)
 	)
 	(symbol
-		(lib_id "Connector:Conn_01x02_Pin")
-		(at 64.77 119.38 180)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(fields_autoplaced yes)
-		(uuid "39386ee7-35f0-47bb-8b66-3d470a8536f9")
-		(property "Reference" "J2"
-			(at 66.04 116.8399 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify right)
-			)
-		)
-		(property "Value" "Conn_01x02_Pin"
-			(at 66.04 119.3799 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify right)
-			)
-		)
-		(property "Footprint" "Connector_Hirose:Hirose_DF13-02P-1.25DSA_1x02_P1.25mm_Vertical"
-			(at 64.77 119.38 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "~"
-			(at 64.77 119.38 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Generic connector, single row, 01x02, script generated"
-			(at 64.77 119.38 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "LCSC" "C145970"
-			(at 66.04 116.8399 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "618361a1-ba9f-4cbd-b16c-7737ba8b1237")
-		)
-		(pin "2"
-			(uuid "a8e557ae-87ac-4324-a026-8e62e51918ba")
-		)
-		(instances
-			(project "Little_Helper"
-				(path "/be456eed-bb99-4947-8d6f-815aa9683d71"
-					(reference "J2")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
 		(lib_id "power:+3.3V")
 		(at 39.37 111.76 0)
 		(unit 1)
@@ -7812,79 +7980,6 @@
 		)
 	)
 	(symbol
-		(lib_id "PCM_Transistor_MOSFET_AKL:DMG3415U")
-		(at 39.37 29.21 0)
-		(mirror x)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "3e8d691b-5018-4103-b89c-4d1d8e2a6672")
-		(property "Reference" "Q1"
-			(at 35.56 26.67 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Value" "DMG3415U"
-			(at 30.48 24.13 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Footprint" "Package_TO_SOT_SMD:SOT-23"
-			(at 44.45 26.67 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "https://www.tme.eu/Document/236093ecb8447f8a47174c5983185a9e/DMG3415U.pdf"
-			(at 39.37 29.21 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "SOT-23 P-MOSFET enchancement mode transistor, 20V, 4A, 0.9W, Alternate KiCAD Library"
-			(at 39.37 29.21 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "2"
-			(uuid "f9268de7-9926-4b17-b06e-cdc19935c471")
-		)
-		(pin "1"
-			(uuid "c501cc62-e102-426e-9aad-55a50a4248ae")
-		)
-		(pin "3"
-			(uuid "addca3f4-6694-4428-a606-74e11a9065ad")
-		)
-		(instances
-			(project "Little_Helper"
-				(path "/be456eed-bb99-4947-8d6f-815aa9683d71"
-					(reference "Q1")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
 		(lib_id "PCM_Capacitor_US_AKL:C_0805")
 		(at 39.37 123.19 0)
 		(unit 1)
@@ -7932,6 +8027,15 @@
 		)
 		(property "Description" "SMD 0805 MLCC capacitor, Alternate KiCad Library"
 			(at 39.37 123.19 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C1713"
+			(at 43.18 121.9199 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -8917,6 +9021,15 @@
 				(hide yes)
 			)
 		)
+		(property "LCSC" "C1713"
+			(at 151.13 43.1799 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "1"
 			(uuid "f2a6952b-ccbb-48ef-a006-5a2396db48c1")
 		)
@@ -9050,7 +9163,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C115316"
+		(property "LCSC" "C17414"
 			(at 140.97 91.44 0)
 			(effects
 				(font
@@ -9217,6 +9330,116 @@
 		)
 	)
 	(symbol
+		(lib_id "Switch_Wolke:SW_On_On")
+		(at 59.69 104.14 90)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "783677ce-0b91-47af-9847-ee852b4915bc")
+		(property "Reference" "SW6"
+			(at 64.77 101.5999 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(property "Value" "SW_On_On"
+			(at 64.77 104.1399 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(property "Footprint" "Button_Switch_SMD:SW_SPDT_PCM12"
+			(at 59.69 104.14 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "https://www.ckswitches.com/media/1424/pcm.pdf"
+			(at 58.674 98.044 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Slide Switch"
+			(at 51.562 104.14 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet2" "https://wmsc.lcsc.com/wmsc/upload/file/pdf/v2/lcsc/2012062037_G-Switch-MK-12C02-G020_C963206.pdf"
+			(at 59.69 104.14 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MN" "G-Switch"
+			(at 59.69 104.14 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "MK-12C02-G020"
+			(at 59.69 104.14 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC Part #" "C963206"
+			(at 64.77 106.6799 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+				(hide yes)
+			)
+		)
+		(pin "2"
+			(uuid "2ef39e68-2021-47c0-b5ef-998527d632d6")
+		)
+		(pin "1"
+			(uuid "bc1d005b-86ab-432c-a3fd-6a34efeda5bb")
+		)
+		(pin "3"
+			(uuid "ed067095-9294-4848-aebf-fb0e7bfc34d7")
+		)
+		(instances
+			(project ""
+				(path "/be456eed-bb99-4947-8d6f-815aa9683d71"
+					(reference "SW6")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "power:GND")
 		(at 81.28 187.96 0)
 		(unit 1)
@@ -9337,6 +9560,15 @@
 				(hide yes)
 			)
 		)
+		(property "LCSC" "C1713"
+			(at 246.38 96.5199 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "1"
 			(uuid "d9d069cc-fd71-4a83-9108-b0dba91757f2")
 		)
@@ -9347,77 +9579,6 @@
 			(project ""
 				(path "/be456eed-bb99-4947-8d6f-815aa9683d71"
 					(reference "C5")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "Switch:SW_Push")
-		(at 165.1 105.41 90)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(fields_autoplaced yes)
-		(uuid "8214ee3d-1d56-427f-9032-d71d795b79bc")
-		(property "Reference" "SW8"
-			(at 166.37 104.1399 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify right)
-			)
-		)
-		(property "Value" "SW_Push"
-			(at 166.37 106.6799 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify right)
-				(hide yes)
-			)
-		)
-		(property "Footprint" "Button_Switch_SMD:SW_SPST_CK_RS282G05A3"
-			(at 160.02 105.41 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "~"
-			(at 160.02 105.41 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Push button switch, generic, two pins"
-			(at 165.1 105.41 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "5ec1493d-16da-4c16-845a-9fa6b69f236a")
-		)
-		(pin "2"
-			(uuid "d7cc10b2-f052-4da8-b350-823ac06b9a8f")
-		)
-		(instances
-			(project "Little_Helper"
-				(path "/be456eed-bb99-4947-8d6f-815aa9683d71"
-					(reference "SW8")
 					(unit 1)
 				)
 			)
@@ -9527,7 +9688,7 @@
 				)
 			)
 		)
-		(property "Footprint" "Diode_SMD:D_0805_2012Metric"
+		(property "Footprint" "Diode_SMD:D_SOD-123"
 			(at 26.67 35.56 0)
 			(effects
 				(font
@@ -9573,76 +9734,6 @@
 			(project "Little_Helper"
 				(path "/be456eed-bb99-4947-8d6f-815aa9683d71"
 					(reference "D1")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "Switch:SW_SPST")
-		(at 59.69 104.14 270)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(fields_autoplaced yes)
-		(uuid "88b40c98-b6c8-4dea-89dc-7326a27d481a")
-		(property "Reference" "SW6"
-			(at 62.23 102.8699 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Value" "SW_SPST"
-			(at 62.23 105.4099 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Footprint" "Button_Switch_SMD:SW_SPDT_CK_JS102011SAQN"
-			(at 59.69 104.14 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "~"
-			(at 59.69 104.14 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Single Pole Single Throw (SPST) switch"
-			(at 59.69 104.14 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "2"
-			(uuid "97c4c6f4-c20b-4ac1-be45-07af96a88e35")
-		)
-		(pin "1"
-			(uuid "95628105-f66f-4286-a539-a6bd69a3ca7a")
-		)
-		(instances
-			(project "Little_Helper"
-				(path "/be456eed-bb99-4947-8d6f-815aa9683d71"
-					(reference "SW6")
 					(unit 1)
 				)
 			)
@@ -9775,6 +9866,82 @@
 			(project "Little_Helper"
 				(path "/be456eed-bb99-4947-8d6f-815aa9683d71"
 					(reference "#PWR033")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "ba_connector:SOLDER_CON_5x2_TOP")
+		(at 59.69 121.92 90)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "96049cf6-bc49-4036-ac8d-7650bb008acd")
+		(property "Reference" "J2"
+			(at 62.23 121.9199 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(property "Value" "SOLDER_CON_5x2_TOP"
+			(at 62.23 114.3 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Footprint" "ba_connector:solder_con_5x2_top"
+			(at 62.23 120.65 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 59.69 121.92 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "SMT Solder onnector"
+			(at 59.69 121.92 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "N_A" "Y"
+			(at 59.69 121.92 0)
+			(effects
+				(font
+					(size 1.524 1.524)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "2202f007-789c-47d4-8f14-5f8ceccc0a37")
+		)
+		(instances
+			(project "Little_Helper"
+				(path "/be456eed-bb99-4947-8d6f-815aa9683d71"
+					(reference "J2")
 					(unit 1)
 				)
 			)
@@ -9924,10 +10091,9 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(fields_autoplaced yes)
 		(uuid "a28e51c4-5c76-4a7b-9d96-12eac853b2ec")
 		(property "Reference" "U1"
-			(at 77.47 29.21 0)
+			(at 72.39 29.21 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -10004,7 +10170,7 @@
 	)
 	(symbol
 		(lib_id "power:+BATT")
-		(at 59.69 88.9 0)
+		(at 62.23 93.98 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -10013,7 +10179,7 @@
 		(fields_autoplaced yes)
 		(uuid "a95a7701-67f8-42cd-be44-2247eaaa2ef4")
 		(property "Reference" "#PWR05"
-			(at 59.69 92.71 0)
+			(at 62.23 97.79 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -10022,7 +10188,7 @@
 			)
 		)
 		(property "Value" "+BATT"
-			(at 59.69 83.82 0)
+			(at 62.23 88.9 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -10030,7 +10196,7 @@
 			)
 		)
 		(property "Footprint" ""
-			(at 59.69 88.9 0)
+			(at 62.23 93.98 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -10039,7 +10205,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 59.69 88.9 0)
+			(at 62.23 93.98 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -10048,7 +10214,7 @@
 			)
 		)
 		(property "Description" "Power symbol creates a global label with name \"+BATT\""
-			(at 59.69 88.9 0)
+			(at 62.23 93.98 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -10182,6 +10348,15 @@
 		)
 		(property "Description" "SMD 0805 MLCC capacitor, Alternate KiCad Library"
 			(at 88.9 44.45 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C1713"
+			(at 92.71 43.1799 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -10325,6 +10500,15 @@
 				(hide yes)
 			)
 		)
+		(property "LCSC" "C1713"
+			(at 261.62 96.5199 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "1"
 			(uuid "f94ab46e-9b1f-4e78-a090-2ae646952795")
 		)
@@ -10341,42 +10525,35 @@
 		)
 	)
 	(symbol
-		(lib_id "ba_diode:BAS16")
-		(at 76.2 25.4 0)
+		(lib_id "Device:R")
+		(at 19.05 44.45 180)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
 		(fields_autoplaced yes)
-		(uuid "b80dbaff-62a0-411c-99ca-f545d4122d41")
-		(property "Reference" "D4"
-			(at 76.2 19.05 0)
+		(uuid "b66c4087-3b26-4449-8f68-b9d615934526")
+		(property "Reference" "R3"
+			(at 21.59 43.1799 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(justify right)
 			)
 		)
-		(property "Value" "BAS16"
-			(at 76.2 21.59 0)
+		(property "Value" "100k"
+			(at 21.59 45.7199 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(justify right)
 			)
 		)
-		(property "Footprint" "ba_sot:sot_23"
-			(at 85.979 19.939 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "http://www.vishay.com/docs/85539/bas16.pdf"
-			(at 76.2 25.4 0)
+		(property "Footprint" "Resistor_SMD:R_0805_2012Metric"
+			(at 20.828 44.45 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -10384,71 +10561,8 @@
 				(hide yes)
 			)
 		)
-		(property "Description" "BAS16 SMT Small Signal Fast Switching Diode in SOT-23 75V 150mA"
-			(at 93.98 5.08 0)
-			(effects
-				(font
-					(size 1.524 1.524)
-				)
-				(hide yes)
-			)
-		)
-		(property "MPN" "BAS16"
-			(at 83.82 15.24 0)
-			(effects
-				(font
-					(size 1.524 1.524)
-				)
-				(hide yes)
-			)
-		)
-		(property "S1PN" "BAS16"
-			(at 88.9 10.16 0)
-			(effects
-				(font
-					(size 1.524 1.524)
-				)
-				(hide yes)
-			)
-		)
-		(property "S2N" "Mouser"
-			(at 91.44 7.62 0)
-			(effects
-				(font
-					(size 1.524 1.524)
-				)
-				(hide yes)
-			)
-		)
-		(property "N_A" "N"
-			(at 76.2 25.4 0)
-			(effects
-				(font
-					(size 1.524 1.524)
-				)
-				(hide yes)
-			)
-		)
-		(property "S1N" "Schukat"
-			(at 86.36 12.7 0)
-			(effects
-				(font
-					(size 1.524 1.524)
-				)
-				(hide yes)
-			)
-		)
-		(property "MN" "VISHAY"
-			(at 81.28 17.78 0)
-			(effects
-				(font
-					(size 1.524 1.524)
-				)
-				(hide yes)
-			)
-		)
-		(property "LCSC" "C79997"
-			(at 76.2 19.05 0)
+		(property "Datasheet" "~"
+			(at 19.05 44.45 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -10456,16 +10570,132 @@
 				(hide yes)
 			)
 		)
-		(pin "3"
-			(uuid "1ad2bbcb-279e-40fb-99f9-b68e8d2d9339")
+		(property "Description" "Resistor"
+			(at 19.05 44.45 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C149504"
+			(at 21.59 43.1799 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "2"
+			(uuid "5600fbde-ad93-4107-8619-ad24a57667ec")
 		)
 		(pin "1"
-			(uuid "17c899f6-934d-4148-b46c-e096d8a8d93a")
+			(uuid "d396fb60-bb60-4bf4-aa7b-ce6d10d6b46b")
 		)
 		(instances
 			(project "Little_Helper"
 				(path "/be456eed-bb99-4947-8d6f-815aa9683d71"
-					(reference "D4")
+					(reference "R3")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_name "SW_Tactile_Small_1")
+		(lib_id "Switch_Wolke:SW_Tactile_Small")
+		(at 130.81 105.41 90)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "bd609c5d-ea1d-4a35-9ba5-04b070ff86a7")
+		(property "Reference" "SW7"
+			(at 132.08 104.1399 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(property "Value" "SW_Tactile_Small"
+			(at 123.19 110.49 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+				(hide yes)
+			)
+		)
+		(property "Footprint" "Button_Switch_SMD_JLCPCB:SW_SPST_TS-1088-AR02016"
+			(at 125.73 105.41 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "https://wmsc.lcsc.com/wmsc/upload/file/pdf/v2/lcsc/2304140030_XUNPU-TS-1088-AR02016_C720477.pdf"
+			(at 124.714 110.236 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "TS-1088 single pole normally-open tactile switch"
+			(at 136.906 105.156 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MN" "XUNPU"
+			(at 130.81 105.41 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "TS-1088-AR02016"
+			(at 130.81 105.41 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC Part #" "C720477"
+			(at 130.81 105.41 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "2"
+			(uuid "8387bef9-6267-49ec-8a3b-f83278145f57")
+		)
+		(pin "1"
+			(uuid "edf46697-5c7b-407d-b828-46696f401d15")
+		)
+		(instances
+			(project ""
+				(path "/be456eed-bb99-4947-8d6f-815aa9683d71"
+					(reference "SW7")
 					(unit 1)
 				)
 			)
@@ -10532,6 +10762,82 @@
 			(project "Little_Helper"
 				(path "/be456eed-bb99-4947-8d6f-815aa9683d71"
 					(reference "#PWR029")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "ba_connector:SOLDER_CON_5x2_TOP")
+		(at 59.69 116.84 270)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "c1cde5df-827b-4ddb-a00a-a91e75b9ec01")
+		(property "Reference" "J3"
+			(at 62.23 116.8399 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "SOLDER_CON_5x2_TOP"
+			(at 57.15 124.46 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Footprint" "ba_connector:solder_con_5x2_top"
+			(at 57.15 118.11 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 59.69 116.84 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "SMT Solder onnector"
+			(at 59.69 116.84 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "N_A" "Y"
+			(at 59.69 116.84 0)
+			(effects
+				(font
+					(size 1.524 1.524)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "d9dffaab-8a0d-4d96-8a26-cff53570ad3a")
+		)
+		(instances
+			(project ""
+				(path "/be456eed-bb99-4947-8d6f-815aa9683d71"
+					(reference "J3")
 					(unit 1)
 				)
 			)
@@ -10734,6 +11040,104 @@
 			(project "Little_Helper"
 				(path "/be456eed-bb99-4947-8d6f-815aa9683d71"
 					(reference "#PWR039")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Switch_Wolke:SW_Tactile_Small")
+		(at 165.1 105.41 90)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "d5c82143-4fb0-42e3-a240-00b6e7a4b4cd")
+		(property "Reference" "SW8"
+			(at 166.37 104.1399 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(property "Value" "SW_Tactile_Small"
+			(at 166.37 106.6799 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+				(hide yes)
+			)
+		)
+		(property "Footprint" "Button_Switch_SMD_JLCPCB:SW_SPST_TS-1088-AR02016"
+			(at 160.02 105.41 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "https://wmsc.lcsc.com/wmsc/upload/file/pdf/v2/lcsc/2304140030_XUNPU-TS-1088-AR02016_C720477.pdf"
+			(at 159.004 110.236 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "TS-1088 single pole normally-open tactile switch"
+			(at 171.196 105.156 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MN" "XUNPU"
+			(at 165.1 105.41 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "TS-1088-AR02016"
+			(at 165.1 105.41 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC Part #" "C720477"
+			(at 165.1 105.41 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "2"
+			(uuid "365f94bb-cc93-44c6-9ddb-8ca3a72f17b3")
+		)
+		(pin "1"
+			(uuid "71df5738-03a8-48f8-a733-3be2437034c7")
+		)
+		(instances
+			(project "Little_Helper"
+				(path "/be456eed-bb99-4947-8d6f-815aa9683d71"
+					(reference "SW8")
 					(unit 1)
 				)
 			)
@@ -11011,6 +11415,79 @@
 			(project "Little_Helper"
 				(path "/be456eed-bb99-4947-8d6f-815aa9683d71"
 					(reference "R8")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "ba_mechanic:fit_3_1")
+		(at 175.26 154.94 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "dc3408a8-8b4e-4ce2-a851-c643eb8b2bcc")
+		(property "Reference" "MH1"
+			(at 179.07 154.9399 0)
+			(effects
+				(font
+					(size 1.524 1.524)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "fit_3_1"
+			(at 181.483 151.13 0)
+			(effects
+				(font
+					(size 1.524 1.524)
+				)
+				(hide yes)
+			)
+		)
+		(property "Footprint" "ba_mechanic:fit_3_1"
+			(at 194.945 154.432 0)
+			(effects
+				(font
+					(size 1.524 1.524)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 175.26 154.94 0)
+			(effects
+				(font
+					(size 1.524 1.524)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "M3 Mechanical Hole D3.0mm"
+			(at 175.26 154.94 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "N_A" "Y"
+			(at 175.26 154.94 0)
+			(effects
+				(font
+					(size 1.524 1.524)
+				)
+				(hide yes)
+			)
+		)
+		(instances
+			(project ""
+				(path "/be456eed-bb99-4947-8d6f-815aa9683d71"
+					(reference "MH1")
 					(unit 1)
 				)
 			)
@@ -11427,6 +11904,15 @@
 				(hide yes)
 			)
 		)
+		(property "LCSC" "C1713"
+			(at 45.72 43.1799 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "1"
 			(uuid "25c8e669-0266-48d5-ac76-62a889a3f392")
 		)
@@ -11701,6 +12187,87 @@
 			(project "Little_Helper"
 				(path "/be456eed-bb99-4947-8d6f-815aa9683d71"
 					(reference "#PWR017")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "PCM_Transistor_MOSFET_JLCPCB:DMG3415U")
+		(at 41.91 29.21 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "f1cd291b-ca7f-4d7b-b3a6-2dada73bc712")
+		(property "Reference" "Q1"
+			(at 35.56 25.4 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "DMG3415U"
+			(at 43.18 33.02 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "Package_TO_SOT_SMD:SOT-23"
+			(at 41.402 29.21 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "https://www.tme.eu/Document/236093ecb8447f8a47174c5983185a9e/DMG3415U.pdf"
+			(at 40.64 28.956 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "SOT-23 P-MOSFET enchancement mode transistor, 20V, 4A, 0.9W, Alternate KiCAD Library"
+			(at 43.434 28.956 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C96616"
+			(at 49.022 26.416 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "2"
+			(uuid "d75fe88d-4096-4c35-8772-6ed3d70575b0")
+		)
+		(pin "1"
+			(uuid "d1f93097-bf5e-47f8-a739-990b62c0da7c")
+		)
+		(pin "3"
+			(uuid "4d26da33-bd63-4a1c-a9ae-a0fc8da8cc53")
+		)
+		(instances
+			(project ""
+				(path "/be456eed-bb99-4947-8d6f-815aa9683d71"
+					(reference "Q1")
 					(unit 1)
 				)
 			)
