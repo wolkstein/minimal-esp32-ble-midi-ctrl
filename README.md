@@ -46,6 +46,16 @@ After compiling BlueZ, Little Helper shown in Catja App
 
 ![Catja on Ubuntu 22.04](doc/Jack+Alsa_Audio_Midi_Connections.png)
 
-## Freecad
+## Ardour / Mixbus Midi Setup
 
-![Freecad Little Helper Housing](doc/Freecad-Housing.png)
+- For example copy the Midi Map file from this Repo like this:
+```bash
+cp DAW_MIDI_MAPS/ArdourAndHarrisonMixbus/midi_mapsLittle_Helper.map ~/.config/ardour6/midi_maps
+```
+- Now you can open the Edit-Preferences Window in Ardour, and under Control Surfaces, select Generic Midi
+- Press Show Protocol Settings
+- Now you can select "Little_Helper" in Midi Bindings dropdown
+- if Little Helper is already connected via bluetooth you can make connection in Incoming Midi Dropdown like in the Image below
+- Done  
+
+![Ardour Mixbus Midi](doc/Ardour-Mixbus-Little-Helper-Midi-Setup.png)
