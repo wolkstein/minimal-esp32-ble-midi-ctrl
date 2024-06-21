@@ -44,4 +44,8 @@ https://tttapa.github.io/Pages/Ubuntu/Software-Installation/BlueZ.html
 
 After compiling BlueZ, Little Helper shown in Catja App
 
-![Example Image](doc/Jack+Alsa_Audio_Midi_Connections.png)
+![Catja on Ubuntu 22.04](doc/Jack+Alsa_Audio_Midi_Connections.png)
+
+## Freecad
+
+![Freecad Little Helper Housing](doc/Freecad-Housing.png)
