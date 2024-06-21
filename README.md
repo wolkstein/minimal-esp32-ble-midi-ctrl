@@ -17,6 +17,15 @@ This project is a minimal ESP32 BLE MIDI controller. It allows you to control MI
 - breadboard
 - optional rgb led ws28xx
 
+## PCB Version with Lipo and Battery Charger
+
+PCB:
+
+![PCB](doc/New-PCB-with-THD-Solder-Tactile-BTN.png)
+
+Housing:
+![Housing](doc/Freecad-Housing.png)
+
 ## Getting Started
 
 To get started with the project, follow these steps:
