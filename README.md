@@ -41,3 +41,7 @@ This project is licensed under the GNU General Public License v3.0. See the [LIC
 Nice Howto from Peter P:
 
 https://tttapa.github.io/Pages/Ubuntu/Software-Installation/BlueZ.html
+
+After compiling BlueZ, Little Helper shown in Catja App
+
+![Example Image](doc/Jack+Alsa_Audio_Midi_Connections.png)
