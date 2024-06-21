@@ -7,7 +7,7 @@
 	(title_block
 		(title "Little_Helper")
 		(date "2024-05-26")
-		(rev "1")
+		(rev "1.1")
 	)
 	(lib_symbols
 		(symbol "Battery_Management:MCP73831-2-OT"

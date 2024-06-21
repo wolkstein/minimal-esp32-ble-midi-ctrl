@@ -635,7 +635,7 @@
       "specctra_dsn": "",
       "step": "Little_Helper.step",
       "svg": "",
-      "vrml": ""
+      "vrml": "Little_Helper.wrl"
     },
     "page_layout_descr_file": "/home/wolke/gitlocal/privat/common/kicad/template/empty_layout.kicad_wks"
   },

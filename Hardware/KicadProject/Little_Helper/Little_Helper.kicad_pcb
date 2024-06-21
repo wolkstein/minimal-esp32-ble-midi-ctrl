@@ -740,7 +740,7 @@
 		(descr "2.4 GHz Wi-Fi and Bluetooth combo chip, external antenna, https://www.espressif.com/sites/default/files/documentation/esp32-s3-mini-1_mini-1u_datasheet_en.pdf")
 		(tags "2.4 GHz Wi-Fi Bluetooth external antenna espressif  20*15.4mm")
 		(property "Reference" "U2"
-			(at -5.95 11.85 -90)
+			(at 8.8 2.95 0)
 			(unlocked yes)
 			(layer "F.SilkS")
 			(uuid "7e683821-f020-4d98-8643-628637b2ec29")
@@ -2369,7 +2369,7 @@
 		(descr "Resistor SMD 0805 (2012 Metric), square (rectangular) end terminal, IPC_7351 nominal, (Body size source: IPC-SM-782 page 72, https://www.pcb-3d.com/wordpress/wp-content/uploads/ipc-sm-782a_amendment_1_and_2.pdf), generated with kicad-footprint-generator")
 		(tags "resistor")
 		(property "Reference" "R1"
-			(at -2.2875 0 90)
+			(at -2.7 -0.1 180)
 			(layer "F.SilkS")
 			(uuid "3a35ef66-9dcb-42b7-87bc-3ab8900b3132")
 			(effects
@@ -2821,7 +2821,7 @@
 		(descr "Ultra-small-sized Tactile Switch with High Contact Reliability, Top-actuated Model, without Ground Terminal, without Boss")
 		(tags "Tactile Switch")
 		(property "Reference" "SW8"
-			(at 0 -2.5 0)
+			(at -4.2 0 0)
 			(layer "F.SilkS")
 			(uuid "3729e39e-ac7e-439e-bbaa-87874f260e3d")
 			(effects
@@ -3077,7 +3077,7 @@
 			(uuid "f2e1ca78-15f1-4e86-9cc0-0049527a6e00")
 		)
 		(fp_text user "${REFERENCE}"
-			(at 0 -2.5 0)
+			(at -4.2 0 0)
 			(layer "F.Fab")
 			(uuid "44feaaf8-18a6-4077-977c-fa5aefef90fd")
 			(effects
@@ -3935,7 +3935,7 @@
 		(descr "Ultra-small-sized Tactile Switch with High Contact Reliability, Top-actuated Model, without Ground Terminal, without Boss")
 		(tags "Tactile Switch")
 		(property "Reference" "SW7"
-			(at 0 -2.5 0)
+			(at -4.3 0.1 0)
 			(layer "F.SilkS")
 			(uuid "fdbfc05c-35b9-4bfc-add3-c342c16aa2b4")
 			(effects
@@ -4191,7 +4191,7 @@
 			(uuid "226e16c0-f728-46f1-8d58-19f9ae2a4ec2")
 		)
 		(fp_text user "${REFERENCE}"
-			(at 0 -2.5 0)
+			(at -4.3 0.1 0)
 			(layer "F.Fab")
 			(uuid "94392f7f-b291-409e-8536-f7ec1d1c5079")
 			(effects
@@ -4690,7 +4690,7 @@
 		(descr "Resistor SMD 0805 (2012 Metric), square (rectangular) end terminal, IPC_7351 nominal, (Body size source: IPC-SM-782 page 72, https://www.pcb-3d.com/wordpress/wp-content/uploads/ipc-sm-782a_amendment_1_and_2.pdf), generated with kicad-footprint-generator")
 		(tags "resistor")
 		(property "Reference" "R6"
-			(at 0 -1.65 -90)
+			(at 2.6625 0 0)
 			(layer "F.SilkS")
 			(uuid "6451e4f0-98ca-4963-8716-02abb4e12c25")
 			(effects
@@ -5933,7 +5933,7 @@
 		(descr "Resistor SMD 0805 (2012 Metric), square (rectangular) end terminal, IPC_7351 nominal, (Body size source: IPC-SM-782 page 72, https://www.pcb-3d.com/wordpress/wp-content/uploads/ipc-sm-782a_amendment_1_and_2.pdf), generated with kicad-footprint-generator")
 		(tags "resistor")
 		(property "Reference" "R7"
-			(at 2.25 0.05 0)
+			(at 3.25 -0.05 0)
 			(layer "F.SilkS")
 			(uuid "b02a9209-546f-4546-81f0-b3110325fc76")
 			(effects
@@ -7727,7 +7727,7 @@
 		(uuid "9cc83265-731d-4f39-9684-0ba55b7e4aa1")
 		(at -33.8 8.7 90)
 		(property "Reference" "J3"
-			(at -0.1 2 90)
+			(at 0 2.2 180)
 			(layer "F.SilkS")
 			(uuid "2074240e-26f9-4276-9474-d59ccea66492")
 			(effects
@@ -8117,7 +8117,7 @@
 		(uuid "cff72b80-4a09-4d6e-96cd-1f7804be73bf")
 		(at -37.1 8.7 90)
 		(property "Reference" "J2"
-			(at 0 -1.7 90)
+			(at 0 -2.3 180)
 			(layer "F.SilkS")
 			(uuid "eba9b2a2-f2b3-47c8-8db5-007dc35d51df")
 			(effects
@@ -8885,7 +8885,7 @@
 		(descr "Resistor SMD 0805 (2012 Metric), square (rectangular) end terminal, IPC_7351 nominal, (Body size source: IPC-SM-782 page 72, https://www.pcb-3d.com/wordpress/wp-content/uploads/ipc-sm-782a_amendment_1_and_2.pdf), generated with kicad-footprint-generator")
 		(tags "resistor")
 		(property "Reference" "R8"
-			(at 0 -1.65 -90)
+			(at 3.6 0.1 0)
 			(layer "F.SilkS")
 			(uuid "447bc5cd-911c-481f-9519-3965bb192884")
 			(effects
@@ -10663,7 +10663,7 @@
 		(descr "Resistor SMD 0805 (2012 Metric), square (rectangular) end terminal, IPC_7351 nominal, (Body size source: IPC-SM-782 page 72, https://www.pcb-3d.com/wordpress/wp-content/uploads/ipc-sm-782a_amendment_1_and_2.pdf), generated with kicad-footprint-generator")
 		(tags "resistor")
 		(property "Reference" "R4"
-			(at 0 -1.65 -90)
+			(at 0.1 -2.3 0)
 			(layer "F.SilkS")
 			(uuid "051b0221-fb56-4939-9262-76a4e1f897ac")
 			(effects
@@ -10889,7 +10889,7 @@
 		(descr "Resistor SMD 0805 (2012 Metric), square (rectangular) end terminal, IPC_7351 nominal, (Body size source: IPC-SM-782 page 72, https://www.pcb-3d.com/wordpress/wp-content/uploads/ipc-sm-782a_amendment_1_and_2.pdf), generated with kicad-footprint-generator")
 		(tags "resistor")
 		(property "Reference" "R9"
-			(at 2.3 0 0)
+			(at 3.3 0.1 0)
 			(layer "F.SilkS")
 			(uuid "44d25e2a-3c14-41fb-bb56-7af0f582f75f")
 			(effects
@@ -11174,7 +11174,7 @@
 			(justify left bottom mirror)
 		)
 	)
-	(gr_text "WOLKE\nLittle Helper V1.0"
+	(gr_text "WOLKE\nLittle Helper V1.1"
 		(at 34.3 6.6 270)
 		(layer "B.Mask")
 		(uuid "a4d8ca31-07e7-4aa9-a39b-cb4a419e0845")
