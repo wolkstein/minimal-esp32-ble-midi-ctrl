@@ -35,3 +35,9 @@ Contributions are welcome! If you have any ideas, suggestions, or bug reports, p
 ## License
 
 This project is licensed under the GNU General Public License v3.0. See the [LICENSE](LICENSE) file for more information.
+
+## Linux howto BlueZ with MIDI over BLE Support
+
+Nice Howto from Peter P:
+
+https://tttapa.github.io/Pages/Ubuntu/Software-Installation/BlueZ.html
