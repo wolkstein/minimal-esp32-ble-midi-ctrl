@@ -12431,7 +12431,7 @@
 				)
 			)
 		)
-		(property "Footprint" "LED_SMD:LED_WS2812B_PLCC4_5.0x5.0mm_P3.2mm"
+		(property "Footprint" "led_smd_JLCPCB:LED_WS2812B_JLCPCB_5.0x5.0mm_P3.2mm"
 			(at 207.01 129.54 0)
 			(effects
 				(font
