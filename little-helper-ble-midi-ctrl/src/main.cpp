@@ -1,109 +1,118 @@
+#include "main.h"
 #include <Arduino.h>
 #include <BLEMidi.h>
 #include <FastLED.h>
-
-#define WS28XX_LED_PIN 33
-#define NUM_LEDS  1
-#define BRIGHTNESS 15
-
-// LED Strucutre
-CRGB myWS28XXLED[NUM_LEDS];
-
 #include <AceButton.h>
 
 using namespace ace_button;
 
-// The pin number attached to the button.
-const uint8_t BUTTON_PIN = 10;
+#define WS28XX_LED_PIN 33 // GPIO 33
+#define NUM_LEDS  1
+#define BRIGHTNESS 15
 
-// Create one button.
-AceButton button;
+uint8_t __active_map = 0; // 0 = map 1, 1 = map 2 ... usw.
 
-// counters to determine the duration of a single call to AceButton::check()
-uint16_t innerLoopCounter = 0;
-uint16_t outerLoopCounter = 0;
-unsigned long startMillis = 0;
-unsigned long stopMillis  = 0;
+std::__cxx11::string midiDeviceName = "LITTLE_HELPER_ONE";
 
-// states of the stopwatch
-const uint8_t STOPWATCH_INIT = 0;
-const uint8_t STOPWATCH_STARTED = 1;
-const uint8_t STOPWATCH_STOPPED = 2;
 
-// implements a finite state machine (FSM)
-uint8_t stopwatchState = STOPWATCH_INIT;
+// LED Strucutre
+CRGB myWS28XXLED[NUM_LEDS];
 
-bool allEventsEnabled = false;
+AceButton btn1; // GPIO 10
+AceButton btn2; // GPIO 11
+AceButton btn3; // GPIO 12
+AceButton btn4; // GPIO 13
+AceButton btn5; // GPIO 14
 
-void enableAllEvents() {
-  Serial.println(F("enabling high level events"));
-  button.getButtonConfig()->setFeature(ButtonConfig::kFeatureClick);
-  button.getButtonConfig()->setFeature(ButtonConfig::kFeatureDoubleClick);
-  button.getButtonConfig()->setFeature(ButtonConfig::kFeatureLongPress);
-  button.getButtonConfig()->setFeature(ButtonConfig::kFeatureRepeatPress);
-}
 
-void disableAllEvents() {
-  Serial.println(F("disabling high level events"));
-  button.getButtonConfig()->clearFeature(ButtonConfig::kFeatureClick);
-  button.getButtonConfig()->clearFeature(ButtonConfig::kFeatureDoubleClick);
-  button.getButtonConfig()->clearFeature(ButtonConfig::kFeatureLongPress);
-  button.getButtonConfig()->clearFeature(ButtonConfig::kFeatureRepeatPress);
-}
+myButton myBtnMap1_1_s = {10, BTN_PUSH, BTN_OFF, BTN_RED, MIDIFUNC_CC, MIDI_CH_1, 60, 100, 43, 127, 0, MMC_REWIND};
+myButton myBtnMap2_1_s = {11, BTN_PUSH, BTN_OFF, BTN_RED, MIDIFUNC_CC, MIDI_CH_1, 61, 100, 42, 127, 0, MMC_STOP};
+myButton myBtnMap3_1_s = {12, BTN_PUSH, BTN_OFF, BTN_RED, MIDIFUNC_CC, MIDI_CH_1, 62, 100, 44, 127, 0, MMC_FAST_FORWARD};
+myButton myBtnMap4_1_s = {13, BTN_PUSH, BTN_OFF, BTN_RED, MIDIFUNC_CC, MIDI_CH_1, 63, 100, 64, 127, 0, MMC_RECORD_STROBE};
+myButton myBtnMap5_1_s = {14, BTN_PUSH, BTN_OFF, BTN_RED, MIDIFUNC_CC, MIDI_CH_1, 64, 100, 41, 127, 0, MMC_PLAY};
+
+myButton myBtnMap1_1_l = {10, BTN_PUSH, BTN_OFF, BTN_RED, MIDIFUNC_CC, MIDI_CH_1, 60, 100, 43, 127, 0, MMC_REWIND};
+// myButton myBtnMap2_1_l = {11, BTN_PUSH, BTN_OFF, BTN_RED, MIDIFUNC_CC, MIDI_CH_1, 61, 100, 42, 127, 0, MMC_STOP}; // btn 2 longpree is change mapping
+myButton myBtnMap3_1_l = {12, BTN_PUSH, BTN_OFF, BTN_RED, MIDIFUNC_CC, MIDI_CH_1, 62, 100, 44, 127, 0, MMC_FAST_FORWARD};
+myButton myBtnMap4_1_l = {13, BTN_PUSH, BTN_OFF, BTN_RED, MIDIFUNC_CC, MIDI_CH_1, 45, 100, 45, 127, 0, MMC_RECORD_STROBE};
+myButton myBtnMap5_1_l = {14, BTN_PUSH, BTN_OFF, BTN_RED, MIDIFUNC_CC, MIDI_CH_1, 64, 100, 41, 127, 0, MMC_PLAY};
+
+myButton myBtnMap1_2_s = {10, BTN_PUSH, BTN_OFF, BTN_RED, MIDIFUNC_CC, MIDI_CH_1, 60, 100, 111, 127, 0, MMC_REWIND};
+myButton myBtnMap2_2_s = {11, BTN_PUSH, BTN_OFF, BTN_RED, MIDIFUNC_CC, MIDI_CH_1, 61, 100, 42, 127, 0, MMC_STOP};
+myButton myBtnMap3_2_s = {12, BTN_PUSH, BTN_OFF, BTN_RED, MIDIFUNC_CC, MIDI_CH_1, 62, 100, 112, 127, 0, MMC_FAST_FORWARD};
+myButton myBtnMap4_2_s = {13, BTN_PUSH, BTN_OFF, BTN_RED, MIDIFUNC_CC, MIDI_CH_1, 63, 100, 64, 127, 0, MMC_RECORD_STROBE};
+myButton myBtnMap5_2_s = {14, BTN_PUSH, BTN_OFF, BTN_RED, MIDIFUNC_CC, MIDI_CH_1, 64, 100, 41, 127, 0, MMC_PAUSE};
+
+myButton myBtnMap1_2_l = {10, BTN_PUSH, BTN_OFF, BTN_RED, MIDIFUNC_CC, MIDI_CH_1, 60, 100, 111, 127, 0, MMC_REWIND};
+// myButton myBtnMap2_2_l = {11, BTN_PUSH, BTN_OFF, BTN_RED, MIDIFUNC_CC, MIDI_CH_1, 61, 100, 42, 127, 0, MMC_STOP}; // btn 2 longpree is change mapping
+myButton myBtnMap3_2_l = {12, BTN_PUSH, BTN_OFF, BTN_RED, MIDIFUNC_CC, MIDI_CH_1, 62, 100, 112, 127, 0, MMC_FAST_FORWARD};
+myButton myBtnMap4_2_l = {13, BTN_PUSH, BTN_OFF, BTN_RED, MIDIFUNC_CC, MIDI_CH_1, 45, 100, 45, 127, 0, MMC_RECORD_STROBE};
+myButton myBtnMap5_2_l = {14, BTN_PUSH, BTN_OFF, BTN_RED, MIDIFUNC_CC, MIDI_CH_1, 64, 100, 41, 127, 0, MMC_PLAY};
+
 
 // The event handler for the button.
-void handleEvent(AceButton* /* button */, uint8_t eventType,
-    uint8_t /* buttonState */) {
-  unsigned long now = millis();
-  switch (eventType) {
-    case AceButton::kEventPressed:
-      if (stopwatchState == STOPWATCH_INIT) {
+void handleEvent(AceButton* button, uint8_t eventType, uint8_t /*buttonState*/) { 
+    
+    uint8_t pin = button->getPin();
 
-        // enable or disable higher level events, to get different performance
-        // numbers
-        if (allEventsEnabled) {
-          enableAllEvents();
-        } else {
-          disableAllEvents();
-        }
+    switch (eventType) {
+      case AceButton::kEventPressed:
+        Serial.println(F("handleEvent(): Pressed"));
+        break;
+      case AceButton::kEventReleased:
+        Serial.println(F("handleEvent(): Released"));
+        break;
+      case AceButton::kEventClicked:
+        Serial.println(F("handleEvent(): Clicked"));
+        break;
+      case AceButton::kEventDoubleClicked:
+        Serial.println(F("handleEvent(): DoubleClicked"));
+        break;
+      case AceButton::kEventLongPressed:
+        Serial.println(F("handleEvent(): LongPressed"));
+        break;
+      // case AceButton::kEventLongPressStop:
+      //   Serial.println(F("handleEvent(): LongPressStop"));
+      //   break;
+      // case AceButton::kEventVeryLongPressed:
+      //   Serial.println(F("handleEvent(): VeryLongPressed"));
+      //   break;
+      // case AceButton::kEventVeryLongPressStop:
+      //   Serial.println(F("handleEvent(): VeryLongPressStop"));
+      //   break;
+      default:
+        break;
+    }
+}
 
-        Serial.println(F("handleEvent(): stopwatch started"));
-        startMillis = now;
-        innerLoopCounter = 0;
-        outerLoopCounter = 0;
-        stopwatchState = STOPWATCH_STARTED;
-      } else if (stopwatchState == STOPWATCH_STARTED) {
-        stopMillis = now;
-        stopwatchState = STOPWATCH_STOPPED;
-        unsigned long duration = stopMillis - startMillis;
-        uint32_t loopCounter = ((uint32_t) outerLoopCounter << 16) +
-            innerLoopCounter;
-        float microsPerLoop = duration * 1000.0f / loopCounter;
 
-        // reenable all events after stopping
-        enableAllEvents();
-
-        Serial.println(F("handleEvent(): stopwatch stopped"));
-        Serial.print(F("handleEvent(): duration (ms): "));
-        Serial.print(duration);
-        Serial.print(F("; loopCount: "));
-        Serial.print(loopCounter);
-        Serial.print(F("; micros/loop: "));
-        Serial.println(microsPerLoop);
-
-        // Setting 0 allows the loop() function to return periodically.
-        innerLoopCounter = 0;
-      }
-      break;
-    case AceButton::kEventLongPressed:
-      if (stopwatchState == STOPWATCH_STOPPED) {
-        stopwatchState = STOPWATCH_INIT;
-        Serial.println(F("handleEvent(): stopwatch reset"));
-        allEventsEnabled = !allEventsEnabled;
-      }
-      break;
+/**
+ * @brief connected callback
+ *
+ */
+void connected() {
+  // device is BLE MIDI connected
+  log_i("Connected");
+  if (__active_map == 0) {
+    myWS28XXLED[0] = CRGB::Green;
+    FastLED.show();
+  } else if (__active_map == 1 ) {
+    myWS28XXLED[0] = CRGB::Purple;
+    FastLED.show();
   }
 }
+
+/**
+ * @brief disconnected callback
+ * 
+ */
+void disconected() {
+  // device is BLE MIDI disconnected
+  log_i("Disconnected");
+  myWS28XXLED[0] = CRGB::Red;
+  FastLED.show();
+}
+
 
 void setup() {
   // initialize WS28xx LED in GRB order
@@ -112,8 +121,8 @@ void setup() {
   myWS28XXLED[0] = CRGB::Red;
   FastLED.show();
     
-Serial.begin(57600);
-    int timoutcounter = 0;
+  Serial.begin(57600);
+  int timoutcounter = 0;
    while (!Serial) {
     delay(1000);
      timoutcounter++;
@@ -121,71 +130,43 @@ Serial.begin(57600);
        break;
      }
    }
-  Serial.println("Initializing bluetooth");
+  log_i("Starting up");
 
 
   // Button uses the built-in pull up register.
-  pinMode(BUTTON_PIN, INPUT_PULLUP);
-  button.init(BUTTON_PIN);
+  // The button is connected to GPIO 0.
+  pinMode(myBtnMap1_1_s.btnGpio, INPUT);
+  pinMode(myBtnMap2_1_s.btnGpio, INPUT);
+  pinMode(myBtnMap3_1_s.btnGpio, INPUT);
+  pinMode(myBtnMap4_1_s.btnGpio, INPUT);
+  pinMode(myBtnMap5_1_s.btnGpio, INPUT);
 
-  // Configure the ButtonConfig with the event handler and enable LongPress.
-  // SupressAfterLongPress is optional since we don't do anything if we get it.
-  ButtonConfig* buttonConfig = button.getButtonConfig();
+
+
+   // Configure the ButtonConfig with the event handler.
+  ButtonConfig* buttonConfig = ButtonConfig::getSystemButtonConfig();
   buttonConfig->setEventHandler(handleEvent);
   buttonConfig->setFeature(ButtonConfig::kFeatureLongPress);
   buttonConfig->setLongPressDelay(2000);
+  buttonConfig->setFeature(ButtonConfig::kFeatureRepeatPress);
+  buttonConfig->setFeature(ButtonConfig::kFeatureSuppressAfterLongPress); 
 
-  Serial.println(F("setup(): stopwatch ready"));
-
-
-
-
-
-
-
-
-
-
-
-
-  BLEMidiServer.begin("Basic MIDI device2");
-  Serial.println("Waiting for connections...");
-  BLEMidiServer.enableDebugging();  // Uncomment if you want to see some debugging output from the library (not much for the server class...)
+  log_i("Starting BLE MIDI server");
+  BLEMidiServer.begin(midiDeviceName);
+  //BLEMidiServer.enableDebugging();
+  BLEMidiServer.setOnConnectCallback(connected);
+  BLEMidiServer.setOnDisconnectCallback(disconected);
+  // BLEMidiServer.setNoteOnCallback(onNoteOn);
+  // BLEMidiServer.setNoteOffCallback(onNoteOff);
+  // BLEMidiServer.setControlChangeCallback(onControlChange);
 }
 
 void loop() {
-
-
-    // We split the loop into an inner loop and an outer loop. The inner loop
-  // allows us to measure the speed of button.check() without the overhead of
-  // the outer loop. However, we must allow the outer loop() method to return
-  // periodically to allow the microcontroller to its own stuff. This is
-  // especially true on an ESP8266 board, where a Watch Dog Timer will
-  // soft-reset the board if loop() doesn't return every few seconds.
-  do {
-    // button.check() Should be called every 4-5ms or faster for the default
-    // debouncing time of ~20ms.
-    button.check();
-
-    // increment loop counter
-    if (stopwatchState == STOPWATCH_STARTED) {
-      innerLoopCounter++;
-    }
-  } while (innerLoopCounter);
-      if(BLEMidiServer.isConnected()) {             // If we've got a connection, we send an A4 during one second, at full velocity (127)
-      BLEMidiServer.noteOn(0, 69, 127);
-     // Serial.println("Note on");
-      myWS28XXLED[0] = CRGB::Purple;
-      FastLED.show();
-      delay(100);
-      BLEMidiServer.noteOff(0, 69, 127);        // Then we make a delay of one second before returning to the beginning of the loop
-    //Serial.println("Note off");
-       myWS28XXLED[0] = CRGB::Green;
-      FastLED.show(); 
-
-
-  }
-  // Each time the innerLoopCounter rolls over (65536), increment the outer loop
-  // counter, and return from loop(), to prevent WDT errors on ESP8266.
-  outerLoopCounter++;
+  // Call the button service routine every loop.
+  btn1.check();
+  btn2.check();
+  btn3.check();
+  btn4.check();
+  btn5.check();
+  delay(1);
 }
