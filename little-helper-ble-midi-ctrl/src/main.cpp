@@ -8,7 +8,7 @@ using namespace ace_button;
 
 #define WS28XX_LED_PIN 33 // GPIO 33
 #define NUM_LEDS  1
-#define BRIGHTNESS 15
+#define BRIGHTNESS 100
 
 uint8_t __active_map = 0; // 0 = map 1, 1 = map 2 ... usw.
 
