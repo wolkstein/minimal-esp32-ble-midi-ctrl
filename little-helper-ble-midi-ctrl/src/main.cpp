@@ -3,6 +3,9 @@
 #include <BLEMidi.h>
 #include <FastLED.h>
 #include <AceButton.h>
+#include <Preferences.h>
+
+Preferences prefs;
 
 using namespace ace_button;
 
@@ -12,7 +15,7 @@ using namespace ace_button;
 
 uint8_t __active_map = 0; // 0 = map 1, 1 = map 2 ... usw.
 
-std::__cxx11::string midiDeviceName = "LITTLE_HELPER_ONE";
+std::__cxx11::string midiDeviceName = "LITTLE_HELPER_TWO";
 
 bool __isConnected = false;
 
@@ -132,7 +135,7 @@ void handleEvent(AceButton* button, uint8_t eventType, uint8_t /*buttonState*/) 
     } else {
         Serial.printf("Button %d not found\n", pin);
         return;
-    } 
+    }
    
     bool logpressevent = false;
     if(eventType == AceButton::kEventLongPressed) {
@@ -253,6 +256,9 @@ void disconected() {
 
 
 void setup() {
+  prefs.begin("Settings");  //namespace
+
+
   // initialize WS28xx LED in GRB order
   FastLED.addLeds<WS2812B, WS28XX_LED_PIN, GRB>(myWS28XXLED, NUM_LEDS);
   FastLED.setBrightness(BRIGHTNESS);
@@ -271,6 +277,15 @@ void setup() {
   log_i("Starting up");
   Serial.println("Starting up");
 
+  if (not prefs.isKey("Settings")) {
+    Serial.println("Settings not found, saving default settings");
+    prefs.putBytes("Settings", &myBtnMap, sizeof(myBtnMap));
+  } else {
+    Serial.println("Settings found, loading settings");
+    prefs.getBytes("Settings", &myBtnMap, sizeof(myBtnMap));
+  }
+
+  Serial.printf("Testdate from settings: %d \n", myBtnMap[4].btnMidiCC[3]);
 
   // Button uses the built-in pull up register.
   // The button is connected to GPIO 0.
