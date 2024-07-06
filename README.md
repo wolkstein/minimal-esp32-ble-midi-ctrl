@@ -22,6 +22,7 @@ This project is a minimal ESP32 BLE MIDI controller. It allows you to control MI
 PCB:
 
 ![PCB](doc/New-PCB-with-THD-Solder-Tactile-BTN.png)
+![PCB - finished](doc/platine.jpg)
 
 Housing:
 ![Housing](doc/Freecad-Housing.png)
