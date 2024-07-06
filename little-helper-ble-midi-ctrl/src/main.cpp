@@ -45,6 +45,7 @@ bool __isConnected = false;
 // LED Strucutre
 CRGB myWS28XXLED[NUM_LEDS];
 
+CRGB __oldLedColor;
 
 myButton myBtnMap[5] = { // 5 Buttons 4 Maps Map 1 und Map 2 are short press values, Map 3 and Map 4 are long press values
     { // Button 1
@@ -69,7 +70,7 @@ myButton myBtnMap[5] = { // 5 Buttons 4 Maps Map 1 und Map 2 are short press val
          {BTN_PUSH, BTN_PUSH},// Button Function 0 = Push, 1 = Toggle
          {false, false}, // Button Long Press
          {BTN_OFF, BTN_OFF}, // Button State 0 = Off, 1 = On
-         {BTN_RED, BTN_RED}, // Button Color 0 = Red, 1 = Green, 2 = Blue, 3 = Yellow, 4 = Purple, 5 = Cyan, 6 = White
+         {BTN_YELLOW, BTN_YELLOW}, // Button Color 0 = Red, 1 = Green, 2 = Blue, 3 = Yellow, 4 = Purple, 5 = Cyan, 6 = White
          {MIDIFUNC_CC, MIDIFUNC_CC}, // Button MIDI Function 0 = Note, 1 = CC, 2 = MMC, 3 = Program Change
          {MIDI_CH_1, MIDI_CH_1}, // Button MIDI Channel 0 - 15
          {61, 61}, // Button MIDI Note 0 - 127
@@ -85,7 +86,7 @@ myButton myBtnMap[5] = { // 5 Buttons 4 Maps Map 1 und Map 2 are short press val
          {BTN_PUSH, BTN_PUSH},// Button Function 0 = Push, 1 = Toggle
          {false, false}, // Button Long Press
          {BTN_OFF, BTN_OFF}, // Button State 0 = Off, 1 = On
-         {BTN_RED, BTN_RED}, // Button Color 0 = Red, 1 = Green, 2 = Blue, 3 = Yellow, 4 = Purple, 5 = Cyan, 6 = White
+         {BTN_CYAN, BTN_CYAN}, // Button Color 0 = Red, 1 = Green, 2 = Blue, 3 = Yellow, 4 = Purple, 5 = Cyan, 6 = White
          {MIDIFUNC_CC, MIDIFUNC_CC}, // Button MIDI Function 0 = Note, 1 = CC, 2 = MMC, 3 = Program Change
          {MIDI_CH_1, MIDI_CH_1}, // Button MIDI Channel 0 - 15
          {62, 62}, // Button MIDI Note 0 - 127
@@ -101,7 +102,7 @@ myButton myBtnMap[5] = { // 5 Buttons 4 Maps Map 1 und Map 2 are short press val
          {BTN_PUSH, BTN_PUSH},// Button Function 0 = Push, 1 = Toggle
          {false, true}, // Button Long Press
          {BTN_OFF, BTN_OFF}, // Button State 0 = Off, 1 = On
-         {BTN_RED, BTN_RED}, // Button Color 0 = Red, 1 = Green, 2 = Blue, 3 = Yellow, 4 = Purple, 5 = Cyan, 6 = White
+         {BTN_WHITE, BTN_WHITE}, // Button Color 0 = Red, 1 = Green, 2 = Blue, 3 = Yellow, 4 = Purple, 5 = Cyan, 6 = White
          {MIDIFUNC_CC, MIDIFUNC_CC}, // Button MIDI Function 0 = Note, 1 = CC, 2 = MMC, 3 = Program Change
          {MIDI_CH_1, MIDI_CH_1}, // Button MIDI Channel 0 - 15
          {62, 62}, // Button MIDI Note 0 - 127
@@ -117,7 +118,7 @@ myButton myBtnMap[5] = { // 5 Buttons 4 Maps Map 1 und Map 2 are short press val
          {BTN_PUSH, BTN_PUSH},// Button Function 0 = Push, 1 = Toggle
          {false, false}, // Button Long Press
          {BTN_OFF, BTN_OFF}, // Button State 0 = Off, 1 = On
-         {BTN_RED, BTN_RED}, // Button Color 0 = Red, 1 = Green, 2 = Blue, 3 = Yellow, 4 = Purple, 5 = Cyan, 6 = White
+         {BTN_BLUE, BTN_BLUE}, // Button Color 0 = Red, 1 = Green, 2 = Blue, 3 = Yellow, 4 = Purple, 5 = Cyan, 6 = White
          {MIDIFUNC_CC, MIDIFUNC_CC}, // Button MIDI Function 0 = Note, 1 = CC, 2 = MMC, 3 = Program Change
          {MIDI_CH_1, MIDI_CH_1}, // Button MIDI Channel 0 - 15
          {62, 62}, // Button MIDI Note 0 - 127
@@ -219,6 +220,8 @@ void handleEvent(AceButton* button, uint8_t eventType, uint8_t /*buttonState*/) 
     uint8_t btnMidiCCValueStateOff = myBtn->btnMidiCCValueStateOff[active_mapper]; // 0 - 127 MIDI CC Value State Off
     uint8_t btnMidiMMC = myBtn->btnMidiCCValueStateOff[active_mapper]; // 0 - 13 MIDI MMC
 
+    CRGB tmpBtncolor = myledslookup[btnColor];
+
     switch (eventType) {
       case AceButton::kEventPressed:
         log_i("handleEvent(): BTN: %d Pressed", pin);
@@ -229,7 +232,8 @@ void handleEvent(AceButton* button, uint8_t eventType, uint8_t /*buttonState*/) 
           BLEMidiServer.controlChange(btnMidiChannel, btnMidiCC, btnMidiCCValueStateOn);
         else if(btnMidiFunction == MIDI_MMC && !needRelease) return; // need implementation
         else if(btnMidiFunction == MIDI_PROGRAMCHANGE && !needRelease) return; // need implementation
-
+        myWS28XXLED[0] = tmpBtncolor;
+        FastLED.show();
         break;
       case AceButton::kEventReleased:
         log_i("handleEvent(): BTN: %d Released", pin);
@@ -240,6 +244,8 @@ void handleEvent(AceButton* button, uint8_t eventType, uint8_t /*buttonState*/) 
           BLEMidiServer.controlChange(btnMidiChannel, btnMidiCC, btnMidiCCValueStateOn);
         else if(btnMidiFunction == MIDI_MMC && needRelease) return; // need implementation
         else if(btnMidiFunction == MIDI_PROGRAMCHANGE && needRelease) return; // need implementation
+        myWS28XXLED[0] = __oldLedColor;
+        FastLED.show();
         break;
       case AceButton::kEventDoubleClicked:
         log_i("handleEvent(): BTN: %d DoubleClicked", pin);
@@ -251,16 +257,19 @@ void handleEvent(AceButton* button, uint8_t eventType, uint8_t /*buttonState*/) 
           if (__active_map == 0 && __isConnected) {
             __active_map = 1;
             myWS28XXLED[0] = CRGB::Purple;
+            __oldLedColor = CRGB::Purple;
             FastLED.show();
           } else if (__active_map == 1 ) {
             __active_map = 0;
             myWS28XXLED[0] = CRGB::Green;
+            __oldLedColor = CRGB::Green;
             if(!__isConnected) myWS28XXLED[0] = CRGB::Red;
             FastLED.show();
           }
           return;
         }
-
+        myWS28XXLED[0] = tmpBtncolor;
+        FastLED.show();
         log_i("handleEvent(): BTN: %d LongPressed", pin);
         Serial.printf("BTN: %d LongPressed, Map:%d\n ", pin, __active_map);
         if(btnLongpress){
@@ -276,6 +285,8 @@ void handleEvent(AceButton* button, uint8_t eventType, uint8_t /*buttonState*/) 
       case AceButton::kEventLongReleased:
         log_i("handleEvent(): BTN: %d LongReleased", pin);
         Serial.printf("BTN: %d LongReleased, Map:%d\n ", pin, __active_map);
+        myWS28XXLED[0] = __oldLedColor;
+        FastLED.show();
         break;
       default:
         break;
@@ -294,8 +305,10 @@ void connected() {
   if (__active_map == 0) {
     myWS28XXLED[0] = CRGB::Green;
     FastLED.show();
+    __oldLedColor = CRGB::Green;
   } else if (__active_map == 1 ) {
     myWS28XXLED[0] = CRGB::Purple;
+    __oldLedColor = CRGB::Purple;
     FastLED.show();
   }
 }
@@ -310,6 +323,8 @@ void disconected() {
   __isConnected = false;
   myWS28XXLED[0] = CRGB::Red;
   FastLED.show();
+  __oldLedColor = CRGB::Red;
+
 }
 
 
@@ -322,6 +337,7 @@ void setup() {
   FastLED.setBrightness(BRIGHTNESS);
   myWS28XXLED[0] = CRGB::Red;
   FastLED.show();
+  __oldLedColor = CRGB::Red;
     
   Serial.begin(57600);
   int timoutcounter = 0;
