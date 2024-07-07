@@ -1,3 +1,21 @@
+/**
+ * @file main.cpp
+ * @brief This file contains the main code for the Little Helper BLE MIDI Controller.
+ * @author Michael Wolkstein (wolke@k-27.de)
+ * @version 1.0
+ * @date 2024-07-07
+ * 
+ * @details The Little Helper BLE MIDI Controller is a device that allows you to control MIDI devices wirelessly using Bluetooth Low Energy (BLE) technology. It uses an ESP32 microcontroller and various libraries such as Arduino, BLEMidi, FastLED, and AceButton.
+ * 
+ * The code initializes the necessary libraries, defines constants for the WiFi network, button configurations, and LED settings. It also includes callback functions for the web UI and button events.
+ * 
+ * The main functionality of the code is to handle button events, such as button presses and long presses. It retrieves the button configuration based on the GPIO pin and the active map. It then performs the corresponding actions, such as sending MIDI messages or updating the button state.
+ * 
+ * The code also includes functions for saving and loading button settings from the preferences, as well as web UI callbacks for selecting button mappings and MIDI functions.
+ * 
+ * This code is licensed under the GNU General Public License version 3 (GPL-3.0).
+ */
+
 #include "main.h"
 #include <Arduino.h>
 #include <BLEMidi.h>
@@ -14,16 +32,26 @@ DNSServer dnsServer;
 
 #include <WiFi.h>
 
+String  midiDeviceName = "LITTLE_HELPER";
 
-const char* ssid = "LocalWlan";
-const char* password = "xxxxxxxxx";
-const char* hostname = "littlehelper";
+String ssid = "LocalWlan";
+String password = "localWlanPassword";
+String ap_ssid = "LittleHelperAP";
+String ap_password = "12345678";
+String hostname = "littlehelper";
 
 uint16_t button1;
 
 uint16_t selectBtn1Map;
 uint16_t selectBtn1MidiFunction;
 uint16_t status;
+
+uint16_t bleNameTxtField;
+uint16_t wlanSsidNameTxtField;
+uint16_t wlanPasswordTxtField;
+uint16_t wlanApSsidTxtField;
+uint16_t wlanApPasswordTxtField;
+uint16_t hostnameTxtField;
 
 bool __configurator = false;
 
@@ -35,10 +63,9 @@ using namespace ace_button;
 #define NUM_LEDS  1
 #define BRIGHTNESS 100
 
+//struct my_config_names
 uint8_t __active_map = 0; // 0 = map 1, 1 = map 2 ... usw.
 uint8_t __active_map_ui_btn[5] = {0, 0, 0, 0, 0};
-
-std::__cxx11::string midiDeviceName = "LITTLE_HELPER_TWO";
 
 bool __isConnected = false;
 
@@ -151,8 +178,141 @@ myButton* getMyButton(int pin) {
 
 
 // WEB UI Callbacks
+void textCallBlueThoothName(Control* sender, int type)
+{
+    String value = sender->value;
+
+    if(value.length() < 8) {
+      ESPUI.updateControlValue(bleNameTxtField, "Name to short");
+      return;
+    }
+    // Check for spaces in the string
+    if (value.indexOf(' ') >= 0) {
+      ESPUI.updateControlValue(bleNameTxtField, "Name contains spaces");
+      return;
+    }
+    prefs.begin("bluetooth", false); // Open NVS namespace "bluetooth" in RW mode
+    delay(100);
+    prefs.putString("blename", value); // Store Bluetooth name
+    delay(100);
+    prefs.end(); // Close NVS
+    delay(100);
+  
+}
+
+void textCallSsidName(Control* sender, int type) {
+    String value = sender->value;
+
+    if(value.length() < 8) {
+      ESPUI.updateControlValue(wlanSsidNameTxtField, "Name to short");
+      return;
+    }
+    // Check for spaces in the string
+    if (value.indexOf(' ') >= 0) {
+      ESPUI.updateControlValue(wlanSsidNameTxtField, "Name contains spaces");
+      return;
+    }
+    prefs.begin("wifi", false); // Open NVS namespace "wifi" in RW mode
+    delay(100);
+    prefs.putString("ssid_local", value); // Store SSID
+    delay(100);
+    prefs.end(); // Close NVS
+    delay(100);
+
+}
+
+void textCallWlanPassword(Control* sender, int type) {
+    String value = sender->value;
+
+    if(value.length() < 8) {
+      ESPUI.updateControlValue(wlanPasswordTxtField, "Name to short");
+      return;
+    }
+    // Check for spaces in the string
+    if (value.indexOf(' ') >= 0) {
+      ESPUI.updateControlValue(wlanPasswordTxtField, "Name contains spaces");
+      return;
+    }  
+    prefs.begin("wifi", false);
+    delay(100);
+    prefs.putString("password_local", value); // Store password
+    delay(100);
+    prefs.end();
+    delay(100);
+
+}
+
+void textCallAPSsidName(Control* sender, int type) {
+    String value = sender->value;
+
+    if(value.length() > 16) {
+      ESPUI.updateControlValue(wlanApSsidTxtField, "Name to long");
+      return;
+    }
+    // Check for spaces in the string
+    if (value.indexOf(' ') >= 0) {
+      ESPUI.updateControlValue(wlanApSsidTxtField, "Name contains spaces");
+      return;
+    }
+    prefs.begin("wifi", false); // Open NVS namespace "wifi" in RW mode
+    delay(100);
+    prefs.putString("ssid_ap", value); // Store SSID
+    delay(100);
+    prefs.end(); // Close NVS
+    delay(100);
+
+}
+
+void textCallAPPassword(Control* sender, int type) {
+    String value = sender->value;
+
+    if(value.length() < 8) {
+      ESPUI.updateControlValue(wlanApPasswordTxtField, "Name to short");
+      return;
+    }
+    // Check for spaces in the string
+    if (value.indexOf(' ') >= 0) {
+      ESPUI.updateControlValue(wlanApPasswordTxtField, "Name contains spaces");
+      return;
+    }
+    prefs.begin("wifi", false);
+    delay(100);
+    prefs.putString("password_ap", value); // Store password
+    delay(100);
+    prefs.end();
+    delay(100);
+
+}
+
+void textCallHostname(Control* sender, int type) {
+    String value = sender->value;
+
+    if(value.length() < 8) {
+      ESPUI.updateControlValue(hostnameTxtField, "Name to short");
+      return;
+    }
+    // Check for spaces in the string
+    if (value.indexOf(' ') >= 0) {
+      ESPUI.updateControlValue(hostnameTxtField, "Name contains spaces");
+      return;
+    }
+    WiFi.setHostname(value.c_str());
+    prefs.begin("wifi", false);
+    delay(100);
+    prefs.putString("hostname", value); // Store password
+    delay(100);
+    prefs.end();
+    delay(100);
+
+} 
+
 void saveSettings() {
+    prefs.begin("Settings"); // Open NVS namespace "Settings" in RW mode
+    delay(100);
     prefs.putBytes("Settings", &myBtnMap, sizeof(myBtnMap));
+    delay(100);
+    prefs.end();
+    delay(100);
 }
 
 void selectBtn1MapFnc(Control* sender, int value) {
@@ -168,6 +328,10 @@ void selectBtn1MapFnc(Control* sender, int value) {
     uint8_t numberMidiFunc = myBtnMap[0].btnMidiFunction[__active_map_ui_btn[0]]; // Assuming this is the uint8_t you mentioned
     sprintf(str, "%d", numberMidiFunc); // Convert the number to a string
     ESPUI.updateControlValue(selectBtn1MidiFunction, str); // Update the control value
+// die anderen button functions auch updaten
+
+
+
 }
 
 void selectBtn1Fnc(Control* sender, int value) {
@@ -329,7 +493,7 @@ void disconected() {
 
 
 void setup() {
-  prefs.begin("Settings");  //namespace
+
 
 
   // initialize WS28xx LED in GRB order
@@ -354,10 +518,43 @@ void setup() {
   // reset the settings
   if(digitalRead(10) == LOW && digitalRead(12) == LOW) {
     //reset settings
+    prefs.begin("Settings");  //Open namespace Settings
     Serial.println("Reset settings!");
+    delay(100);
     prefs.putBytes("Settings", &myBtnMap, sizeof(myBtnMap));
+    delay(100);
+    prefs.end(); // close the Settings Namespace
+    delay(100);
+
+    prefs.begin("blename", false); // Open NVS namespace "blename" in RW mode
+    Serial.println("Reset blename!");
+    delay(100);
+    prefs.putString("blename", midiDeviceName); // Save the default name
+    delay(100);
+    prefs.end(); // Close NVS namespace "blename"
+    delay(100);
+
+    prefs.begin("wifi", false); // Open NVS namespace "wifi" in RW mode
+    Serial.println("Reset wifi!");
+    delay(100);
+    prefs.putString("ssid_local", ssid); // Save the default name
+    delay(100);
+    prefs.putString("password_local", password); // Save the default name
+    delay(100);
+    prefs.putString("ssid_ap", ap_ssid); // Save the default name
+    delay(100);
+    prefs.putString("password_ap", ap_password); // Save the default name
+    delay(100);
+    prefs.putString("hostname", hostname); // Save the default name
+    delay(100);
+    prefs.end(); // Close NVS namespace "wifi"
+    delay(100);
   }
 
+
+  prefs.begin("Settings");  //Open namespace Settings
+
+  delay(100);
   if (not prefs.isKey("Settings")) {
     Serial.println("Settings not found, saving default settings");
     prefs.putBytes("Settings", &myBtnMap, sizeof(myBtnMap));
@@ -365,8 +562,69 @@ void setup() {
     Serial.println("Settings found, loading settings");
     prefs.getBytes("Settings", &myBtnMap, sizeof(myBtnMap));
   }
+  delay(100);
+  prefs.end(); // close the Settings Namespace
+  delay(100);
 
+  prefs.begin("blename", false); // Open NVS namespace "blename" in RW mode
+  delay(100);
+  if (not prefs.isKey("blename")) {
+    Serial.println("blename not found");
+    prefs.putString("blename", midiDeviceName); // Save the default name
+  } else {
+    midiDeviceName = prefs.getString("blename"); // 
+    Serial.printf("blename found, loading settings: value: %S\n", midiDeviceName.c_str());
+  }
+  delay(100);
+  prefs.end(); // Close NVS namespace "blename"
+  delay(100);
+
+  prefs.begin("wifi", false); // Open NVS namespace "wifi" in RW mode
+  if (not prefs.isKey("ssid_local")) {
+    Serial.println("ssid_local not found");
+    prefs.putString("ssid_local", ssid); // Save the default name
+  } else {
+    ssid = prefs.getString("ssid_local"); // 
+    Serial.printf("ssid_local found, loading settings: value: %S\n", ssid.c_str());
+  }
+  delay(100);
+  if (not prefs.isKey("password_local")) {
+    Serial.println("password_local not found");
+    prefs.putString("password_local", password); // Save the default name
+  } else {
+    password = prefs.getString("password_local"); // 
+    Serial.printf("password_local found, loading settings: value: %S\n", password.c_str());
+  }
+  delay(100);
+  if (not prefs.isKey("ssid_ap")) {
+    Serial.println("ssid_ap not found");
+    prefs.putString("ssid_ap", ap_ssid); // Save the default name
+  } else {
+    ap_ssid = prefs.getString("ssid_ap"); // 
+    Serial.printf("ssid_ap found, loading settings: value: %S\n", ap_ssid.c_str());
+  }
+  delay(100);
+  if (not prefs.isKey("password_ap")) {
+    Serial.println("password_ap not found");
+    prefs.putString("password_ap", ap_password); // Save the default name
+  } else {
+    ap_password = prefs.getString("password_ap"); // 
+    Serial.printf("password_ap found, loading settings: value: %S\n", ap_password.c_str());
+  }
+  delay(100);
+  if (not prefs.isKey("hostname")) {
+    Serial.println("hostname not found");
+    prefs.putString("hostname", hostname); // Save the default name
+  } else {
+    hostname = prefs.getString("hostname"); // 
+    Serial.printf("hostname found, loading settings: value: %S\n", hostname.c_str());
+  }
+  delay(100);
+  prefs.end(); // Close NVS namespace "wifi"
+  delay(100);
   Serial.printf("Testdate from settings: %d \n", myBtnMap[4].btnMidiCC[3]);
+
+
 
   // Button uses the built-in pull up register.
   // The button is connected to GPIO 0.
@@ -398,10 +656,11 @@ void setup() {
 
     ESPUI.setVerbosity(Verbosity::VerboseJSON);
 
-    WiFi.setHostname(hostname);
+    WiFi.setHostname(hostname.c_str());
 
     // try to connect to existing network
-    WiFi.begin(ssid, password);
+    WiFi.begin(ssid.c_str(), password.c_str());
+
     Serial.print("\n\nTry to connect to existing network");
 
     {
@@ -424,9 +683,9 @@ void setup() {
             delay(100);
             WiFi.softAPConfig(apIP, apIP, IPAddress(255, 255, 255, 0));
 
-            char ap_ssid[25];
-            snprintf(ap_ssid, 26, "LittleHelper-%08X", ESP.getEfuseMac());
-            WiFi.softAP(ap_ssid);
+            char local_ap_ssid[25];
+            snprintf(local_ap_ssid, 26, "%S-%08X", ap_ssid.c_str(), ESP.getEfuseMac());
+            WiFi.softAP(local_ap_ssid, ap_password.c_str());
 
             timeout = 5;
 
@@ -451,7 +710,16 @@ void setup() {
     uint16_t tab3 = ESPUI.addControl(ControlType::Tab, "Button 3", "Button 3");
     uint16_t tab4 = ESPUI.addControl(ControlType::Tab, "Button 4", "Button 4");
     uint16_t tab5 = ESPUI.addControl(ControlType::Tab, "Button 5", "Button 5");
-    uint16_t tab7 = ESPUI.addControl(ControlType::Tab, "Defaults", "Defaults");
+    uint16_t tab7 = ESPUI.addControl(ControlType::Tab, "Settings", "Settings");
+
+    // Wlan Settings and Bluethooth Settings
+    
+    bleNameTxtField = ESPUI.addControl(ControlType::Text, "Bluethooth Name:", midiDeviceName.c_str(), ControlColor::Alizarin, tab7, &textCallBlueThoothName);
+    wlanSsidNameTxtField = ESPUI.addControl(ControlType::Text, "Wlan SSID:", ssid.c_str(), ControlColor::Alizarin, tab7, &textCallSsidName);
+    wlanPasswordTxtField = ESPUI.addControl(ControlType::Text, "Wlan Password:", password.c_str(), ControlColor::Alizarin, tab7, &textCallWlanPassword);
+    wlanApSsidTxtField = ESPUI.addControl(ControlType::Text, "Access Point SSID:", ap_ssid.c_str(), ControlColor::Alizarin, tab7, &textCallAPSsidName);
+    wlanApPasswordTxtField = ESPUI.addControl(ControlType::Text, "Access Point Password:", ap_password.c_str(), ControlColor::Alizarin, tab7, &textCallAPPassword);
+    hostnameTxtField = ESPUI.addControl(ControlType::Text, "Hostname:", hostname.c_str(), ControlColor::Alizarin, tab7, &textCallHostname);
 
     // Button 1
     selectBtn1Map = ESPUI.addControl(ControlType::Select, "Select Map:", "", ControlColor::Alizarin, tab1, &selectBtn1MapFnc);
@@ -483,7 +751,7 @@ void setup() {
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
   log_i("Starting BLE MIDI server");
-  BLEMidiServer.begin(midiDeviceName);
+  BLEMidiServer.begin(midiDeviceName.c_str());
   //BLEMidiServer.enableDebugging();
   BLEMidiServer.setOnConnectCallback(connected);
   BLEMidiServer.setOnDisconnectCallback(disconected);
