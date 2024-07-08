@@ -26,48 +26,15 @@
 #include <DNSServer.h>
 #include <ESPUI.h>
 
-const byte DNS_PORT = 53;
-IPAddress apIP(192, 168, 4, 1);
-DNSServer dnsServer;
-
 #include <WiFi.h>
 
-String  midiDeviceName = "LITTLE_HELPER";
-
-String ssid = "LocalWlan";
-String password = "localWlanPassword";
-String ap_ssid = "LittleHelperAP";
-String ap_password = "12345678";
-String hostname = "littlehelper";
-
-uint16_t button1;
-
-uint16_t selectBtn1Map;
-uint16_t selectBtn1MidiFunction;
-uint16_t status;
-
-uint16_t bleNameTxtField;
-uint16_t wlanSsidNameTxtField;
-uint16_t wlanPasswordTxtField;
-uint16_t wlanApSsidTxtField;
-uint16_t wlanApPasswordTxtField;
-uint16_t hostnameTxtField;
-
-bool __configurator = false;
+const byte DNS_PORT = 53;
+IPAddress apIP(192, 168, 8, 1);
+DNSServer dnsServer;
 
 Preferences prefs;
 
 using namespace ace_button;
-
-#define WS28XX_LED_PIN 33 // GPIO 33
-#define NUM_LEDS  1
-#define BRIGHTNESS 100
-
-//struct my_config_names
-uint8_t __active_map = 0; // 0 = map 1, 1 = map 2 ... usw.
-uint8_t __active_map_ui_btn[5] = {0, 0, 0, 0, 0};
-
-bool __isConnected = false;
 
 // LED Strucutre
 CRGB myWS28XXLED[NUM_LEDS];
@@ -178,6 +145,18 @@ myButton* getMyButton(int pin) {
 
 
 // WEB UI Callbacks
+
+void switchShowPasswords(Control* sender, int type) {
+
+  if(sender->value == "0") {
+    ESPUI.setInputType(wlanApPasswordTxtField, "password");
+    ESPUI.setInputType(wlanPasswordTxtField, "password");
+  } else if(sender->value == "1") {  
+    ESPUI.setInputType(wlanApPasswordTxtField, "text");
+    ESPUI.setInputType(wlanPasswordTxtField, "text");
+  }
+}
+
 void textCallBlueThoothName(Control* sender, int type)
 {
     String value = sender->value;
@@ -192,11 +171,11 @@ void textCallBlueThoothName(Control* sender, int type)
       return;
     }
     prefs.begin("bluetooth", false); // Open NVS namespace "bluetooth" in RW mode
-    delay(100);
+    
     prefs.putString("blename", value); // Store Bluetooth name
-    delay(100);
+    
     prefs.end(); // Close NVS
-    delay(100);
+    
   
 }
 
@@ -213,11 +192,11 @@ void textCallSsidName(Control* sender, int type) {
       return;
     }
     prefs.begin("wifi", false); // Open NVS namespace "wifi" in RW mode
-    delay(100);
+    
     prefs.putString("ssid_local", value); // Store SSID
-    delay(100);
+    
     prefs.end(); // Close NVS
-    delay(100);
+    
 
 }
 
@@ -234,11 +213,11 @@ void textCallWlanPassword(Control* sender, int type) {
       return;
     }  
     prefs.begin("wifi", false);
-    delay(100);
+    
     prefs.putString("password_local", value); // Store password
-    delay(100);
+    
     prefs.end();
-    delay(100);
+    
 
 }
 
@@ -255,11 +234,11 @@ void textCallAPSsidName(Control* sender, int type) {
       return;
     }
     prefs.begin("wifi", false); // Open NVS namespace "wifi" in RW mode
-    delay(100);
+    
     prefs.putString("ssid_ap", value); // Store SSID
-    delay(100);
+    
     prefs.end(); // Close NVS
-    delay(100);
+    
 
 }
 
@@ -276,11 +255,11 @@ void textCallAPPassword(Control* sender, int type) {
       return;
     }
     prefs.begin("wifi", false);
-    delay(100);
+    
     prefs.putString("password_ap", value); // Store password
-    delay(100);
+    
     prefs.end();
-    delay(100);
+    
 
 }
 
@@ -298,23 +277,24 @@ void textCallHostname(Control* sender, int type) {
     }
     WiFi.setHostname(value.c_str());
     prefs.begin("wifi", false);
-    delay(100);
+    
     prefs.putString("hostname", value); // Store password
-    delay(100);
+    
     prefs.end();
-    delay(100);
+    
 
 } 
 
 void saveSettings() {
     prefs.begin("Settings"); // Open NVS namespace "Settings" in RW mode
-    delay(100);
+    
     prefs.putBytes("Settings", &myBtnMap, sizeof(myBtnMap));
-    delay(100);
+    
     prefs.end();
-    delay(100);
+    
 }
 
+// Button 1 Web UI Callbacks ---------
 void selectBtn1MapFnc(Control* sender, int value) {
 
     uint8_t value_t = static_cast<uint8_t>(String(sender->value).toInt());
@@ -325,16 +305,37 @@ void selectBtn1MapFnc(Control* sender, int value) {
 
     //update the value in the settings
     char str[10]; // Ensure this is large enough to hold the number and the null terminator
-    uint8_t numberMidiFunc = myBtnMap[0].btnMidiFunction[__active_map_ui_btn[0]]; // Assuming this is the uint8_t you mentioned
-    sprintf(str, "%d", numberMidiFunc); // Convert the number to a string
+    uint8_t localvalue = myBtnMap[0].btnMidiFunction[__active_map_ui_btn[0]]; // get the MidiFunction value from the settings
+    sprintf(str, "%d", localvalue); // Convert the number to a string
     ESPUI.updateControlValue(selectBtn1MidiFunction, str); // Update the control value
-// die anderen button functions auch updaten
 
+    localvalue = myBtnMap[0].btnMidiChannel[__active_map_ui_btn[0]]; // Get the MidiChannel value from the settings
+    sprintf(str, "%d", localvalue); // Convert the number to a string
+    ESPUI.updateControlValue(selectBtn1MidiChannel, str); // Update the control value
 
+    localvalue = myBtnMap[0].btnMidiCC[__active_map_ui_btn[0]]; // Get the MidiCC value from the settings
+    sprintf(str, "%d", localvalue); // Convert the number to a string
+    ESPUI.updateControlValue(selectBtn1CCFunction, str); // Update the control value
+
+    localvalue = myBtnMap[0].btnMidiCCValueStateOn[__active_map_ui_btn[0]]; // Get the MidiCCValueStateOn value from the settings
+    sprintf(str, "%d", localvalue); // Convert the number to a string
+    ESPUI.updateControlValue(selectBtn1CCValueMax, str); // Update the control value
+
+    localvalue = myBtnMap[0].btnMidiCCValueStateOff[__active_map_ui_btn[0]]; // Get the MidiCCValueStateOff value from the settings
+    sprintf(str, "%d", localvalue); // Convert the number to a string
+    ESPUI.updateControlValue(selectBtn1CCValueMin, str); // Update the control value
+
+    localvalue = myBtnMap[0].btnMidiNote[__active_map_ui_btn[0]]; // Get the MidiNote value from the settings
+    sprintf(str, "%d", localvalue); // Convert the number to a string
+    ESPUI.updateControlValue(selectBtn1MidiNote, str); // Update the control value
+
+    localvalue = myBtnMap[0].btnMidiVelocity[__active_map_ui_btn[0]]; // Get the MidiVelocity value from the settings
+    sprintf(str, "%d", localvalue); // Convert the number to a string
+    ESPUI.updateControlValue(selectBtn1NoteVelocity, str); // Update the control value
 
 }
 
-void selectBtn1Fnc(Control* sender, int value) {
+void selectBtn1MidiFnc(Control* sender, int value) {
     
     uint8_t value_t = static_cast<uint8_t>(String(sender->value).toInt());
 
@@ -343,6 +344,172 @@ void selectBtn1Fnc(Control* sender, int value) {
     saveSettings();
 
 }
+
+void selectBtn1MidiChannelCalback(Control* sender, int value) {
+    
+    uint8_t value_t = static_cast<uint8_t>(String(sender->value).toInt());
+
+    Serial.printf("Select: ID: %d, Value: %s, Value as int %d\n", sender->id, sender->value, value_t);
+    myBtnMap[0].btnMidiChannel[__active_map_ui_btn[0]] = value_t;
+    saveSettings();
+
+}
+
+void selectBtn1MidiCCFunctionCalback(Control* sender, int value) {
+    
+    uint8_t value_t = static_cast<uint8_t>(String(sender->value).toInt());
+
+    Serial.printf("Select: ID: %d, Value: %s, Value as int %d\n", sender->id, sender->value, value_t);
+    myBtnMap[0].btnMidiCC[__active_map_ui_btn[0]] = value_t;
+    saveSettings();
+}
+
+void selectBtn1CCValueMaxCalback(Control* sender, int value) {
+    
+    uint8_t value_t = static_cast<uint8_t>(String(sender->value).toInt());
+
+    Serial.printf("Select: ID: %d, Value: %s, Value as int %d\n", sender->id, sender->value, value_t);
+    myBtnMap[0].btnMidiCCValueStateOn[__active_map_ui_btn[0]] = value_t;
+    saveSettings();
+}
+
+void selectBtn1CCValueMinCalback(Control* sender, int value) {
+    
+    uint8_t value_t = static_cast<uint8_t>(String(sender->value).toInt());
+
+    Serial.printf("Select: ID: %d, Value: %s, Value as int %d\n", sender->id, sender->value, value_t);
+    myBtnMap[0].btnMidiCCValueStateOff[__active_map_ui_btn[0]] = value_t;
+    saveSettings();
+}
+
+void selectBtn1MidiNoteCalback(Control* sender, int value) {
+    
+    uint8_t value_t = static_cast<uint8_t>(String(sender->value).toInt());
+
+    Serial.printf("Select: ID: %d, Value: %s, Value as int %d\n", sender->id, sender->value, value_t);
+    myBtnMap[0].btnMidiNote[__active_map_ui_btn[0]] = value_t;
+    saveSettings();
+}
+
+void selectBtn1NoteVelocityCalback(Control* sender, int value) {
+    
+    uint8_t value_t = static_cast<uint8_t>(String(sender->value).toInt());
+
+    Serial.printf("Select: ID: %d, Value: %s, Value as int %d\n", sender->id, sender->value, value_t);
+    myBtnMap[0].btnMidiVelocity[__active_map_ui_btn[0]] = value_t;
+    saveSettings();
+}
+// Button 1 Web UI Callbacks end ---------
+
+// Button 2 Web UI Callbacks ---------
+void selectBtn2MapFnc(Control* sender, int value) {
+
+    uint8_t value_t = static_cast<uint8_t>(String(sender->value).toInt());
+
+    Serial.printf("Select: ID: %d, Value: %s, Value as int %d\n", sender->id, sender->value, value_t);
+    __active_map_ui_btn[1] = value_t;
+
+
+    //update the value in the settings
+    char str[10]; // Ensure this is large enough to hold the number and the null terminator
+    uint8_t localvalue = myBtnMap[1].btnMidiFunction[__active_map_ui_btn[1]]; // get the MidiFunction value from the settings
+    sprintf(str, "%d", localvalue); // Convert the number to a string
+    ESPUI.updateControlValue(selectBtn2MidiFunction, str); // Update the control value
+
+    localvalue = myBtnMap[1].btnMidiChannel[__active_map_ui_btn[1]]; // Get the MidiChannel value from the settings
+    sprintf(str, "%d", localvalue); // Convert the number to a string
+    ESPUI.updateControlValue(selectBtn2MidiChannel, str); // Update the control value
+
+    localvalue = myBtnMap[1].btnMidiCC[__active_map_ui_btn[1]]; // Get the MidiCC value from the settings
+    sprintf(str, "%d", localvalue); // Convert the number to a string
+    ESPUI.updateControlValue(selectBtn2CCFunction, str); // Update the control value
+
+    localvalue = myBtnMap[1].btnMidiCCValueStateOn[__active_map_ui_btn[1]]; // Get the MidiCCValueStateOn value from the settings
+    sprintf(str, "%d", localvalue); // Convert the number to a string
+    ESPUI.updateControlValue(selectBtn2CCValueMax, str); // Update the control value
+
+    localvalue = myBtnMap[1].btnMidiCCValueStateOff[__active_map_ui_btn[1]]; // Get the MidiCCValueStateOff value from the settings
+    sprintf(str, "%d", localvalue); // Convert the number to a string
+    ESPUI.updateControlValue(selectBtn2CCValueMin, str); // Update the control value
+
+    localvalue = myBtnMap[1].btnMidiNote[__active_map_ui_btn[1]]; // Get the MidiNote value from the settings
+    sprintf(str, "%d", localvalue); // Convert the number to a string
+    ESPUI.updateControlValue(selectBtn2MidiNote, str); // Update the control value
+
+    localvalue = myBtnMap[1].btnMidiVelocity[__active_map_ui_btn[1]]; // Get the MidiVelocity value from the settings
+    sprintf(str, "%d", localvalue); // Convert the number to a string
+    ESPUI.updateControlValue(selectBtn2NoteVelocity, str); // Update the control value
+
+}
+
+void selectBtn2MidiFnc(Control* sender, int value) {
+    
+    uint8_t value_t = static_cast<uint8_t>(String(sender->value).toInt());
+
+    Serial.printf("Select: ID: %d, Value: %s, Value as int %d\n", sender->id, sender->value, value_t);
+    myBtnMap[1].btnMidiFunction[__active_map_ui_btn[1]] = value_t;
+    saveSettings();
+
+}
+
+void selectBtn2MidiChannelCalback(Control* sender, int value) {
+    
+    uint8_t value_t = static_cast<uint8_t>(String(sender->value).toInt());
+
+    Serial.printf("Select: ID: %d, Value: %s, Value as int %d\n", sender->id, sender->value, value_t);
+    myBtnMap[1].btnMidiChannel[__active_map_ui_btn[1]] = value_t;
+    saveSettings();
+
+}
+
+void selectBtn2MidiCCFunctionCalback(Control* sender, int value) {
+    
+    uint8_t value_t = static_cast<uint8_t>(String(sender->value).toInt());
+
+    Serial.printf("Select: ID: %d, Value: %s, Value as int %d\n", sender->id, sender->value, value_t);
+    myBtnMap[1].btnMidiCC[__active_map_ui_btn[1]] = value_t;
+    saveSettings();
+}
+
+void selectBtn2CCValueMaxCalback(Control* sender, int value) {
+    
+    uint8_t value_t = static_cast<uint8_t>(String(sender->value).toInt());
+
+    Serial.printf("Select: ID: %d, Value: %s, Value as int %d\n", sender->id, sender->value, value_t);
+    myBtnMap[1].btnMidiCCValueStateOn[__active_map_ui_btn[1]] = value_t;
+    saveSettings();
+}
+
+void selectBtn2CCValueMinCalback(Control* sender, int value) {
+    
+    uint8_t value_t = static_cast<uint8_t>(String(sender->value).toInt());
+
+    Serial.printf("Select: ID: %d, Value: %s, Value as int %d\n", sender->id, sender->value, value_t);
+    myBtnMap[1].btnMidiCCValueStateOff[__active_map_ui_btn[1]] = value_t;
+    saveSettings();
+}
+
+void selectBtn2MidiNoteCalback(Control* sender, int value) {
+    
+    uint8_t value_t = static_cast<uint8_t>(String(sender->value).toInt());
+
+    Serial.printf("Select: ID: %d, Value: %s, Value as int %d\n", sender->id, sender->value, value_t);
+    myBtnMap[1].btnMidiNote[__active_map_ui_btn[1]] = value_t;
+    saveSettings();
+}
+
+void selectBtn2NoteVelocityCalback(Control* sender, int value) {
+    
+    uint8_t value_t = static_cast<uint8_t>(String(sender->value).toInt());
+
+    Serial.printf("Select: ID: %d, Value: %s, Value as int %d\n", sender->id, sender->value, value_t);
+    myBtnMap[1].btnMidiVelocity[__active_map_ui_btn[1]] = value_t;
+    saveSettings();
+}
+// Button 2 Web UI Callbacks end ---------
+
+
+
 
 // ~ WEB UI Callbacks
 
@@ -520,41 +687,41 @@ void setup() {
     //reset settings
     prefs.begin("Settings");  //Open namespace Settings
     Serial.println("Reset settings!");
-    delay(100);
+    
     prefs.putBytes("Settings", &myBtnMap, sizeof(myBtnMap));
-    delay(100);
+    
     prefs.end(); // close the Settings Namespace
-    delay(100);
+    
 
     prefs.begin("blename", false); // Open NVS namespace "blename" in RW mode
     Serial.println("Reset blename!");
-    delay(100);
+    
     prefs.putString("blename", midiDeviceName); // Save the default name
-    delay(100);
+    
     prefs.end(); // Close NVS namespace "blename"
-    delay(100);
+    
 
     prefs.begin("wifi", false); // Open NVS namespace "wifi" in RW mode
     Serial.println("Reset wifi!");
-    delay(100);
+    
     prefs.putString("ssid_local", ssid); // Save the default name
-    delay(100);
+    
     prefs.putString("password_local", password); // Save the default name
-    delay(100);
+    
     prefs.putString("ssid_ap", ap_ssid); // Save the default name
-    delay(100);
+    
     prefs.putString("password_ap", ap_password); // Save the default name
-    delay(100);
+    
     prefs.putString("hostname", hostname); // Save the default name
-    delay(100);
+    
     prefs.end(); // Close NVS namespace "wifi"
-    delay(100);
+    
   }
 
 
   prefs.begin("Settings");  //Open namespace Settings
 
-  delay(100);
+  
   if (not prefs.isKey("Settings")) {
     Serial.println("Settings not found, saving default settings");
     prefs.putBytes("Settings", &myBtnMap, sizeof(myBtnMap));
@@ -562,12 +729,12 @@ void setup() {
     Serial.println("Settings found, loading settings");
     prefs.getBytes("Settings", &myBtnMap, sizeof(myBtnMap));
   }
-  delay(100);
+  
   prefs.end(); // close the Settings Namespace
-  delay(100);
+  
 
   prefs.begin("blename", false); // Open NVS namespace "blename" in RW mode
-  delay(100);
+  
   if (not prefs.isKey("blename")) {
     Serial.println("blename not found");
     prefs.putString("blename", midiDeviceName); // Save the default name
@@ -575,9 +742,9 @@ void setup() {
     midiDeviceName = prefs.getString("blename"); // 
     Serial.printf("blename found, loading settings: value: %S\n", midiDeviceName.c_str());
   }
-  delay(100);
+  
   prefs.end(); // Close NVS namespace "blename"
-  delay(100);
+  
 
   prefs.begin("wifi", false); // Open NVS namespace "wifi" in RW mode
   if (not prefs.isKey("ssid_local")) {
@@ -587,7 +754,7 @@ void setup() {
     ssid = prefs.getString("ssid_local"); // 
     Serial.printf("ssid_local found, loading settings: value: %S\n", ssid.c_str());
   }
-  delay(100);
+  
   if (not prefs.isKey("password_local")) {
     Serial.println("password_local not found");
     prefs.putString("password_local", password); // Save the default name
@@ -595,7 +762,7 @@ void setup() {
     password = prefs.getString("password_local"); // 
     Serial.printf("password_local found, loading settings: value: %S\n", password.c_str());
   }
-  delay(100);
+  
   if (not prefs.isKey("ssid_ap")) {
     Serial.println("ssid_ap not found");
     prefs.putString("ssid_ap", ap_ssid); // Save the default name
@@ -603,7 +770,7 @@ void setup() {
     ap_ssid = prefs.getString("ssid_ap"); // 
     Serial.printf("ssid_ap found, loading settings: value: %S\n", ap_ssid.c_str());
   }
-  delay(100);
+  
   if (not prefs.isKey("password_ap")) {
     Serial.println("password_ap not found");
     prefs.putString("password_ap", ap_password); // Save the default name
@@ -611,7 +778,7 @@ void setup() {
     ap_password = prefs.getString("password_ap"); // 
     Serial.printf("password_ap found, loading settings: value: %S\n", ap_password.c_str());
   }
-  delay(100);
+  
   if (not prefs.isKey("hostname")) {
     Serial.println("hostname not found");
     prefs.putString("hostname", hostname); // Save the default name
@@ -619,9 +786,9 @@ void setup() {
     hostname = prefs.getString("hostname"); // 
     Serial.printf("hostname found, loading settings: value: %S\n", hostname.c_str());
   }
-  delay(100);
+  
   prefs.end(); // Close NVS namespace "wifi"
-  delay(100);
+  
   Serial.printf("Testdate from settings: %d \n", myBtnMap[4].btnMidiCC[3]);
 
 
@@ -714,27 +881,128 @@ void setup() {
 
     // Wlan Settings and Bluethooth Settings
     
-    bleNameTxtField = ESPUI.addControl(ControlType::Text, "Bluethooth Name:", midiDeviceName.c_str(), ControlColor::Alizarin, tab7, &textCallBlueThoothName);
-    wlanSsidNameTxtField = ESPUI.addControl(ControlType::Text, "Wlan SSID:", ssid.c_str(), ControlColor::Alizarin, tab7, &textCallSsidName);
-    wlanPasswordTxtField = ESPUI.addControl(ControlType::Text, "Wlan Password:", password.c_str(), ControlColor::Alizarin, tab7, &textCallWlanPassword);
-    wlanApSsidTxtField = ESPUI.addControl(ControlType::Text, "Access Point SSID:", ap_ssid.c_str(), ControlColor::Alizarin, tab7, &textCallAPSsidName);
-    wlanApPasswordTxtField = ESPUI.addControl(ControlType::Text, "Access Point Password:", ap_password.c_str(), ControlColor::Alizarin, tab7, &textCallAPPassword);
-    hostnameTxtField = ESPUI.addControl(ControlType::Text, "Hostname:", hostname.c_str(), ControlColor::Alizarin, tab7, &textCallHostname);
+    bleNameTxtField = ESPUI.addControl(ControlType::Text, "Bluethooth Name:", midiDeviceName.c_str(), ControlColor::Dark, tab7, &textCallBlueThoothName);
+    wlanSsidNameTxtField = ESPUI.addControl(ControlType::Text, "Wlan SSID:", ssid.c_str(), ControlColor::Dark, tab7, &textCallSsidName);
+    wlanPasswordTxtField = ESPUI.addControl(ControlType::Text, "Wlan Password:", password.c_str(), ControlColor::Dark, tab7, &textCallWlanPassword);
+    ESPUI.setInputType(wlanPasswordTxtField, "password");
+    wlanApSsidTxtField = ESPUI.addControl(ControlType::Text, "Access Point SSID:", ap_ssid.c_str(), ControlColor::Dark, tab7, &textCallAPSsidName);
+    wlanApPasswordTxtField = ESPUI.addControl(ControlType::Text, "Access Point Password:", ap_password.c_str(), ControlColor::Dark, tab7, &textCallAPPassword);
+    ESPUI.setInputType(wlanApPasswordTxtField, "password");
+    hostnameTxtField = ESPUI.addControl(ControlType::Text, "Hostname:", hostname.c_str(), ControlColor::Dark, tab7, &textCallHostname);
+    ESPUI.addControl(ControlType::Switcher, "Show Passwords", "", ControlColor::Alizarin, tab7, &switchShowPasswords);
 
-    // Button 1
-    selectBtn1Map = ESPUI.addControl(ControlType::Select, "Select Map:", "", ControlColor::Alizarin, tab1, &selectBtn1MapFnc);
-    ESPUI.addControl(ControlType::Option, "Map 1", "0", ControlColor::Alizarin, selectBtn1Map);
-    ESPUI.addControl(ControlType::Option, "Map 2", "1", ControlColor::Alizarin, selectBtn1Map);
+    // Button 1 ---------------------------------
+    selectBtn1Map = ESPUI.addControl(ControlType::Select, "Select Map:", "", ControlColor::Emerald, tab1, &selectBtn1MapFnc);
+    ESPUI.addControl(ControlType::Option, "Map 1", "0", ControlColor::Dark, selectBtn1Map);
+    ESPUI.addControl(ControlType::Option, "Map 2", "1", ControlColor::Dark, selectBtn1Map);
 
-    selectBtn1MidiFunction = ESPUI.addControl(ControlType::Select, "Midi Function:", "", ControlColor::Alizarin, tab1, &selectBtn1Fnc);
+    char convertstr[10];
+    sprintf(convertstr, "%d", myBtnMap[0].btnMidiChannel[__active_map]); // Convert the number to a string
+    selectBtn1MidiChannel = ESPUI.addControl(ControlType::Number, "Midi Channel 0 - 15:", convertstr, ControlColor::Dark, tab1, &selectBtn1MidiChannelCalback);
+    ESPUI.addControl(Min, "", "0", None, selectBtn1MidiChannel);
+	  ESPUI.addControl(Max, "", "15", None, selectBtn1MidiChannel);
+
+    sprintf(convertstr, "%d", myBtnMap[0].btnMidiFunction[__active_map]); // Convert the number to a string 
+    selectBtn1MidiFunction = ESPUI.addControl(ControlType::Select, "Midi Function:", convertstr, ControlColor::Dark, tab1, &selectBtn1MidiFnc);
     // Button MIDI Function 0 = Note, 1 = CC, 2 = MMC, 3 = Program Change
-    ESPUI.addControl(ControlType::Option, "Note", "0", ControlColor::Alizarin, selectBtn1MidiFunction);
-    ESPUI.addControl(ControlType::Option, "CC", "1", ControlColor::Alizarin, selectBtn1MidiFunction);
-    ESPUI.addControl(ControlType::Option, "MMC", "2", ControlColor::Alizarin, selectBtn1MidiFunction);
-    ESPUI.addControl(ControlType::Option, "PC", "3", ControlColor::Alizarin, selectBtn1MidiFunction);
+    ESPUI.addControl(ControlType::Option, "Note", "0", ControlColor::Dark, selectBtn1MidiFunction);
+    ESPUI.addControl(ControlType::Option, "CC", "1", ControlColor::Dark, selectBtn1MidiFunction);
+    //ESPUI.addControl(ControlType::Option, "MMC", "2", ControlColor::Dark, selectBtn1MidiFunction);
+    //ESPUI.addControl(ControlType::Option, "PC", "3", ControlColor::Dark, selectBtn1MidiFunction);
 
+    sprintf(convertstr, "%d", myBtnMap[0].btnMidiCC[__active_map]); // Convert the number to a string
+    selectBtn1CCFunction = ESPUI.addControl(ControlType::Number, "Midi CC 0 - 127:", convertstr, ControlColor::Dark, tab1, &selectBtn1MidiCCFunctionCalback);
+    ESPUI.addControl(Min, "", "0", None, selectBtn1CCFunction);
+	  ESPUI.addControl(Max, "", "127", None, selectBtn1CCFunction);
 
+    sprintf(convertstr, "%d", myBtnMap[0].btnMidiCCValueStateOn[__active_map]); // Convert the number to a string
+    selectBtn1CCValueMax = ESPUI.addControl(ControlType::Number, "Midi CC Value On 0 - 127:", convertstr, ControlColor::Dark, tab1, &selectBtn1CCValueMaxCalback);
+    ESPUI.addControl(Min, "", "0", None, selectBtn1CCValueMax);
+    ESPUI.addControl(Max, "", "127", None, selectBtn1CCValueMax);
 
+    sprintf(convertstr, "%d", myBtnMap[0].btnMidiCCValueStateOff[__active_map]); // Convert the number to a string
+    selectBtn1CCValueMin = ESPUI.addControl(ControlType::Number, "Midi CC Value Off 0 - 127:", convertstr, ControlColor::Dark, tab1, &selectBtn1CCValueMinCalback);
+    ESPUI.addControl(Min, "", "0", None, selectBtn1CCValueMin);
+    ESPUI.addControl(Max, "", "127", None, selectBtn1CCValueMin);
+
+    sprintf(convertstr, "%d", myBtnMap[0].btnMidiNote[__active_map]); // Convert the number to a string
+    selectBtn1MidiNote = ESPUI.addControl(ControlType::Number, "Midi Note 0 - 127:", convertstr, ControlColor::Dark, tab1, &selectBtn1MidiNoteCalback);
+    ESPUI.addControl(Min, "", "0", None, selectBtn1MidiNote);
+    ESPUI.addControl(Max, "", "127", None, selectBtn1MidiNote);
+
+    sprintf(convertstr, "%d", myBtnMap[0].btnMidiVelocity[__active_map]); // Convert the number to a string
+    selectBtn1NoteVelocity = ESPUI.addControl(ControlType::Number, "Midi Note Velocity 0 - 127:", convertstr, ControlColor::Dark, tab1, &selectBtn1NoteVelocityCalback);
+    ESPUI.addControl(Min, "", "0", None, selectBtn1NoteVelocity);
+    ESPUI.addControl(Max, "", "127", None, selectBtn1NoteVelocity);
+    // Button 1 end ---------------------------------
+
+    // Button 2 ---------------------------------
+    selectBtn2Map = ESPUI.addControl(ControlType::Select, "Select Map:", "", ControlColor::Emerald, tab2, &selectBtn2MapFnc);
+    ESPUI.addControl(ControlType::Option, "Map 1", "0", ControlColor::Dark, selectBtn2Map);
+    ESPUI.addControl(ControlType::Option, "Map 2", "1", ControlColor::Dark, selectBtn2Map);
+
+    sprintf(convertstr, "%d", myBtnMap[1].btnMidiChannel[__active_map]); // Convert the number to a string
+    selectBtn2MidiChannel = ESPUI.addControl(ControlType::Number, "Midi Channel 0 - 15:", convertstr, ControlColor::Dark, tab2, &selectBtn2MidiChannelCalback);
+    ESPUI.addControl(Min, "", "0", None, selectBtn2MidiChannel);
+    ESPUI.addControl(Max, "", "15", None, selectBtn2MidiChannel);
+
+    sprintf(convertstr, "%d", myBtnMap[1].btnMidiFunction[__active_map]); // Convert the number to a string
+    selectBtn2MidiFunction = ESPUI.addControl(ControlType::Select, "Midi Function:", convertstr, ControlColor::Dark, tab2, &selectBtn2MidiFnc);
+    // Button MIDI Function 0 = Note, 1 = CC, 2 = MMC, 3 = Program Change
+    ESPUI.addControl(ControlType::Option, "Note", "0", ControlColor::Dark, selectBtn2MidiFunction);
+    ESPUI.addControl(ControlType::Option, "CC", "1", ControlColor::Dark, selectBtn2MidiFunction);
+    //ESPUI.addControl(ControlType::Option, "MMC", "2", ControlColor::Dark, selectBtn2MidiFunction);
+    //ESPUI.addControl(ControlType::Option, "PC", "3", ControlColor::Dark, selectBtn2MidiFunction);
+
+    sprintf(convertstr, "%d", myBtnMap[1].btnMidiCC[__active_map]); // Convert the number to a string
+    selectBtn2CCFunction = ESPUI.addControl(ControlType::Number, "Midi CC 0 - 127:", convertstr, ControlColor::Dark, tab2, &selectBtn2MidiCCFunctionCalback);
+    ESPUI.addControl(Min, "", "0", None, selectBtn2CCFunction);
+    ESPUI.addControl(Max, "", "127", None, selectBtn2CCFunction);
+
+    sprintf(convertstr, "%d", myBtnMap[1].btnMidiCCValueStateOn[__active_map]); // Convert the number to a string
+    selectBtn2CCValueMax = ESPUI.addControl(ControlType::Number, "Midi CC Value On 0 - 127:", convertstr, ControlColor::Dark, tab2, &selectBtn2CCValueMaxCalback);
+    ESPUI.addControl(Min, "", "0", None, selectBtn2CCValueMax);
+    ESPUI.addControl(Max, "", "127", None, selectBtn2CCValueMax);
+
+    sprintf(convertstr, "%d", myBtnMap[1].btnMidiCCValueStateOff[__active_map]); // Convert the number to a string
+    selectBtn2CCValueMin = ESPUI.addControl(ControlType::Number, "Midi CC Value Off 0 - 127:", convertstr, ControlColor::Dark, tab2, &selectBtn2CCValueMinCalback);
+    ESPUI.addControl(Min, "", "0", None, selectBtn2CCValueMin);
+    ESPUI.addControl(Max, "", "127", None, selectBtn2CCValueMin);
+
+    sprintf(convertstr, "%d", myBtnMap[1].btnMidiNote[__active_map]); // Convert the number to a string
+    selectBtn2MidiNote = ESPUI.addControl(ControlType::Number, "Midi Note 0 - 127:", convertstr, ControlColor::Dark, tab2, &selectBtn2MidiNoteCalback);
+    ESPUI.addControl(Min, "", "0", None, selectBtn2MidiNote);
+    ESPUI.addControl(Max, "", "127", None, selectBtn2MidiNote);
+
+    sprintf(convertstr, "%d", myBtnMap[1].btnMidiVelocity[__active_map]); // Convert the number to a string
+    selectBtn2NoteVelocity = ESPUI.addControl(ControlType::Number, "Midi Note Velocity 0 - 127:", convertstr, ControlColor::Dark, tab2, &selectBtn2NoteVelocityCalback);
+    ESPUI.addControl(Min, "", "0", None, selectBtn2NoteVelocity);
+    ESPUI.addControl(Max, "", "127", None, selectBtn2NoteVelocity);
+    // Button 2 end ---------------------------------
+
+/*
+uint16_t selectBtn1MidiChannel;
+uint16_t selectBtn1CCFunction;
+uint16_t selectBtn1CCValueMax;
+uint16_t selectBtn1CCValueMin;
+uint16_t selectBtn1MidiNote;
+uint16_t selectBtn1NoteVelocity;
+
+  uint8_t btnGpio; // GPIO Pin bleibt unverändert
+  bool needRelease[2]; // Button Release als Array
+  uint8_t btnFunction[2]; // Button Function als Array 0 = Push, 1 = Toggle
+  bool btnLongpress[2]; // Button Longpress als Array
+  uint8_t btnState[2]; // Button State als Array
+  uint8_t btnColor[2]; // Button Color als Array
+  uint8_t btnMidiFunction[2]; // Button MIDI Function als Array
+  uint8_t btnMidiChannel[2]; // Button MIDI Channel als Array
+  uint8_t btnMidiNote[2]; // Button MIDI Note als Array
+  uint8_t btnMidiVelocity[2]; // Button MIDI Velocity als Array
+  uint8_t btnMidiCC[2]; // Button MIDI CC als Array
+  uint8_t btnMidiCCValueStateOn[2]; // Button MIDI Value State On als Array
+  uint8_t btnMidiCCValueStateOff[2]; // Button MIDI Value State Off als Array
+  uint8_t btnMidiMMC[2]; // Button MIDI MMC als Array
+*/
 
     ESPUI.begin("Little Helper Configuration");
 
@@ -762,26 +1030,20 @@ void setup() {
 
 void loop() {
 
-  static long oldTime = 0;
-  static bool switchi = false;
-  if(__configurator) {
-    dnsServer.processNextRequest();
-
-    if (millis() - oldTime > 5000)
-    { //Update the Ui 
-        //switchi = !switchi;
-        //ESPUI.updateControlValue(switchOne, switchi ? "1" : "0");
-        //Serial.println("Update UI");
-        oldTime = millis();
-    }
-  }
-
-
   // Call the button service routine every loop.
   btn1.check();
   btn2.check();
   btn3.check();
   btn4.check();
   btn5.check();
+
+  static long oldTime = 0;
+  if(__configurator) {
+    if (millis() - oldTime > 50){ 
+        dnsServer.processNextRequest();
+        oldTime = millis();
+    }
+  }
+
   delay(1);
 }
