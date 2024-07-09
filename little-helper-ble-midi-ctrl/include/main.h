@@ -89,6 +89,14 @@ uint16_t selectBtn5CCValueMin;
 uint16_t selectBtn5MidiNote;
 uint16_t selectBtn5NoteVelocity;
 
+uint16_t __selectUiBtn[5][8]  = {
+  // selectBtn1Map, selectBtn1MidiFunction, selectBtn1MidiChannel, selectBtn1CCFunction, selectBtn1CCValueMax, selectBtn1CCValueMin, selectBtn1MidiNote, selectBtn1NoteVelocity
+  {0, 0, 0, 0, 0, 0, 0, 0},
+  {0, 0, 0, 0, 0, 0, 0, 0},
+  {0, 0, 0, 0, 0, 0, 0, 0},
+  {0, 0, 0, 0, 0, 0, 0, 0},
+  {0, 0, 0, 0, 0, 0, 0, 0}
+};
 
 enum my_mmc_t {
   MMC_STOP          = 0x01,
