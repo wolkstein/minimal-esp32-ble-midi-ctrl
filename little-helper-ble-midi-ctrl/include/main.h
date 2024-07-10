@@ -19,6 +19,7 @@ String ap_ssid = "LittleHelperAP";
 String ap_password = "12345678";
 String hostname = "littlehelper";
 
+uint8_t __HW_BUTTONS = 5; // Anzahl der Hardware Buttons
 uint16_t button1;
 
 uint16_t status;
@@ -90,7 +91,7 @@ uint16_t selectBtn5MidiNote;
 uint16_t selectBtn5NoteVelocity;
 
 uint16_t __selectUiBtn[5][8]  = {
-  // selectBtn1Map, selectBtn1MidiFunction, selectBtn1MidiChannel, selectBtn1CCFunction, selectBtn1CCValueMax, selectBtn1CCValueMin, selectBtn1MidiNote, selectBtn1NoteVelocity
+  // selectBtn1Map, selectBtn1MidiChannel, selectBtn1MidiFunction, selectBtn1CCFunction, selectBtn1CCValueMax, selectBtn1CCValueMin, selectBtn1MidiNote, selectBtn1NoteVelocity
   {0, 0, 0, 0, 0, 0, 0, 0},
   {0, 0, 0, 0, 0, 0, 0, 0},
   {0, 0, 0, 0, 0, 0, 0, 0},

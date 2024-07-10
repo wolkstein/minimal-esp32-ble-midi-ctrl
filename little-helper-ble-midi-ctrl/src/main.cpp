@@ -294,65 +294,56 @@ void saveSettings() {
     
 }
 
-// Buttons dynamic callback test function
-void buttonCallbackDynamicMap(Control* sender, int type) {
-    Serial.printf("Button Callback: ID: %d, Value: %s\n", sender->id, sender->value);
-    Serial.println("Dynamic MAp Function------------------------------------------------->");
-}
 
-void buttonCallbackDynamicAction(Control* sender, int type) {
-    Serial.printf("Button Callback: ID: %d, Value: %s\n", sender->id, sender->value);
-    Serial.println("Dynamic Action Function------------------------------------------------->");
-}
-
-// Button 1 Web UI Callbacks ---------
+// Button 1 - x Web UI Callbacks ---------
 void selectBtnMapFnc(Control* sender, int value) {
 
     uint8_t value_t = static_cast<uint8_t>(String(sender->value).toInt());
 
-    Serial.printf("Select: ID: %d, Value: %s, Value as int %d\n", sender->id, sender->value, value_t);
-    __active_map_ui_btn[0] = value_t;
+    log_d("Select: ID: %d, Value: %s, Value as int %d\n", sender->id, sender->value, value_t);
+    
 
-
+    int active_btn = 0;
+    for(int i = 0; i < __HW_BUTTONS; i++) {
+      if(__selectUiBtn[i][0] == sender->id) {
+        active_btn = i;
+        break;
+      }
+    }
+    __active_map_ui_btn[active_btn] = value_t;
+    
     //update the value in the settings
     char str[10]; // Ensure this is large enough to hold the number and the null terminator
-    uint8_t localvalue = myBtnMap[0].btnMidiFunction[__active_map_ui_btn[0]]; // get the MidiFunction value from the settings
+
+    uint8_t localvalue = myBtnMap[active_btn].btnMidiChannel[value_t]; // Get the MidiChannel value from the settings
     sprintf(str, "%d", localvalue); // Convert the number to a string
-    ESPUI.updateControlValue(selectBtn1MidiFunction, str); // Update the control value
+    ESPUI.updateControlValue(__selectUiBtn[active_btn][1], str); // Update the control value
 
-    localvalue = myBtnMap[0].btnMidiChannel[__active_map_ui_btn[0]]; // Get the MidiChannel value from the settings
+    //uint8_t localvalue = myBtnMap[0].btnMidiFunction[__active_map_ui_btn[0]]; // get the MidiFunction value from the settings
+    localvalue = myBtnMap[active_btn].btnMidiFunction[value_t]; // get the MidiFunction value from the settings
+    sprintf(str, "%u", localvalue); // Convert the number to a string
+    ESPUI.updateControlValue(__selectUiBtn[active_btn][2], str); // Update the control value
+    log_d("Active Button: %d, String: %S, Value: %u\nOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO", active_btn, str,localvalue);
+
+    localvalue = myBtnMap[active_btn].btnMidiCC[value_t]; // Get the MidiCC value from the settings
     sprintf(str, "%d", localvalue); // Convert the number to a string
-    ESPUI.updateControlValue(selectBtn1MidiChannel, str); // Update the control value
+    ESPUI.updateControlValue(__selectUiBtn[active_btn][3], str); // Update the control value
 
-    localvalue = myBtnMap[0].btnMidiCC[__active_map_ui_btn[0]]; // Get the MidiCC value from the settings
+    localvalue = myBtnMap[active_btn].btnMidiCCValueStateOn[value_t]; // Get the MidiCCValueStateOn value from the settings
     sprintf(str, "%d", localvalue); // Convert the number to a string
-    ESPUI.updateControlValue(selectBtn1CCFunction, str); // Update the control value
+    ESPUI.updateControlValue(__selectUiBtn[active_btn][4], str); // Update the control value
 
-    localvalue = myBtnMap[0].btnMidiCCValueStateOn[__active_map_ui_btn[0]]; // Get the MidiCCValueStateOn value from the settings
+    localvalue = myBtnMap[active_btn].btnMidiCCValueStateOff[value_t]; // Get the MidiCCValueStateOff value from the settings
     sprintf(str, "%d", localvalue); // Convert the number to a string
-    ESPUI.updateControlValue(selectBtn1CCValueMax, str); // Update the control value
+    ESPUI.updateControlValue(__selectUiBtn[active_btn][5], str); // Update the control value
 
-    localvalue = myBtnMap[0].btnMidiCCValueStateOff[__active_map_ui_btn[0]]; // Get the MidiCCValueStateOff value from the settings
+    localvalue = myBtnMap[active_btn].btnMidiNote[value_t]; // Get the MidiNote value from the settings
     sprintf(str, "%d", localvalue); // Convert the number to a string
-    ESPUI.updateControlValue(selectBtn1CCValueMin, str); // Update the control value
+    ESPUI.updateControlValue(__selectUiBtn[active_btn][6], str); // Update the control value
 
-    localvalue = myBtnMap[0].btnMidiNote[__active_map_ui_btn[0]]; // Get the MidiNote value from the settings
+    localvalue = myBtnMap[active_btn].btnMidiVelocity[value_t]; // Get the MidiVelocity value from the settings
     sprintf(str, "%d", localvalue); // Convert the number to a string
-    ESPUI.updateControlValue(selectBtn1MidiNote, str); // Update the control value
-
-    localvalue = myBtnMap[0].btnMidiVelocity[__active_map_ui_btn[0]]; // Get the MidiVelocity value from the settings
-    sprintf(str, "%d", localvalue); // Convert the number to a string
-    ESPUI.updateControlValue(selectBtn1NoteVelocity, str); // Update the control value
-
-}
-
-void selectBtnMidiFnc(Control* sender, int value) {
-    
-    uint8_t value_t = static_cast<uint8_t>(String(sender->value).toInt());
-
-    Serial.printf("Select: ID: %d, Value: %s, Value as int %d\n", sender->id, sender->value, value_t);
-    myBtnMap[0].btnMidiFunction[__active_map_ui_btn[0]] = value_t;
-    saveSettings();
+    ESPUI.updateControlValue(__selectUiBtn[active_btn][7], str); // Update the control value
 
 }
 
@@ -360,18 +351,54 @@ void selectBtnMidiChannelCalback(Control* sender, int value) {
     
     uint8_t value_t = static_cast<uint8_t>(String(sender->value).toInt());
 
-    Serial.printf("Select: ID: %d, Value: %s, Value as int %d\n", sender->id, sender->value, value_t);
-    myBtnMap[0].btnMidiChannel[__active_map_ui_btn[0]] = value_t;
+    int active_btn = 0;
+    for(int i = 0; i < __HW_BUTTONS; i++) {
+      if(__selectUiBtn[i][1] == sender->id) {
+        active_btn = i;
+        break;
+      }
+    }
+
+    log_d("Select: ID: %d, Value: %s, Value as int %d\n", sender->id, sender->value, value_t);
+    myBtnMap[active_btn].btnMidiChannel[__active_map_ui_btn[active_btn]] = value_t;
     saveSettings();
 
 }
 
+void selectBtnMidiFnc(Control* sender, int value) {
+    
+    uint8_t value_t = static_cast<uint8_t>(String(sender->value).toInt());
+
+    log_d("Select: ID: %d, Value: %s, Value as int %d\n", sender->id, sender->value, value_t);
+
+    int active_btn = 0;
+    for(int i = 0; i < __HW_BUTTONS; i++) {
+      if(__selectUiBtn[i][2] == sender->id) {
+        active_btn = i;
+        break;
+      }
+    }
+
+    log_d("Select: ID: %d, Value: %s, Value as int %d\n", sender->id, sender->value, value_t);
+    myBtnMap[active_btn].btnMidiFunction[__active_map_ui_btn[active_btn]] = value_t;
+    saveSettings();
+
+}
+// ---- hier geht es weiter
 void selectBtnMidiCCFunctionCalback(Control* sender, int value) {
     
     uint8_t value_t = static_cast<uint8_t>(String(sender->value).toInt());
 
-    Serial.printf("Select: ID: %d, Value: %s, Value as int %d\n", sender->id, sender->value, value_t);
-    myBtnMap[0].btnMidiCC[__active_map_ui_btn[0]] = value_t;
+    int active_btn = 0;
+    for(int i = 0; i < __HW_BUTTONS; i++) {
+      if(__selectUiBtn[i][3] == sender->id) {
+        active_btn = i;
+        break;
+      }
+    }
+
+    log_d("Select: ID: %d, Value: %s, Value as int %d\n", sender->id, sender->value, value_t);
+    myBtnMap[active_btn].btnMidiCC[__active_map_ui_btn[active_btn]] = value_t;
     saveSettings();
 }
 
@@ -379,8 +406,16 @@ void selectBtnCCValueMaxCalback(Control* sender, int value) {
     
     uint8_t value_t = static_cast<uint8_t>(String(sender->value).toInt());
 
-    Serial.printf("Select: ID: %d, Value: %s, Value as int %d\n", sender->id, sender->value, value_t);
-    myBtnMap[0].btnMidiCCValueStateOn[__active_map_ui_btn[0]] = value_t;
+    int active_btn = 0;
+    for(int i = 0; i < __HW_BUTTONS; i++) {
+      if(__selectUiBtn[i][4] == sender->id) {
+        active_btn = i;
+        break;
+      }
+    }
+
+    log_d("Select: ID: %d, Value: %s, Value as int %d\n", sender->id, sender->value, value_t);
+    myBtnMap[active_btn].btnMidiCCValueStateOn[__active_map_ui_btn[active_btn]] = value_t;
     saveSettings();
 }
 
@@ -388,8 +423,16 @@ void selectBtnCCValueMinCalback(Control* sender, int value) {
     
     uint8_t value_t = static_cast<uint8_t>(String(sender->value).toInt());
 
-    Serial.printf("Select: ID: %d, Value: %s, Value as int %d\n", sender->id, sender->value, value_t);
-    myBtnMap[0].btnMidiCCValueStateOff[__active_map_ui_btn[0]] = value_t;
+    int active_btn = 0;
+    for(int i = 0; i < __HW_BUTTONS; i++) {
+      if(__selectUiBtn[i][5] == sender->id) {
+        active_btn = i;
+        break;
+      }
+    }
+
+    log_d("Select: ID: %d, Value: %s, Value as int %d\n", sender->id, sender->value, value_t);
+    myBtnMap[active_btn].btnMidiCCValueStateOff[__active_map_ui_btn[active_btn]] = value_t;
     saveSettings();
 }
 
@@ -397,8 +440,16 @@ void selectBtnMidiNoteCalback(Control* sender, int value) {
     
     uint8_t value_t = static_cast<uint8_t>(String(sender->value).toInt());
 
-    Serial.printf("Select: ID: %d, Value: %s, Value as int %d\n", sender->id, sender->value, value_t);
-    myBtnMap[0].btnMidiNote[__active_map_ui_btn[0]] = value_t;
+    int active_btn = 0;
+    for(int i = 0; i < __HW_BUTTONS; i++) {
+      if(__selectUiBtn[i][6] == sender->id) {
+        active_btn = i;
+        break;
+      }
+    }
+
+    log_d("Select: ID: %d, Value: %s, Value as int %d\n", sender->id, sender->value, value_t);
+    myBtnMap[active_btn].btnMidiNote[__active_map_ui_btn[active_btn]] = value_t;
     saveSettings();
 }
 
@@ -406,8 +457,16 @@ void selectBtnNoteVelocityCalback(Control* sender, int value) {
     
     uint8_t value_t = static_cast<uint8_t>(String(sender->value).toInt());
 
-    Serial.printf("Select: ID: %d, Value: %s, Value as int %d\n", sender->id, sender->value, value_t);
-    myBtnMap[0].btnMidiVelocity[__active_map_ui_btn[0]] = value_t;
+    int active_btn = 0;
+    for(int i = 0; i < __HW_BUTTONS; i++) {
+      if(__selectUiBtn[i][7] == sender->id) {
+        active_btn = i;
+        break;
+      }
+    }
+
+    log_d("Select: ID: %d, Value: %s, Value as int %d\n", sender->id, sender->value, value_t);
+    myBtnMap[active_btn].btnMidiVelocity[__active_map_ui_btn[active_btn]] = value_t;
     saveSettings();
 }
 // Button 1 Web UI Callbacks end ---------
@@ -426,9 +485,9 @@ void handleEvent(AceButton* button, uint8_t eventType, uint8_t /*buttonState*/) 
 
     myButton* myBtn = getMyButton(pin);
     if (myBtn != nullptr) {
-        Serial.printf("Button %d found\n", pin);
+        log_d("Button %d found\n", pin);
     } else {
-        Serial.printf("Button %d not found\n", pin);
+        log_d("Button %d not found\n", pin);
         return;
     }
    
@@ -442,7 +501,7 @@ void handleEvent(AceButton* button, uint8_t eventType, uint8_t /*buttonState*/) 
     //if(logpressevent) active_mapper = __active_map + 2; // 0 = map 1, 1 = map 2, 2 = map 3, 3 = map 4
     
     bool needRelease = myBtn->needRelease[active_mapper];
-    Serial.printf("BTN: %d, Map:%d, NeedRelease:%d, Test valid Gpio %d \n", pin, active_mapper, needRelease, myBtn->btnGpio);
+    log_d("BTN: %d, Map:%d, NeedRelease:%d, Test valid Gpio %d \n", pin, active_mapper, needRelease, myBtn->btnGpio);
     uint8_t btnFunction = myBtn->btnFunction[active_mapper]; // 0 = Push, 1 = Toggle
     bool btnLongpress = myBtn->btnLongpress[active_mapper]; // 0 = Short Press, 1 = Long Press
     uint8_t btnState = myBtn->btnState[active_mapper]; // 0 = Off, 1 = On
@@ -461,7 +520,7 @@ void handleEvent(AceButton* button, uint8_t eventType, uint8_t /*buttonState*/) 
     switch (eventType) {
       case AceButton::kEventPressed:
         log_i("handleEvent(): BTN: %d Pressed", pin);
-        Serial.printf("BTN: %d Pressed, Map:%d\n ", pin, __active_map);
+        log_d("BTN: %d Pressed, Map:%d\n ", pin, __active_map);
         if(btnMidiFunction == MIDI_NOTE) // Note on need short press event
           BLEMidiServer.noteOn(btnMidiChannel, btnMidiNote, btnMidiVelocity);
         else if(btnMidiFunction == MIDI_CC && !needRelease) // CC on need short press event
@@ -473,7 +532,7 @@ void handleEvent(AceButton* button, uint8_t eventType, uint8_t /*buttonState*/) 
         break;
       case AceButton::kEventReleased:
         log_i("handleEvent(): BTN: %d Released", pin);
-        Serial.printf("BTN: %d Released, Map:%d\n ", pin, __active_map);
+        log_d("BTN: %d Released, Map:%d\n ", pin, __active_map);
         if(btnMidiFunction == MIDI_NOTE) // Note on need short press event
           BLEMidiServer.noteOff(btnMidiChannel, btnMidiNote, 0 );
         else if(btnMidiFunction == MIDI_CC && needRelease) // CC on need short press event
@@ -485,7 +544,7 @@ void handleEvent(AceButton* button, uint8_t eventType, uint8_t /*buttonState*/) 
         break;
       case AceButton::kEventDoubleClicked:
         log_i("handleEvent(): BTN: %d DoubleClicked", pin);
-        Serial.printf("BTN: %d DoubleClicked, Map:%d\n ", pin, __active_map);
+        log_d("BTN: %d DoubleClicked, Map:%d\n ", pin, __active_map);
         break;
       case AceButton::kEventLongPressed:
         // Button 2 is used to change the active map
@@ -507,7 +566,7 @@ void handleEvent(AceButton* button, uint8_t eventType, uint8_t /*buttonState*/) 
         myWS28XXLED[0] = tmpBtncolor;
         FastLED.show();
         log_i("handleEvent(): BTN: %d LongPressed", pin);
-        Serial.printf("BTN: %d LongPressed, Map:%d\n ", pin, __active_map);
+        log_d("BTN: %d LongPressed, Map:%d\n ", pin, __active_map);
         if(btnLongpress){
           if(btnMidiFunction == MIDI_NOTE) // Note on need short press event
             BLEMidiServer.noteOff(btnMidiChannel, btnMidiNote, 0 );
@@ -520,7 +579,7 @@ void handleEvent(AceButton* button, uint8_t eventType, uint8_t /*buttonState*/) 
         break;
       case AceButton::kEventLongReleased:
         log_i("handleEvent(): BTN: %d LongReleased", pin);
-        Serial.printf("BTN: %d LongReleased, Map:%d\n ", pin, __active_map);
+        log_d("BTN: %d LongReleased, Map:%d\n ", pin, __active_map);
         myWS28XXLED[0] = __oldLedColor;
         FastLED.show();
         break;
@@ -575,7 +634,7 @@ void setup() {
   FastLED.show();
   __oldLedColor = CRGB::Red;
     
-  Serial.begin(57600);
+  //Serial.begin(57600);
   int timoutcounter = 0;
    while (!Serial) {
     delay(1000);
@@ -585,13 +644,12 @@ void setup() {
      }
    }
   log_i("Starting up");
-  Serial.println("Starting up");
 
   // reset the settings
   if(digitalRead(10) == LOW && digitalRead(12) == LOW) {
     //reset settings
     prefs.begin("Settings");  //Open namespace Settings
-    Serial.println("Reset settings!");
+    log_d("Reset settings!");
     
     prefs.putBytes("Settings", &myBtnMap, sizeof(myBtnMap));
     
@@ -599,7 +657,7 @@ void setup() {
     
 
     prefs.begin("blename", false); // Open NVS namespace "blename" in RW mode
-    Serial.println("Reset blename!");
+    log_d("Reset blename!");
     
     prefs.putString("blename", midiDeviceName); // Save the default name
     
@@ -607,7 +665,7 @@ void setup() {
     
 
     prefs.begin("wifi", false); // Open NVS namespace "wifi" in RW mode
-    Serial.println("Reset wifi!");
+    log_d("Reset wifi!");
     
     prefs.putString("ssid_local", ssid); // Save the default name
     
@@ -628,10 +686,10 @@ void setup() {
 
   
   if (not prefs.isKey("Settings")) {
-    Serial.println("Settings not found, saving default settings");
+    log_d("Settings not found, saving default settings");
     prefs.putBytes("Settings", &myBtnMap, sizeof(myBtnMap));
   } else {
-    Serial.println("Settings found, loading settings");
+    log_d("Settings found, loading settings");
     prefs.getBytes("Settings", &myBtnMap, sizeof(myBtnMap));
   }
   
@@ -641,11 +699,11 @@ void setup() {
   prefs.begin("blename", false); // Open NVS namespace "blename" in RW mode
   
   if (not prefs.isKey("blename")) {
-    Serial.println("blename not found");
+    log_d("blename not found");
     prefs.putString("blename", midiDeviceName); // Save the default name
   } else {
     midiDeviceName = prefs.getString("blename"); // 
-    Serial.printf("blename found, loading settings: value: %S\n", midiDeviceName.c_str());
+    log_d("blename found, loading settings: value: %S\n", midiDeviceName.c_str());
   }
   
   prefs.end(); // Close NVS namespace "blename"
@@ -653,48 +711,48 @@ void setup() {
 
   prefs.begin("wifi", false); // Open NVS namespace "wifi" in RW mode
   if (not prefs.isKey("ssid_local")) {
-    Serial.println("ssid_local not found");
+    log_d("ssid_local not found");
     prefs.putString("ssid_local", ssid); // Save the default name
   } else {
     ssid = prefs.getString("ssid_local"); // 
-    Serial.printf("ssid_local found, loading settings: value: %S\n", ssid.c_str());
+    log_d("ssid_local found, loading settings: value: %S\n", ssid.c_str());
   }
   
   if (not prefs.isKey("password_local")) {
-    Serial.println("password_local not found");
+    log_d("password_local not found");
     prefs.putString("password_local", password); // Save the default name
   } else {
     password = prefs.getString("password_local"); // 
-    Serial.printf("password_local found, loading settings: value: %S\n", password.c_str());
+    log_d("password_local found, loading settings: value: %S\n", password.c_str());
   }
   
   if (not prefs.isKey("ssid_ap")) {
-    Serial.println("ssid_ap not found");
+    log_d("ssid_ap not found");
     prefs.putString("ssid_ap", ap_ssid); // Save the default name
   } else {
     ap_ssid = prefs.getString("ssid_ap"); // 
-    Serial.printf("ssid_ap found, loading settings: value: %S\n", ap_ssid.c_str());
+    log_d("ssid_ap found, loading settings: value: %S\n", ap_ssid.c_str());
   }
   
   if (not prefs.isKey("password_ap")) {
-    Serial.println("password_ap not found");
+    log_d("password_ap not found");
     prefs.putString("password_ap", ap_password); // Save the default name
   } else {
     ap_password = prefs.getString("password_ap"); // 
-    Serial.printf("password_ap found, loading settings: value: %S\n", ap_password.c_str());
+    log_d("password_ap found, loading settings: value: %S\n", ap_password.c_str());
   }
   
   if (not prefs.isKey("hostname")) {
-    Serial.println("hostname not found");
+    log_d("hostname not found");
     prefs.putString("hostname", hostname); // Save the default name
   } else {
     hostname = prefs.getString("hostname"); // 
-    Serial.printf("hostname found, loading settings: value: %S\n", hostname.c_str());
+    log_d("hostname found, loading settings: value: %S\n", hostname.c_str());
   }
   
   prefs.end(); // Close NVS namespace "wifi"
   
-  Serial.printf("Testdate from settings: %d \n", myBtnMap[4].btnMidiCC[3]);
+  log_d("Testdate from settings: %d \n", myBtnMap[4].btnMidiCC[3]);
 
 
 
@@ -717,13 +775,13 @@ void setup() {
   buttonConfig->setFeature(ButtonConfig::kFeatureRepeatPress);
   buttonConfig->setFeature(ButtonConfig::kFeatureSuppressAfterLongPress); 
 
-  Serial.println("warte 1s");
+  log_d("warte 1s");
   delay(1000);
   //----------------------------------------------------------------
   if(digitalRead(13) == LOW && digitalRead(14) == LOW) {
     myWS28XXLED[0] = CRGB::Blue;
     FastLED.show();
-    Serial.println("Start in AP Mode");
+    log_d("Start in AP Mode");
     __configurator = true;
 
     ESPUI.setVerbosity(Verbosity::VerboseJSON);
@@ -733,7 +791,7 @@ void setup() {
     // try to connect to existing network
     WiFi.begin(ssid.c_str(), password.c_str());
 
-    Serial.print("\n\nTry to connect to existing network");
+    log_d("\n\nTry to connect to existing network");
 
     {
         uint8_t timeout = 10;
@@ -742,14 +800,14 @@ void setup() {
         do
         {
             delay(500);
-            Serial.print(".");
+            log_d(".");
             timeout--;
         } while (timeout && WiFi.status() != WL_CONNECTED);
 
         // not connected -> create hotspot
         if (WiFi.status() != WL_CONNECTED)
         {
-            Serial.print("\n\nCreating hotspot");
+            log_d("\n\nCreating hotspot");
 
             WiFi.mode(WIFI_AP);
             delay(100);
@@ -764,7 +822,7 @@ void setup() {
             do
             {
                 delay(500);
-                Serial.print(".");
+                log_d(".");
                 timeout--;
             } while (timeout);
         }
@@ -772,11 +830,11 @@ void setup() {
 
     dnsServer.start(DNS_PORT, "LittleHelper", apIP);
 
-    Serial.println("\n\nWiFi parameters:");
-    Serial.print("Mode: ");
-    Serial.println(WiFi.getMode() == WIFI_AP ? "Station" : "Client");
-    Serial.print("IP address: ");
-    Serial.println(WiFi.getMode() == WIFI_AP ? WiFi.softAPIP() : WiFi.localIP());
+    log_d("\n\nWiFi parameters:");
+    log_d("Mode: ");
+    log_d(WiFi.getMode() == WIFI_AP ? "Station" : "Client");
+    log_d("IP address: ");
+    log_d(WiFi.getMode() == WIFI_AP ? WiFi.softAPIP() : WiFi.localIP());
     uint16_t tab1 = ESPUI.addControl(ControlType::Tab, "Button 1", "Button 1");
     uint16_t tab2 = ESPUI.addControl(ControlType::Tab, "Button 2", "Button 2");
     uint16_t tab3 = ESPUI.addControl(ControlType::Tab, "Button 3", "Button 3");
@@ -796,8 +854,8 @@ void setup() {
     ESPUI.addControl(ControlType::Switcher, "Show Passwords", "", ControlColor::Alizarin, tab7, &switchShowPasswords);
 
     // Buttons in a for loop
-    int HW_BUTTONS = 5;
-    for (size_t hw_B = 0; hw_B < HW_BUTTONS; hw_B++) // HW Buttons * Ui Button Functions
+    
+    for (size_t hw_B = 0; hw_B < __HW_BUTTONS; hw_B++) // HW Buttons * Ui Button Functions
     {
       uint16_t thistab = 0;
       switch ( hw_B )
@@ -839,8 +897,8 @@ void setup() {
       // Button MIDI Function 0 = Note, 1 = CC, 2 = MMC, 3 = Program Change
       ESPUI.addControl(ControlType::Option, "Note", "0", ControlColor::Dark, __selectUiBtn[hw_B][2]);
       ESPUI.addControl(ControlType::Option, "CC", "1", ControlColor::Dark, __selectUiBtn[hw_B][2]);
-      //ESPUI.addControl(ControlType::Option, "MMC", "2", ControlColor::Dark, __selectUiBtn[hw_B][2]);
-      //ESPUI.addControl(ControlType::Option, "PC", "3", ControlColor::Dark, __selectUiBtn[hw_B][2]);
+      ESPUI.addControl(ControlType::Option, "MMC", "2", ControlColor::Dark, __selectUiBtn[hw_B][2]);
+      ESPUI.addControl(ControlType::Option, "PC", "3", ControlColor::Dark, __selectUiBtn[hw_B][2]);
 
       sprintf(convertstr, "%d", myBtnMap[hw_B].btnMidiCC[__active_map_ui_btn[hw_B]]); // Convert the number to a string
       __selectUiBtn[hw_B][3] = ESPUI.addControl(ControlType::Number, "Midi CC 0 - 127:", convertstr, ControlColor::Dark, thistab, &selectBtnMidiCCFunctionCalback);
@@ -868,7 +926,6 @@ void setup() {
       ESPUI.addControl(Max, "", "127", None, __selectUiBtn[hw_B][7]);
     }
 
-
     ESPUI.begin("Little Helper Configuration");
 
     // set the rigth value to the select control
@@ -876,7 +933,6 @@ void setup() {
     char str[10]; // Ensure this is large enough to hold the number and the null terminator
     uint8_t number = myBtnMap[0].btnMidiFunction[0]; // Assuming this is the uint8_t you mentioned
     sprintf(str, "%d", number); // Convert the number to a string
-    ESPUI.updateControlValue(selectBtn1MidiFunction, str); // Update the control value
   }
 
 
