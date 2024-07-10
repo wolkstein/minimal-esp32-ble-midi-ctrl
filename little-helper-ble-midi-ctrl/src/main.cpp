@@ -170,10 +170,8 @@ void textCallBlueThoothName(Control* sender, int type)
       ESPUI.updateControlValue(bleNameTxtField, "Name contains spaces");
       return;
     }
-    prefs.begin("bluetooth", false); // Open NVS namespace "bluetooth" in RW mode
-    
+    prefs.begin("blename", false); // Open NVS namespace "bluetooth" in RW mode
     prefs.putString("blename", value); // Store Bluetooth name
-    
     prefs.end(); // Close NVS
     
   
@@ -634,7 +632,7 @@ void setup() {
   FastLED.show();
   __oldLedColor = CRGB::Red;
     
-  //Serial.begin(57600);
+  Serial.begin(57600);
   int timoutcounter = 0;
    while (!Serial) {
     delay(1000);
@@ -835,6 +833,7 @@ void setup() {
     log_d(WiFi.getMode() == WIFI_AP ? "Station" : "Client");
     log_d("IP address: ");
     log_d(WiFi.getMode() == WIFI_AP ? WiFi.softAPIP() : WiFi.localIP());
+
     uint16_t tab1 = ESPUI.addControl(ControlType::Tab, "Button 1", "Button 1");
     uint16_t tab2 = ESPUI.addControl(ControlType::Tab, "Button 2", "Button 2");
     uint16_t tab3 = ESPUI.addControl(ControlType::Tab, "Button 3", "Button 3");
