@@ -22,6 +22,7 @@
 #include <FastLED.h>
 #include <AceButton.h>
 #include <Preferences.h>
+#include "esp_log.h"
 
 #include <DNSServer.h>
 #include <ESPUI.h>
@@ -142,8 +143,6 @@ myButton* getMyButton(int pin) {
     }
 }
 
-
-
 // WEB UI Callbacks
 
 void switchShowPasswords(Control* sender, int type) {
@@ -174,7 +173,6 @@ void textCallBlueThoothName(Control* sender, int type)
     prefs.putString("blename", value); // Store Bluetooth name
     prefs.end(); // Close NVS
     
-  
 }
 
 void textCallSsidName(Control* sender, int type) {
@@ -308,7 +306,11 @@ void selectBtnMapFnc(Control* sender, int value) {
         break;
       }
     }
-    __active_map_ui_btn[active_btn] = value_t;
+
+
+    // Enable or disable the controls based on the selected map
+    ESPUI.setEnabled(__selectUiBtn[active_btn][9], true);
+    ESPUI.setPanelStyle(__selectUiBtn[active_btn][9], ";");
     
     //update the value in the settings
     char str[10]; // Ensure this is large enough to hold the number and the null terminator
@@ -319,9 +321,13 @@ void selectBtnMapFnc(Control* sender, int value) {
 
     //uint8_t localvalue = myBtnMap[0].btnMidiFunction[__active_map_ui_btn[0]]; // get the MidiFunction value from the settings
     localvalue = myBtnMap[active_btn].btnMidiFunction[value_t]; // get the MidiFunction value from the settings
+    if(localvalue == 0){
+        ESPUI.setEnabled(__selectUiBtn[active_btn][9], false);
+    }
     sprintf(str, "%u", localvalue); // Convert the number to a string
     ESPUI.updateControlValue(__selectUiBtn[active_btn][2], str); // Update the control value
     log_d("Active Button: %d, String: %S, Value: %u\nOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO", active_btn, str,localvalue);
+
 
     localvalue = myBtnMap[active_btn].btnMidiCC[value_t]; // Get the MidiCC value from the settings
     sprintf(str, "%d", localvalue); // Convert the number to a string
@@ -342,6 +348,14 @@ void selectBtnMapFnc(Control* sender, int value) {
     localvalue = myBtnMap[active_btn].btnMidiVelocity[value_t]; // Get the MidiVelocity value from the settings
     sprintf(str, "%d", localvalue); // Convert the number to a string
     ESPUI.updateControlValue(__selectUiBtn[active_btn][7], str); // Update the control value
+
+    localvalue = myBtnMap[active_btn].btnFunction[value_t]; // Get the Function value from the settings
+    sprintf(str, "%d", localvalue); // Convert the number to a string
+    ESPUI.updateControlValue(__selectUiBtn[active_btn][8], str); // Update the control value
+
+    localvalue = myBtnMap[active_btn].needRelease[value_t]; // Get the NeedRelease value from the settings
+    sprintf(str, "%d", localvalue); // Convert the number to a string
+    ESPUI.updateControlValue(__selectUiBtn[active_btn][9], str); // Update the control value
 
 }
 
@@ -467,11 +481,42 @@ void selectBtnNoteVelocityCalback(Control* sender, int value) {
     myBtnMap[active_btn].btnMidiVelocity[__active_map_ui_btn[active_btn]] = value_t;
     saveSettings();
 }
-// Button 1 Web UI Callbacks end ---------
+
+void selectBtnBehaveFncCalback(Control* sender, int value) {
+    
+    uint8_t value_t = static_cast<uint8_t>(String(sender->value).toInt());
+
+    int active_btn = 0;
+    for(int i = 0; i < __HW_BUTTONS; i++) {
+      if(__selectUiBtn[i][8] == sender->id) {
+        active_btn = i;
+        break;
+      }
+    }
+
+    log_d("Select: ID: %d, Value: %s, Value as int %d\n", sender->id, sender->value, value_t);
+    myBtnMap[active_btn].btnFunction[__active_map_ui_btn[active_btn]] = value_t;
+    saveSettings();
+}
 
 
 
+void selectBtnTransitinCalback(Control* sender, int value) {
+    
+    uint8_t value_t = static_cast<uint8_t>(String(sender->value).toInt());
 
+    int active_btn = 0;
+    for(int i = 0; i < __HW_BUTTONS; i++) {
+      if(__selectUiBtn[i][9] == sender->id) {
+        active_btn = i;
+        break;
+      }
+    }
+
+    log_d("Select: ID: %d, Value: %s, Value as int %d\n", sender->id, sender->value, value_t);
+    myBtnMap[active_btn].needRelease[__active_map_ui_btn[active_btn]] = (bool)value_t;
+    saveSettings();
+}
 
 // ~ WEB UI Callbacks
 
@@ -515,26 +560,53 @@ void handleEvent(AceButton* button, uint8_t eventType, uint8_t /*buttonState*/) 
 
     CRGB tmpBtncolor = myledslookup[btnColor];
 
+    // check the current button state BTN_ON
+
     switch (eventType) {
       case AceButton::kEventPressed:
         log_i("handleEvent(): BTN: %d Pressed", pin);
         log_d("BTN: %d Pressed, Map:%d\n ", pin, __active_map);
-        if(btnMidiFunction == MIDI_NOTE) // Note on need short press event
-          BLEMidiServer.noteOn(btnMidiChannel, btnMidiNote, btnMidiVelocity);
-        else if(btnMidiFunction == MIDI_CC && !needRelease) // CC on need short press event
+
+
+        if(btnMidiFunction == MIDI_NOTE) { // Note on need short press event
+          if(btnFunction == BTN_PUSH){ // Push Button
+            BLEMidiServer.noteOn(btnMidiChannel, btnMidiNote, btnMidiVelocity);
+            myBtn->btnState[active_mapper] = BTN_ON;
+          }
+          if(btnFunction == BTN_TOGGLE){ // Toggle Button
+            if(btnState == BTN_OFF){
+              BLEMidiServer.noteOn(btnMidiChannel, btnMidiNote, btnMidiVelocity);
+              myBtn->btnState[active_mapper] = BTN_ON;
+            }
+            else if(btnState == BTN_ON){
+              BLEMidiServer.noteOff(btnMidiChannel, btnMidiNote, 0 );
+              myBtn->btnState[active_mapper] = BTN_OFF;
+            }
+          }
+        }
+        else if(btnMidiFunction == MIDI_CC && !needRelease){ // CC on need short press event
           BLEMidiServer.controlChange(btnMidiChannel, btnMidiCC, btnMidiCCValueStateOn);
+          myBtn->btnState[active_mapper] = BTN_ON;
+        } 
         else if(btnMidiFunction == MIDI_MMC && !needRelease) return; // need implementation
         else if(btnMidiFunction == MIDI_PROGRAMCHANGE && !needRelease) return; // need implementation
+
         myWS28XXLED[0] = tmpBtncolor;
         FastLED.show();
         break;
       case AceButton::kEventReleased:
         log_i("handleEvent(): BTN: %d Released", pin);
         log_d("BTN: %d Released, Map:%d\n ", pin, __active_map);
-        if(btnMidiFunction == MIDI_NOTE) // Note on need short press event
-          BLEMidiServer.noteOff(btnMidiChannel, btnMidiNote, 0 );
-        else if(btnMidiFunction == MIDI_CC && needRelease) // CC on need short press event
+        if(btnMidiFunction == MIDI_NOTE){ // Note on need short press event
+          if(btnFunction == BTN_PUSH){ // Push Button
+            BLEMidiServer.noteOff(btnMidiChannel, btnMidiNote, 0 ); // Note off
+            myBtn->btnState[active_mapper] = BTN_OFF;
+          }
+        }
+        else if(btnMidiFunction == MIDI_CC && needRelease){ // CC on need short press event
           BLEMidiServer.controlChange(btnMidiChannel, btnMidiCC, btnMidiCCValueStateOn);
+          myBtn->btnState[active_mapper] = BTN_OFF;
+        }
         else if(btnMidiFunction == MIDI_MMC && needRelease) return; // need implementation
         else if(btnMidiFunction == MIDI_PROGRAMCHANGE && needRelease) return; // need implementation
         myWS28XXLED[0] = __oldLedColor;
@@ -576,6 +648,9 @@ void handleEvent(AceButton* button, uint8_t eventType, uint8_t /*buttonState*/) 
 
         break;
       case AceButton::kEventLongReleased:
+        // we can disable the note every time the button is logpress released even MidiFuction is not Note
+        BLEMidiServer.noteOff(btnMidiChannel, btnMidiNote, 0 );
+        
         log_i("handleEvent(): BTN: %d LongReleased", pin);
         log_d("BTN: %d LongReleased, Map:%d\n ", pin, __active_map);
         myWS28XXLED[0] = __oldLedColor;
@@ -623,8 +698,6 @@ void disconected() {
 
 void setup() {
 
-
-
   // initialize WS28xx LED in GRB order
   FastLED.addLeds<WS2812B, WS28XX_LED_PIN, GRB>(myWS28XXLED, NUM_LEDS);
   FastLED.setBrightness(BRIGHTNESS);
@@ -634,16 +707,29 @@ void setup() {
     
   Serial.begin(57600);
   int timoutcounter = 0;
-   while (!Serial) {
-    delay(1000);
-     timoutcounter++;
-     if (timoutcounter > 10) {
-       break;
-     }
-   }
+  while (!Serial) {
+  delay(1000);
+    timoutcounter++;
+    if (timoutcounter > 10) {
+      break;
+    }
+  }
+  // Set log level
+  esp_log_level_set("*", ESP_LOG_DEBUG);
   log_i("Starting up");
 
-  // reset the settings
+  // Reset only Midi Settings
+  if(digitalRead(10) == LOW && digitalRead(11) == LOW) {
+    //reset settings
+    prefs.begin("Settings");  //Open namespace Settings
+    log_d("Reset settings!");
+    
+    prefs.putBytes("Settings", &myBtnMap, sizeof(myBtnMap));
+    
+    prefs.end(); // close the Settings Namespace
+  }
+
+  // reset all the settings
   if(digitalRead(10) == LOW && digitalRead(12) == LOW) {
     //reset settings
     prefs.begin("Settings");  //Open namespace Settings
@@ -786,10 +872,11 @@ void setup() {
 
     WiFi.setHostname(hostname.c_str());
 
-    // try to connect to existing network
-    WiFi.begin(ssid.c_str(), password.c_str());
-
-    log_d("\n\nTry to connect to existing network");
+    if(digitalRead(12) == HIGH) {
+      // try to connect to existing network
+      WiFi.begin(ssid.c_str(), password.c_str());
+      log_d("\n\nTry to connect to existing network");
+    }
 
     {
         uint8_t timeout = 10;
@@ -830,9 +917,11 @@ void setup() {
 
     log_d("\n\nWiFi parameters:");
     log_d("Mode: ");
-    log_d(WiFi.getMode() == WIFI_AP ? "Station" : "Client");
+    log_d("%S\n", WiFi.getMode() == WIFI_AP ? "Station" : "Client");
     log_d("IP address: ");
-    log_d(WiFi.getMode() == WIFI_AP ? WiFi.softAPIP() : WiFi.localIP());
+    log_d("%S\n", WiFi.getMode() == WIFI_AP ? WiFi.softAPIP() : WiFi.localIP());
+
+    ESPUI.setVerbosity(Verbosity::Quiet);
 
     uint16_t tab1 = ESPUI.addControl(ControlType::Tab, "Button 1", "Button 1");
     uint16_t tab2 = ESPUI.addControl(ControlType::Tab, "Button 2", "Button 2");
@@ -923,6 +1012,14 @@ void setup() {
       __selectUiBtn[hw_B][7] = ESPUI.addControl(ControlType::Number, "Midi Note Velocity 0 - 127:", convertstr, ControlColor::Dark, thistab, &selectBtnNoteVelocityCalback);
       ESPUI.addControl(Min, "", "0", None, __selectUiBtn[hw_B][7]);
       ESPUI.addControl(Max, "", "127", None, __selectUiBtn[hw_B][7]);
+
+      __selectUiBtn[hw_B][8] = ESPUI.addControl(ControlType::Select, "Button behave: Midi Note only", "", ControlColor::Dark, thistab, &selectBtnBehaveFncCalback);
+      ESPUI.addControl(ControlType::Option, "Push", "0", ControlColor::Dark, __selectUiBtn[hw_B][8]);
+      ESPUI.addControl(ControlType::Option, "Toggle", "1", ControlColor::Dark, __selectUiBtn[hw_B][8]);
+
+      __selectUiBtn[hw_B][9] = ESPUI.addControl(ControlType::Select, "Button Transition: Midi Note excluded", "", ControlColor::Dark, thistab, &selectBtnTransitinCalback);
+      ESPUI.addControl(ControlType::Option, "Push", "0", ControlColor::Dark, __selectUiBtn[hw_B][9]);
+      ESPUI.addControl(ControlType::Option, "Release", "1", ControlColor::Dark, __selectUiBtn[hw_B][9]);
     }
 
     ESPUI.begin("Little Helper Configuration");

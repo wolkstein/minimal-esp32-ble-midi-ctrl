@@ -1,5 +1,7 @@
+
 #include <Arduino.h> // Standard Arduino Library
 #include <FastLED.h>
+#include "esp_log.h"
 
 #ifndef MAIN_H // Makro-Wächter, um Mehrfachinklusionen zu verhindern
 #define MAIN_H
@@ -33,8 +35,6 @@ uint16_t hostnameTxtField;
 
 bool __configurator = false;
 
-
-
 #define WS28XX_LED_PIN 33 // GPIO 33
 #define NUM_LEDS  1
 #define BRIGHTNESS 100
@@ -45,58 +45,13 @@ uint8_t __active_map_ui_btn[5] = {0, 0, 0, 0, 0};
 
 bool __isConnected = false;
 
-uint16_t selectBtn1Map;
-uint16_t selectBtn1MidiFunction;
-uint16_t selectBtn1MidiChannel;
-uint16_t selectBtn1CCFunction;
-uint16_t selectBtn1CCValueMax;
-uint16_t selectBtn1CCValueMin;
-uint16_t selectBtn1MidiNote;
-uint16_t selectBtn1NoteVelocity;
-
-uint16_t selectBtn2Map;
-uint16_t selectBtn2MidiFunction;
-uint16_t selectBtn2MidiChannel;
-uint16_t selectBtn2CCFunction;
-uint16_t selectBtn2CCValueMax;
-uint16_t selectBtn2CCValueMin;
-uint16_t selectBtn2MidiNote;
-uint16_t selectBtn2NoteVelocity;
-
-uint16_t selectBtn3Map;
-uint16_t selectBtn3MidiFunction;
-uint16_t selectBtn3MidiChannel;
-uint16_t selectBtn3CCFunction;
-uint16_t selectBtn3CCValueMax;
-uint16_t selectBtn3CCValueMin;
-uint16_t selectBtn3MidiNote;
-uint16_t selectBtn3NoteVelocity;
-
-uint16_t selectBtn4Map;
-uint16_t selectBtn4MidiFunction;
-uint16_t selectBtn4MidiChannel;
-uint16_t selectBtn4CCFunction;
-uint16_t selectBtn4CCValueMax;
-uint16_t selectBtn4CCValueMin;
-uint16_t selectBtn4MidiNote;
-uint16_t selectBtn4NoteVelocity;
-
-uint16_t selectBtn5Map;
-uint16_t selectBtn5MidiFunction;
-uint16_t selectBtn5MidiChannel;
-uint16_t selectBtn5CCFunction;
-uint16_t selectBtn5CCValueMax;
-uint16_t selectBtn5CCValueMin;
-uint16_t selectBtn5MidiNote;
-uint16_t selectBtn5NoteVelocity;
-
-uint16_t __selectUiBtn[5][8]  = {
+uint16_t __selectUiBtn[5][10]  = {
   // selectBtn1Map, selectBtn1MidiChannel, selectBtn1MidiFunction, selectBtn1CCFunction, selectBtn1CCValueMax, selectBtn1CCValueMin, selectBtn1MidiNote, selectBtn1NoteVelocity
-  {0, 0, 0, 0, 0, 0, 0, 0},
-  {0, 0, 0, 0, 0, 0, 0, 0},
-  {0, 0, 0, 0, 0, 0, 0, 0},
-  {0, 0, 0, 0, 0, 0, 0, 0},
-  {0, 0, 0, 0, 0, 0, 0, 0}
+  {0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+  {0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+  {0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+  {0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+  {0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
 };
 
 enum my_mmc_t {
