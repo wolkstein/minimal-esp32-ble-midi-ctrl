@@ -45,13 +45,13 @@ uint8_t __active_map_ui_btn[5] = {0, 0, 0, 0, 0};
 
 bool __isConnected = false;
 
-uint16_t __selectUiBtn[5][10]  = {
+uint16_t __selectUiBtn[5][11]  = {
   // selectBtn1Map, selectBtn1MidiChannel, selectBtn1MidiFunction, selectBtn1CCFunction, selectBtn1CCValueMax, selectBtn1CCValueMin, selectBtn1MidiNote, selectBtn1NoteVelocity
-  {0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-  {0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-  {0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-  {0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-  {0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
+  {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+  {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+  {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+  {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+  {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
 };
 
 enum my_mmc_t {
@@ -77,26 +77,6 @@ enum my_btn_function {
 enum my_btn_state {
   BTN_OFF = 0x00,
   BTN_ON = 0x01,
-};
-
-CRGB myledslookup[7] = {
-    CRGB::Red,
-    CRGB::Green,
-    CRGB::Blue,
-    CRGB::Yellow,
-    CRGB::Purple,
-    CRGB::Cyan,
-    CRGB::White
-    };
-
-enum my_btn_color {
-  BTN_RED = 0x00,
-  BTN_GREEN = 0x01,
-  BTN_BLUE = 0x02,
-  BTN_YELLOW = 0x03,
-  BTN_PURPLE = 0x04,
-  BTN_CYAN = 0x05,
-  BTN_WHITE = 0x06,
 };
 
 enum my_midi_function {
@@ -150,7 +130,7 @@ struct myButton
   uint8_t btnFunction[2]; // Button Function als Array
   bool btnLongpress[2]; // Button Longpress als Array
   uint8_t btnState[2]; // Button State als Array
-  uint8_t btnColor[2]; // Button Color als Array
+  uint32_t btnColor[2]; // Button Color als Array
   uint8_t btnMidiFunction[2]; // Button MIDI Function als Array
   uint8_t btnMidiChannel[2]; // Button MIDI Channel als Array
   uint8_t btnMidiNote[2]; // Button MIDI Note als Array
@@ -160,5 +140,6 @@ struct myButton
   uint8_t btnMidiCCValueStateOff[2]; // Button MIDI Value State Off als Array
   uint8_t btnMidiMMC[2]; // Button MIDI MMC als Array
 };
+
 
 #endif // MAIN_H

@@ -42,6 +42,8 @@ CRGB myWS28XXLED[NUM_LEDS];
 
 CRGB __oldLedColor;
 
+
+
 myButton myBtnMap[5] = { // 5 Buttons 4 Maps Map 1 und Map 2 are short press values, Map 3 and Map 4 are long press values
     { // Button 1
          10,  // GPIO Pin
@@ -49,7 +51,7 @@ myButton myBtnMap[5] = { // 5 Buttons 4 Maps Map 1 und Map 2 are short press val
          {BTN_PUSH, BTN_PUSH},// Button Function 0 = Push, 1 = Toggle
          {false, false}, // Button Long Press
          {BTN_OFF, BTN_OFF}, // Button State 0 = Off, 1 = On
-         {BTN_RED, BTN_RED}, // Button Color 0 = Red, 1 = Green, 2 = Blue, 3 = Yellow, 4 = Purple, 5 = Cyan, 6 = White
+         {CRGB::Red, CRGB::Red}, // Button Color 0 = Red, 1 = Green, 2 = Blue, 3 = Yellow, 4 = Purple, 5 = Cyan, 6 = White
          {MIDIFUNC_CC, MIDIFUNC_CC}, // Button MIDI Function 0 = Note, 1 = CC, 2 = MMC, 3 = Program Change
          {MIDI_CH_1, MIDI_CH_1}, // Button MIDI Channel 0 - 15
          {60, 60}, // Button MIDI Note 0 - 127
@@ -65,7 +67,7 @@ myButton myBtnMap[5] = { // 5 Buttons 4 Maps Map 1 und Map 2 are short press val
          {BTN_PUSH, BTN_PUSH},// Button Function 0 = Push, 1 = Toggle
          {false, false}, // Button Long Press
          {BTN_OFF, BTN_OFF}, // Button State 0 = Off, 1 = On
-         {BTN_YELLOW, BTN_YELLOW}, // Button Color 0 = Red, 1 = Green, 2 = Blue, 3 = Yellow, 4 = Purple, 5 = Cyan, 6 = White
+         {CRGB::Yellow, CRGB::Yellow}, // Button Color 0 = Red, 1 = Green, 2 = Blue, 3 = Yellow, 4 = Purple, 5 = Cyan, 6 = White
          {MIDIFUNC_CC, MIDIFUNC_CC}, // Button MIDI Function 0 = Note, 1 = CC, 2 = MMC, 3 = Program Change
          {MIDI_CH_1, MIDI_CH_1}, // Button MIDI Channel 0 - 15
          {61, 61}, // Button MIDI Note 0 - 127
@@ -81,7 +83,7 @@ myButton myBtnMap[5] = { // 5 Buttons 4 Maps Map 1 und Map 2 are short press val
          {BTN_PUSH, BTN_PUSH},// Button Function 0 = Push, 1 = Toggle
          {false, false}, // Button Long Press
          {BTN_OFF, BTN_OFF}, // Button State 0 = Off, 1 = On
-         {BTN_CYAN, BTN_CYAN}, // Button Color 0 = Red, 1 = Green, 2 = Blue, 3 = Yellow, 4 = Purple, 5 = Cyan, 6 = White
+         {CRGB::Cyan, CRGB::Cyan}, // Button Color 0 = Red, 1 = Green, 2 = Blue, 3 = Yellow, 4 = Purple, 5 = Cyan, 6 = White
          {MIDIFUNC_CC, MIDIFUNC_CC}, // Button MIDI Function 0 = Note, 1 = CC, 2 = MMC, 3 = Program Change
          {MIDI_CH_1, MIDI_CH_1}, // Button MIDI Channel 0 - 15
          {62, 62}, // Button MIDI Note 0 - 127
@@ -97,7 +99,7 @@ myButton myBtnMap[5] = { // 5 Buttons 4 Maps Map 1 und Map 2 are short press val
          {BTN_PUSH, BTN_PUSH},// Button Function 0 = Push, 1 = Toggle
          {false, true}, // Button Long Press
          {BTN_OFF, BTN_OFF}, // Button State 0 = Off, 1 = On
-         {BTN_WHITE, BTN_WHITE}, // Button Color 0 = Red, 1 = Green, 2 = Blue, 3 = Yellow, 4 = Purple, 5 = Cyan, 6 = White
+         {CRGB::Aquamarine, CRGB::Aquamarine}, // Button Color 0 = Red, 1 = Green, 2 = Blue, 3 = Yellow, 4 = Purple, 5 = Cyan, 6 = White
          {MIDIFUNC_CC, MIDIFUNC_CC}, // Button MIDI Function 0 = Note, 1 = CC, 2 = MMC, 3 = Program Change
          {MIDI_CH_1, MIDI_CH_1}, // Button MIDI Channel 0 - 15
          {62, 62}, // Button MIDI Note 0 - 127
@@ -113,7 +115,7 @@ myButton myBtnMap[5] = { // 5 Buttons 4 Maps Map 1 und Map 2 are short press val
          {BTN_PUSH, BTN_PUSH},// Button Function 0 = Push, 1 = Toggle
          {false, false}, // Button Long Press
          {BTN_OFF, BTN_OFF}, // Button State 0 = Off, 1 = On
-         {BTN_BLUE, BTN_BLUE}, // Button Color 0 = Red, 1 = Green, 2 = Blue, 3 = Yellow, 4 = Purple, 5 = Cyan, 6 = White
+         {CRGB::Blue, CRGB::Blue}, // Button Color 0 = Red, 1 = Green, 2 = Blue, 3 = Yellow, 4 = Purple, 5 = Cyan, 6 = White
          {MIDIFUNC_CC, MIDIFUNC_CC}, // Button MIDI Function 0 = Note, 1 = CC, 2 = MMC, 3 = Program Change
          {MIDI_CH_1, MIDI_CH_1}, // Button MIDI Channel 0 - 15
          {62, 62}, // Button MIDI Note 0 - 127
@@ -518,6 +520,29 @@ void selectBtnTransitinCalback(Control* sender, int value) {
     saveSettings();
 }
 
+void selectBtnColorCalback(Control *sender, int type) {
+	//Declare space for style strings. These have to be static so that they are always available
+	//to the websocket layer. If we'd not made them static they'd be allocated on the heap and
+	//will be unavailable when we leave this function.
+	static char stylecol1[60], stylecol2[30]; 
+	if(type == B_UP) {
+		//Generate two random HTML hex colour codes, and print them into CSS style rules
+		sprintf(stylecol1, "border-bottom: #999 3px solid; background-color: #%06X;", (unsigned int) random(0x0, 0xFFFFFF));
+		sprintf(stylecol2, "background-color: #%06X;", (unsigned int) random(0x0, 0xFFFFFF));
+
+		//Apply those styles to various elements to show how controls react to styling
+		ESPUI.setPanelStyle(sender->id, stylecol1);
+		ESPUI.setElementStyle(sender->id, stylecol2);
+		ESPUI.setPanelStyle(sender->id, stylecol1);
+		ESPUI.setElementStyle(sender->id, stylecol2);
+		ESPUI.setPanelStyle(sender->id, stylecol1);
+		ESPUI.setElementStyle(sender->id, stylecol2);
+		ESPUI.setPanelStyle(sender->id, stylecol1);
+		ESPUI.setElementStyle(sender->id, stylecol2);
+	}
+
+}
+
 // ~ WEB UI Callbacks
 
 
@@ -548,7 +573,7 @@ void handleEvent(AceButton* button, uint8_t eventType, uint8_t /*buttonState*/) 
     uint8_t btnFunction = myBtn->btnFunction[active_mapper]; // 0 = Push, 1 = Toggle
     bool btnLongpress = myBtn->btnLongpress[active_mapper]; // 0 = Short Press, 1 = Long Press
     uint8_t btnState = myBtn->btnState[active_mapper]; // 0 = Off, 1 = On
-    uint8_t btnColor = myBtn->btnColor[active_mapper]; // 0 = Red, 1 = Green, 2 = Blue, 3 = Yellow, 4 = Purple, 5 = Cyan, 6 = White
+    uint32_t btnColor = myBtn->btnColor[active_mapper]; // 0 = Red, 1 = Green, 2 = Blue, 3 = Yellow, 4 = Purple, 5 = Cyan, 6 = White
     uint8_t btnMidiFunction = myBtn->btnMidiFunction[active_mapper]; // 0 = Note, 1 = CC, 2 = MMC, 3 = Program Change
     uint8_t btnMidiChannel = myBtn->btnMidiChannel[active_mapper]; // 0 - 15  MIDI Channel
     uint8_t btnMidiNote = myBtn->btnMidiNote[active_mapper]; // 0 - 127 MIDI Note
@@ -558,7 +583,7 @@ void handleEvent(AceButton* button, uint8_t eventType, uint8_t /*buttonState*/) 
     uint8_t btnMidiCCValueStateOff = myBtn->btnMidiCCValueStateOff[active_mapper]; // 0 - 127 MIDI CC Value State Off
     uint8_t btnMidiMMC = myBtn->btnMidiCCValueStateOff[active_mapper]; // 0 - 13 MIDI MMC
 
-    CRGB tmpBtncolor = myledslookup[btnColor];
+    CRGB tmpBtncolor = (CRGB::HTMLColorCode)btnColor;
 
     // check the current button state BTN_ON
 
@@ -698,6 +723,7 @@ void disconected() {
 
 void setup() {
 
+
   // initialize WS28xx LED in GRB order
   FastLED.addLeds<WS2812B, WS28XX_LED_PIN, GRB>(myWS28XXLED, NUM_LEDS);
   FastLED.setBrightness(BRIGHTNESS);
@@ -715,12 +741,12 @@ void setup() {
     }
   }
   // Set log level
-  esp_log_level_set("*", ESP_LOG_DEBUG);
+  esp_log_level_set("*", ESP_LOG_NONE);
   log_i("Starting up");
 
   // Reset only Midi Settings
   if(digitalRead(10) == LOW && digitalRead(11) == LOW) {
-    //reset settings
+    Serial.println("Reset Midi settings!");
     prefs.begin("Settings");  //Open namespace Settings
     log_d("Reset settings!");
     
@@ -1020,15 +1046,14 @@ void setup() {
       __selectUiBtn[hw_B][9] = ESPUI.addControl(ControlType::Select, "Button Transition: Midi Note excluded", "", ControlColor::Dark, thistab, &selectBtnTransitinCalback);
       ESPUI.addControl(ControlType::Option, "Push", "0", ControlColor::Dark, __selectUiBtn[hw_B][9]);
       ESPUI.addControl(ControlType::Option, "Release", "1", ControlColor::Dark, __selectUiBtn[hw_B][9]);
+
+      __selectUiBtn[hw_B][10] = ESPUI.addControl(ControlType::Slider, "Button Color:", "", ControlColor::Dark, thistab, &selectBtnColorCalback);
+      ESPUI.addControl(Min, "", "0", None, __selectUiBtn[hw_B][10]);
+      ESPUI.addControl(Max, "", "150", None, __selectUiBtn[hw_B][10]);
     }
 
     ESPUI.begin("Little Helper Configuration");
 
-    // set the rigth value to the select control
-    // BTN 1 Values
-    char str[10]; // Ensure this is large enough to hold the number and the null terminator
-    uint8_t number = myBtnMap[0].btnMidiFunction[0]; // Assuming this is the uint8_t you mentioned
-    sprintf(str, "%d", number); // Convert the number to a string
   }
 
 
@@ -1064,3 +1089,6 @@ void loop() {
 
   delay(1);
 }
+
+
+
