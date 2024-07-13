@@ -79,7 +79,7 @@ cp DAW_MIDI_MAPS/ArdourAndHarrisonMixbus/midi_mapsLittle_Helper.map ~/.config/ar
 
 ### Guitar attachment
 
-![Guitar attachment cad](doc/guitarattachment_cad.jpg)
-![Guitar attachment ](doc/guitarattachment1.jpg)
-![Guitar attachment ](doc/guitarattachment2.jpg)
-![Guitar attachment ](doc/guitarattachment3.jpg)
+![Guitar attachment cad](doc/guitar_attachment_cad.jpg)
+![Guitar attachment ](doc/guitar_attachment1.jpg)
+![Guitar attachment ](doc/guitar_attachment2.jpg)
+![Guitar attachment ](doc/guitar_attachment3.jpg)
