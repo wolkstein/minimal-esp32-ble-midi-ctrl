@@ -2,6 +2,8 @@
 
 This project is a minimal ESP32 BLE MIDI controller. It allows you to control MIDI devices wirelessly using Bluetooth Low Energy (BLE) technology. The controller is designed to be compact and easy to use, making it ideal for musicians and performers.
 
+![PCB](doc/headerimg.jpg)
+
 ## Features
 
 - BLE MIDI connectivity
