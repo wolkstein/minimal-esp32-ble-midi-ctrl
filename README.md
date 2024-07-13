@@ -7,11 +7,12 @@ This project is a minimal ESP32 BLE MIDI controller. It allows you to control MI
 - BLE MIDI connectivity
 - Compact and portable design
 - Easy-to-use interface
+- Easy-to-use Web UI to make settings
 - With Ardour and Harrison Mixbus compatible midi_map file
 - as Platformio Project (esp32 arduino framework)
 
 ## Parts
-- ESP32 
+- ESP32-S3-Mini
 - 5 momentary button switches
 - 5 10k resistors
 - breadboard
@@ -83,3 +84,8 @@ cp DAW_MIDI_MAPS/ArdourAndHarrisonMixbus/midi_mapsLittle_Helper.map ~/.config/ar
 ![Guitar attachment ](doc/guitar_attachment1.jpg)
 ![Guitar attachment ](doc/guitar_attachment2.jpg)
 ![Guitar attachment ](doc/guitar_attachment3.jpg)
+
+### Web interface
+
+![ Settings ](doc/webinterface-settings.png)
+![ Btn Tabs 1 - 5 ](doc/webinterface-btn1-5.png)
