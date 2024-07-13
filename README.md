@@ -25,7 +25,7 @@ PCB:
 ![PCB - finished](doc/platine.jpg)
 
 Housing:
-![Housing](doc/Freecad-Housing.png)
+![Housing](doc/guitarattachment_cad.png)
 
 ## Getting Started
 
@@ -79,7 +79,7 @@ cp DAW_MIDI_MAPS/ArdourAndHarrisonMixbus/midi_mapsLittle_Helper.map ~/.config/ar
 
 ### Guitar attachment
 
-![Guitar attachment cad](doc/guitar_attachment_cad.jpg)
+![Guitar attachment cad](doc/guitarattachment_cad.png)
 ![Guitar attachment ](doc/guitar_attachment1.jpg)
 ![Guitar attachment ](doc/guitar_attachment2.jpg)
 ![Guitar attachment ](doc/guitar_attachment3.jpg)
