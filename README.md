@@ -69,3 +69,17 @@ cp DAW_MIDI_MAPS/ArdourAndHarrisonMixbus/midi_mapsLittle_Helper.map ~/.config/ar
 - Done  
 
 ![Ardour Mixbus Midi](doc/Ardour-Mixbus-Little-Helper-Midi-Setup.png)
+
+---
+## Some more pictures of how it is used
+
+### All parts
+
+![All Parts](doc/allparts.jpg)
+
+### Guitar attachment
+
+![Guitar attachment cad](doc/guitarattachment_cad.jpg)
+![Guitar attachment ](doc/guitarattachment1.jpg)
+![Guitar attachment ](doc/guitarattachment2.jpg)
+![Guitar attachment ](doc/guitarattachment3.jpg)
