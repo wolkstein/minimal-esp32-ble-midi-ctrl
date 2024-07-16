@@ -3421,6 +3421,246 @@
 				)
 			)
 		)
+		(symbol "Resistor_SMD_0805_JLCPCB:R0805_18K"
+			(pin_numbers hide)
+			(pin_names
+				(offset 0)
+			)
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(property "Reference" "R"
+				(at -2.54 0 90)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Value" "R0805_18K"
+				(at 2.54 0 90)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Footprint" "ba_res:r2012"
+				(at 5.08 2.54 90)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Datasheet" "https://wmsc.lcsc.com/wmsc/upload/file/pdf/v2/lcsc/2206010216_UNI-ROYAL-Uniroyal-Elec-0805W8F1802T5E_C17506.pdf"
+				(at 2.032 0 90)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Description" "125mW Thick Film Resistors 150V ±100ppm/℃ ±1% 18kΩ 0805 Chip Resistor - Surface Mount ROHS"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "LCSC Part #" "C17506"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "ki_keywords" "r res resistor"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(symbol "R0805_18K_0_1"
+				(rectangle
+					(start -1.016 -2.54)
+					(end 1.016 2.54)
+					(stroke
+						(width 0.254)
+						(type solid)
+					)
+					(fill
+						(type none)
+					)
+				)
+			)
+			(symbol "R0805_18K_1_1"
+				(pin passive line
+					(at 0 3.81 270)
+					(length 1.27)
+					(name "~"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at 0 -3.81 90)
+					(length 1.27)
+					(name "~"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "2"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+			)
+		)
+		(symbol "Resistor_SMD_0805_JLCPCB:R0805_47K"
+			(pin_numbers hide)
+			(pin_names
+				(offset 0)
+			)
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(property "Reference" "R"
+				(at -2.54 0 90)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Value" "R0805_47K"
+				(at 2.54 0 90)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Footprint" "ba_res:r2012"
+				(at 5.08 2.54 90)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Datasheet" "https://wmsc.lcsc.com/wmsc/upload/file/pdf/v2/lcsc/2206010200_UNI-ROYAL-Uniroyal-Elec-0805W8F4702T5E_C17713.pdf"
+				(at 2.032 0 90)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Description" "125mW Thick Film Resistors 150V ±100ppm/℃ ±1% 47kΩ 0805 Chip Resistor - Surface Mount ROHS"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "LCSC Part #" "C17713"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "ki_keywords" "r res resistor"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(symbol "R0805_47K_0_1"
+				(rectangle
+					(start -1.016 -2.54)
+					(end 1.016 2.54)
+					(stroke
+						(width 0.254)
+						(type solid)
+					)
+					(fill
+						(type none)
+					)
+				)
+			)
+			(symbol "R0805_47K_1_1"
+				(pin passive line
+					(at 0 3.81 270)
+					(length 1.27)
+					(name "~"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at 0 -3.81 90)
+					(length 1.27)
+					(name "~"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "2"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+			)
+		)
 		(symbol "SW_Tactile_Small_1"
 			(pin_numbers hide)
 			(pin_names
@@ -5002,6 +5242,12 @@
 		(color 0 0 0 0)
 		(uuid "d770dabd-e8fe-4dfa-a7b0-f5741edc2466")
 	)
+	(junction
+		(at 58.42 60.96)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "fd903273-aa98-4419-94a6-6dfa21744eba")
+	)
 	(no_connect
 		(at 229.87 50.8)
 		(uuid "06f131a7-808c-44da-9463-bb6124754fe8")
@@ -5093,10 +5339,6 @@
 	(no_connect
 		(at 229.87 58.42)
 		(uuid "b982184a-9648-477b-a161-2e7d15ac732a")
-	)
-	(no_connect
-		(at 229.87 53.34)
-		(uuid "be0b4bc0-f025-40ca-8cbb-8481172e2873")
 	)
 	(no_connect
 		(at 260.35 55.88)
@@ -5323,6 +5565,16 @@
 			(type default)
 		)
 		(uuid "2dd606e4-c491-495d-92d3-418d1c02e129")
+	)
+	(wire
+		(pts
+			(xy 58.42 57.15) (xy 58.42 60.96)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "30561d2d-b478-4ae4-a5aa-b81afdfc506c")
 	)
 	(wire
 		(pts
@@ -5556,6 +5808,26 @@
 	)
 	(wire
 		(pts
+			(xy 58.42 69.85) (xy 58.42 72.39)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "5db05c55-d276-4cd3-94a2-84f5c64e251b")
+	)
+	(wire
+		(pts
+			(xy 58.42 60.96) (xy 60.96 60.96)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "5e4f9a23-b0ad-4924-8ea7-221d5814aad3")
+	)
+	(wire
+		(pts
 			(xy 114.3 58.42) (xy 120.65 58.42)
 		)
 		(stroke
@@ -5696,6 +5968,16 @@
 	)
 	(wire
 		(pts
+			(xy 58.42 60.96) (xy 58.42 62.23)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "8db72881-db18-429d-99b0-4adecac0321c")
+	)
+	(wire
+		(pts
 			(xy 52.07 171.45) (xy 52.07 173.99)
 		)
 		(stroke
@@ -5773,6 +6055,16 @@
 			(type default)
 		)
 		(uuid "95686ccf-7a9d-4f36-becc-cb54915a3f60")
+	)
+	(wire
+		(pts
+			(xy 58.42 45.72) (xy 58.42 49.53)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "9825f106-9d06-4a49-ad91-0e85e9ea3231")
 	)
 	(wire
 		(pts
@@ -6003,6 +6295,16 @@
 			(type default)
 		)
 		(uuid "b6dee639-5ef0-41eb-9ef0-b4de508cd475")
+	)
+	(wire
+		(pts
+			(xy 215.9 53.34) (xy 229.87 53.34)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "b89703ca-4d58-4f29-ba6a-682aeef8df3f")
 	)
 	(wire
 		(pts
@@ -6294,6 +6596,16 @@
 		)
 		(uuid "ffc2bbb5-87f9-446f-a12e-0295231b655a")
 	)
+	(text "4,3V\n47k\n18k\n1.191V"
+		(exclude_from_sim no)
+		(at 58.42 85.09 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+		)
+		(uuid "02c3f16a-3774-4012-bce2-8debc0168e9f")
+	)
 	(text "Orange\n"
 		(exclude_from_sim no)
 		(at 132.08 54.61 0)
@@ -6425,6 +6737,17 @@
 		)
 		(uuid "5ecfd295-45ea-4e80-a5cc-d72190a960a1")
 	)
+	(label "BattVoltDiv"
+		(at 215.9 53.34 0)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "6a03ec24-f140-473b-9b73-71b00f9e49c4")
+	)
 	(label "BTN_1_RV"
 		(at 38.1 171.45 0)
 		(fields_autoplaced yes)
@@ -6457,6 +6780,17 @@
 			(justify left bottom)
 		)
 		(uuid "9c5c8a6a-1ab6-4966-9b4a-e91749da4fe4")
+	)
+	(label "BattVoltDiv"
+		(at 60.96 60.96 0)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "9f5f8d26-79f6-40b5-a284-8a30c35b0855")
 	)
 	(label "Usb_D+"
 		(at 261.62 43.18 0)
@@ -8903,6 +9237,85 @@
 		)
 	)
 	(symbol
+		(lib_id "Resistor_SMD_0805_JLCPCB:R0805_47K")
+		(at 58.42 53.34 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "69c564a4-e1d5-4015-8550-f445c666385c")
+		(property "Reference" "R12"
+			(at 53.34 52.07 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "47K"
+			(at 53.34 54.61 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "ba_res:r2012"
+			(at 63.5 50.8 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "https://wmsc.lcsc.com/wmsc/upload/file/pdf/v2/lcsc/2206010200_UNI-ROYAL-Uniroyal-Elec-0805W8F4702T5E_C17713.pdf"
+			(at 60.452 53.34 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "125mW Thick Film Resistors 150V ±100ppm/℃ ±1% 47kΩ 0805 Chip Resistor - Surface Mount ROHS"
+			(at 58.42 53.34 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC Part #" "C17713"
+			(at 60.96 55.8799 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "9ad9ad8f-45a3-4987-9058-284212e4f2b5")
+		)
+		(pin "2"
+			(uuid "de246740-c581-4e76-9f3e-a6560fc91294")
+		)
+		(instances
+			(project ""
+				(path "/be456eed-bb99-4947-8d6f-815aa9683d71"
+					(reference "R12")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "PCM_Capacitor_US_AKL:C_0805")
 		(at 149.86 54.61 0)
 		(unit 1)
@@ -10019,6 +10432,85 @@
 		)
 	)
 	(symbol
+		(lib_id "Resistor_SMD_0805_JLCPCB:R0805_18K")
+		(at 58.42 66.04 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "9de5a8e6-1cd6-4f62-8a63-e78b2d7bfe6b")
+		(property "Reference" "R13"
+			(at 59.69 64.77 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "18K"
+			(at 59.69 67.31 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "ba_res:r2012"
+			(at 63.5 63.5 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "https://wmsc.lcsc.com/wmsc/upload/file/pdf/v2/lcsc/2206010216_UNI-ROYAL-Uniroyal-Elec-0805W8F1802T5E_C17506.pdf"
+			(at 60.452 66.04 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "125mW Thick Film Resistors 150V ±100ppm/℃ ±1% 18kΩ 0805 Chip Resistor - Surface Mount ROHS"
+			(at 58.42 66.04 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC Part #" "C17506"
+			(at 60.96 68.5799 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "1cdeba95-abf9-4498-aada-075aaef5fa3b")
+		)
+		(pin "2"
+			(uuid "6acf4965-0a77-4e44-bff0-42146bdf4812")
+		)
+		(instances
+			(project ""
+				(path "/be456eed-bb99-4947-8d6f-815aa9683d71"
+					(reference "R13")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "Regulator_Linear:AP2112K-3.3")
 		(at 80.01 48.26 0)
 		(unit 1)
@@ -11067,6 +11559,72 @@
 	)
 	(symbol
 		(lib_id "power:GND")
+		(at 58.42 72.39 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "d1ac2914-8b1f-4f15-bc3d-122c4599002a")
+		(property "Reference" "#PWR08"
+			(at 58.42 78.74 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Value" "GND"
+			(at 58.42 77.47 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 58.42 72.39 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 58.42 72.39 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
+			(at 58.42 72.39 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "81a50ff1-0916-4832-9afb-ac470e8da9af")
+		)
+		(instances
+			(project "Little_Helper"
+				(path "/be456eed-bb99-4947-8d6f-815aa9683d71"
+					(reference "#PWR08")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "power:GND")
 		(at 207.01 133.35 0)
 		(unit 1)
 		(exclude_from_sim no)
@@ -11940,10 +12498,9 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(fields_autoplaced yes)
 		(uuid "ec8a9026-65cd-4fc8-9b47-057729007061")
 		(property "Reference" "C4"
-			(at 48.26 53.3399 0)
+			(at 39.37 53.34 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -11952,7 +12509,7 @@
 			)
 		)
 		(property "Value" "10uF"
-			(at 48.26 55.8799 0)
+			(at 38.1 57.15 0)
 			(effects
 				(font
 					(size 1.27 1.27)

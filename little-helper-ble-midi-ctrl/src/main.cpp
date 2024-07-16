@@ -280,8 +280,21 @@ void textCallHostname(Control* sender, int type) {
     
     prefs.end();
     
+}
 
-} 
+void textCallLedBrightness(Control* sender, int type) {
+
+
+    __BRIGHTNESS = sender->value.toInt();
+    FastLED.setBrightness(__BRIGHTNESS);
+    FastLED.show();
+
+    prefs.begin("wifi", false); // Open NVS namespace "wifi" in RW mode
+    prefs.putUInt("LedBrightness", __BRIGHTNESS); // Store password
+    
+    prefs.end();
+    
+}
 
 void saveSettings() {
     prefs.begin("Settings"); // Open NVS namespace "Settings" in RW mode
@@ -328,8 +341,7 @@ void selectBtnMapFnc(Control* sender, int value) {
     }
     sprintf(str, "%u", localvalue); // Convert the number to a string
     ESPUI.updateControlValue(__selectUiBtn[active_btn][2], str); // Update the control value
-    log_d("Active Button: %d, String: %S, Value: %u\nOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO", active_btn, str,localvalue);
-
+    log_d("Active Button: %d, String: %S, Value: %u\n", active_btn, str,localvalue);
 
     localvalue = myBtnMap[active_btn].btnMidiCC[value_t]; // Get the MidiCC value from the settings
     sprintf(str, "%d", localvalue); // Convert the number to a string
@@ -358,6 +370,18 @@ void selectBtnMapFnc(Control* sender, int value) {
     localvalue = myBtnMap[active_btn].needRelease[value_t]; // Get the NeedRelease value from the settings
     sprintf(str, "%d", localvalue); // Convert the number to a string
     ESPUI.updateControlValue(__selectUiBtn[active_btn][9], str); // Update the control value
+
+    localvalue = myBtnMap[active_btn].btnColor[value_t]; // Get the Color value from the settings
+
+    uint8_t colorval = 0;
+    for(int i = 0; i < 141; i++) {
+      if(__btnLookUpTable[i] == localvalue) {
+        colorval = i;
+        break;
+      }
+    }
+    sprintf(str, "%d", colorval); // Convert the number to a string
+    ESPUI.updateControlValue(__selectUiBtn[active_btn][10], str); // Update the control value
 
 }
 
@@ -521,25 +545,32 @@ void selectBtnTransitinCalback(Control* sender, int value) {
 }
 
 void selectBtnColorCalback(Control *sender, int type) {
-	//Declare space for style strings. These have to be static so that they are always available
-	//to the websocket layer. If we'd not made them static they'd be allocated on the heap and
-	//will be unavailable when we leave this function.
-	static char stylecol1[60], stylecol2[30]; 
-	if(type == B_UP) {
-		//Generate two random HTML hex colour codes, and print them into CSS style rules
-		sprintf(stylecol1, "border-bottom: #999 3px solid; background-color: #%06X;", (unsigned int) random(0x0, 0xFFFFFF));
-		sprintf(stylecol2, "background-color: #%06X;", (unsigned int) random(0x0, 0xFFFFFF));
 
-		//Apply those styles to various elements to show how controls react to styling
-		ESPUI.setPanelStyle(sender->id, stylecol1);
-		ESPUI.setElementStyle(sender->id, stylecol2);
-		ESPUI.setPanelStyle(sender->id, stylecol1);
-		ESPUI.setElementStyle(sender->id, stylecol2);
-		ESPUI.setPanelStyle(sender->id, stylecol1);
-		ESPUI.setElementStyle(sender->id, stylecol2);
-		ESPUI.setPanelStyle(sender->id, stylecol1);
-		ESPUI.setElementStyle(sender->id, stylecol2);
-	}
+    uint8_t value_t = static_cast<uint8_t>(String(sender->value).toInt());
+
+    int active_btn = 0;
+    for(int i = 0; i < __HW_BUTTONS; i++) {
+      if(__selectUiBtn[i][10] == sender->id) {
+        active_btn = i;
+        break;
+      }
+    }
+
+    static char stylecol1[60], stylecol2[30]; 
+    
+
+    //uint32_t oppositeColor = 0xFFFFFF - __btnLookUpTable[value_t];
+
+    sprintf(stylecol1, "border-bottom: #999 3px solid; background-color: #%06X;", __btnLookUpTable[value_t] );
+
+    //sprintf(stylecol2, "background-color: #%06X;", oppositeColor);
+    
+    ESPUI.setPanelStyle(sender->id, stylecol1);
+    //ESPUI.setElementStyle(sender->id, stylecol1);
+    
+    myBtnMap[active_btn].btnColor[__active_map_ui_btn[active_btn]] = __btnLookUpTable[value_t];
+    saveSettings();
+
 
 }
 
@@ -726,9 +757,9 @@ void setup() {
 
   // initialize WS28xx LED in GRB order
   FastLED.addLeds<WS2812B, WS28XX_LED_PIN, GRB>(myWS28XXLED, NUM_LEDS);
-  FastLED.setBrightness(BRIGHTNESS);
+  FastLED.setBrightness(__BRIGHTNESS);
   myWS28XXLED[0] = CRGB::Red;
-  FastLED.show();
+  //FastLED.show();
   __oldLedColor = CRGB::Red;
     
   Serial.begin(57600);
@@ -786,6 +817,8 @@ void setup() {
     prefs.putString("password_ap", ap_password); // Save the default name
     
     prefs.putString("hostname", hostname); // Save the default name
+
+    prefs.putUInt("LedBrightness", __BRIGHTNESS); // Save the default name
     
     prefs.end(); // Close NVS namespace "wifi"
     
@@ -859,9 +892,21 @@ void setup() {
     hostname = prefs.getString("hostname"); // 
     log_d("hostname found, loading settings: value: %S\n", hostname.c_str());
   }
+
+  if (not prefs.isKey("LedBrightness")) {
+    log_d("LedBrightness not found");
+    prefs.putUInt("LedBrightness", __BRIGHTNESS); // Save the default name
+  } else {
+    Serial.printf("LedBrightness found: %d\n", prefs.getUInt("LedBrightness"));
+    __BRIGHTNESS = prefs.getUInt("LedBrightness"); // 
+    log_d("LedBrightness found, loading settings: value: %d\n", __BRIGHTNESS);
+  } 
   
   prefs.end(); // Close NVS namespace "wifi"
   
+  FastLED.setBrightness(__BRIGHTNESS);
+  FastLED.show();
+
   log_d("Testdate from settings: %d \n", myBtnMap[4].btnMidiCC[3]);
 
 
@@ -967,6 +1012,11 @@ void setup() {
     hostnameTxtField = ESPUI.addControl(ControlType::Text, "Hostname:", hostname.c_str(), ControlColor::Dark, tab7, &textCallHostname);
     ESPUI.addControl(ControlType::Switcher, "Show Passwords", "", ControlColor::Alizarin, tab7, &switchShowPasswords);
 
+    // Led Brightness
+    ledBrightnessTxtField = ESPUI.addControl(ControlType::Slider, "LED Brightness:", String(__BRIGHTNESS).c_str(), ControlColor::Dark, tab7, &textCallLedBrightness);
+    ESPUI.addControl(Min, "", "0", None, ledBrightnessTxtField);
+    ESPUI.addControl(Max, "", "255", None, ledBrightnessTxtField);
+
     // Buttons in a for loop
     
     for (size_t hw_B = 0; hw_B < __HW_BUTTONS; hw_B++) // HW Buttons * Ui Button Functions
@@ -1047,9 +1097,21 @@ void setup() {
       ESPUI.addControl(ControlType::Option, "Push", "0", ControlColor::Dark, __selectUiBtn[hw_B][9]);
       ESPUI.addControl(ControlType::Option, "Release", "1", ControlColor::Dark, __selectUiBtn[hw_B][9]);
 
-      __selectUiBtn[hw_B][10] = ESPUI.addControl(ControlType::Slider, "Button Color:", "", ControlColor::Dark, thistab, &selectBtnColorCalback);
+      uint32_t color = myBtnMap[hw_B].btnColor[__active_map_ui_btn[hw_B]];
+      uint8_t colorval = 0;
+      for(int i = 0; i < 141; i++) {
+        if(__btnLookUpTable[i] == color) {
+          colorval = i;
+          break;
+        }
+      }
+      sprintf(convertstr, "%d", colorval); // Convert the number to a string  
+      __selectUiBtn[hw_B][10] = ESPUI.addControl(ControlType::Slider, "Button Color:", convertstr, ControlColor::Dark, thistab, &selectBtnColorCalback);
       ESPUI.addControl(Min, "", "0", None, __selectUiBtn[hw_B][10]);
-      ESPUI.addControl(Max, "", "150", None, __selectUiBtn[hw_B][10]);
+      ESPUI.addControl(Max, "", "139", None, __selectUiBtn[hw_B][10]);
+      static char stylecol1[60];
+      sprintf(stylecol1, "border-bottom: #999 3px solid; background-color: #%06X;", color );   
+      ESPUI.setPanelStyle(__selectUiBtn[hw_B][10], stylecol1);
     }
 
     ESPUI.begin("Little Helper Configuration");
