@@ -313,7 +313,6 @@ void selectBtnMapFnc(Control* sender, int value) {
 
     log_d("Select: ID: %d, Value: %s, Value as int %d\n", sender->id, sender->value, value_t);
     
-
     int active_btn = 0;
     for(int i = 0; i < __HW_BUTTONS; i++) {
       if(__selectUiBtn[i][0] == sender->id) {
@@ -322,10 +321,11 @@ void selectBtnMapFnc(Control* sender, int value) {
       }
     }
 
+  __active_map_ui_btn[active_btn] = value_t;
 
-    // Enable or disable the controls based on the selected map
-    ESPUI.setEnabled(__selectUiBtn[active_btn][9], true);
-    ESPUI.setPanelStyle(__selectUiBtn[active_btn][9], ";");
+    // // Enable or disable the controls based on the selected map
+    // ESPUI.setEnabled(__selectUiBtn[active_btn][9], true);
+    // ESPUI.setPanelStyle(__selectUiBtn[active_btn][9], ";");
     
     //update the value in the settings
     char str[10]; // Ensure this is large enough to hold the number and the null terminator
@@ -334,10 +334,9 @@ void selectBtnMapFnc(Control* sender, int value) {
     sprintf(str, "%d", localvalue); // Convert the number to a string
     ESPUI.updateControlValue(__selectUiBtn[active_btn][1], str); // Update the control value
 
-    //uint8_t localvalue = myBtnMap[0].btnMidiFunction[__active_map_ui_btn[0]]; // get the MidiFunction value from the settings
     localvalue = myBtnMap[active_btn].btnMidiFunction[value_t]; // get the MidiFunction value from the settings
     if(localvalue == 0){
-        ESPUI.setEnabled(__selectUiBtn[active_btn][9], false);
+       // ESPUI.setEnabled(__selectUiBtn[active_btn][9], false);
     }
     sprintf(str, "%u", localvalue); // Convert the number to a string
     ESPUI.updateControlValue(__selectUiBtn[active_btn][2], str); // Update the control value
@@ -373,7 +372,7 @@ void selectBtnMapFnc(Control* sender, int value) {
 
     localvalue = myBtnMap[active_btn].btnColor[value_t]; // Get the Color value from the settings
 
-    uint8_t colorval = 0;
+    int colorval = 0;
     for(int i = 0; i < 141; i++) {
       if(__btnLookUpTable[i] == localvalue) {
         colorval = i;
@@ -757,9 +756,9 @@ void setup() {
 
   // initialize WS28xx LED in GRB order
   FastLED.addLeds<WS2812B, WS28XX_LED_PIN, GRB>(myWS28XXLED, NUM_LEDS);
-  FastLED.setBrightness(__BRIGHTNESS);
+  FastLED.setBrightness(6);
   myWS28XXLED[0] = CRGB::Red;
-  //FastLED.show();
+  FastLED.show();
   __oldLedColor = CRGB::Red;
     
   Serial.begin(57600);
@@ -1098,7 +1097,7 @@ void setup() {
       ESPUI.addControl(ControlType::Option, "Release", "1", ControlColor::Dark, __selectUiBtn[hw_B][9]);
 
       uint32_t color = myBtnMap[hw_B].btnColor[__active_map_ui_btn[hw_B]];
-      uint8_t colorval = 0;
+      int colorval = 0;
       for(int i = 0; i < 141; i++) {
         if(__btnLookUpTable[i] == color) {
           colorval = i;
