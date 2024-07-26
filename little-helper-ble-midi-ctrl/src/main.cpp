@@ -782,6 +782,17 @@ void disconected() {
 
 }
 
+void onProgramChange(uint8_t channel, uint8_t program, uint16_t timestamp){
+  // program change received
+  Serial.printf("Program Change: Channel: %d, Program: %d, Timestamp: %d\n", channel, program, timestamp);
+  if(program > NUBER_OF_MAPS){
+    program = NUBER_OF_MAPS - 1;
+  }
+
+  __active_map = program;
+  saveActiveMap(__active_map);
+  updateUiActiveMap(__active_map);
+}
 
 void setup() {
 
@@ -1187,6 +1198,7 @@ void setup() {
   // BLEMidiServer.setNoteOnCallback(onNoteOn);
   // BLEMidiServer.setNoteOffCallback(onNoteOff);
   // BLEMidiServer.setControlChangeCallback(onControlChange);
+  BLEMidiServer.setProgramChangeCallback(onProgramChange);
 }
 
 void loop() {
