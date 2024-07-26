@@ -42,89 +42,88 @@ CRGB myWS28XXLED[NUM_LEDS];
 
 CRGB __oldLedColor;
 
-
-
+// Button Structure now with n Maps, first we try 4 Maps
 myButton myBtnMap[5] = { // 5 Buttons 4 Maps Map 1 und Map 2 are short press values, Map 3 and Map 4 are long press values
-    { // Button 1
-         10,  // GPIO Pin
-         {false, false}, // Button Release
-         {BTN_PUSH, BTN_PUSH},// Button Function 0 = Push, 1 = Toggle
-         {false, false}, // Button Long Press
-         {BTN_OFF, BTN_OFF}, // Button State 0 = Off, 1 = On
-         {CRGB::Red, CRGB::Red}, // Button Color 0 = Red, 1 = Green, 2 = Blue, 3 = Yellow, 4 = Purple, 5 = Cyan, 6 = White
-         {MIDIFUNC_CC, MIDIFUNC_CC}, // Button MIDI Function 0 = Note, 1 = CC, 2 = MMC, 3 = Program Change
-         {MIDI_CH_1, MIDI_CH_1}, // Button MIDI Channel 0 - 15
-         {60, 60}, // Button MIDI Note 0 - 127
-         {100, 100}, // Button MIDI Velocity 0 - 127
-         {43, 111}, // Button MIDI CC 0 - 127
-         {127, 127}, // Button MIDI CC ON Value 0 - 127
-         {0, 0}, // Button MIDI CC OFF Value 0 - 127
-         {MMC_REWIND, MMC_REWIND} // Button MIDI MMC 0 - 13
-    },
-    { // Button 2
-         11,  // GPIO Pin
-         {false, false}, // Button Release
-         {BTN_PUSH, BTN_PUSH},// Button Function 0 = Push, 1 = Toggle
-         {false, false}, // Button Long Press
-         {BTN_OFF, BTN_OFF}, // Button State 0 = Off, 1 = On
-         {CRGB::Yellow, CRGB::Yellow}, // Button Color 0 = Red, 1 = Green, 2 = Blue, 3 = Yellow, 4 = Purple, 5 = Cyan, 6 = White
-         {MIDIFUNC_CC, MIDIFUNC_CC}, // Button MIDI Function 0 = Note, 1 = CC, 2 = MMC, 3 = Program Change
-         {MIDI_CH_1, MIDI_CH_1}, // Button MIDI Channel 0 - 15
-         {61, 61}, // Button MIDI Note 0 - 127
-         {100, 100}, // Button MIDI Velocity 0 - 127
-         {42, 42}, // Button MIDI CC 0 - 127
-         {127, 127}, // Button MIDI CC ON Value 0 - 127
-         {0, 0}, // Button MIDI CC OFF Value 0 - 127
-         {MMC_STOP, MMC_STOP} // Button MIDI MMC 0 - 13
-    },
-    { // Button 3
-         12,  // GPIO Pin
-         {false, false}, // Button Release
-         {BTN_PUSH, BTN_PUSH},// Button Function 0 = Push, 1 = Toggle
-         {false, false}, // Button Long Press
-         {BTN_OFF, BTN_OFF}, // Button State 0 = Off, 1 = On
-         {CRGB::Cyan, CRGB::Cyan}, // Button Color 0 = Red, 1 = Green, 2 = Blue, 3 = Yellow, 4 = Purple, 5 = Cyan, 6 = White
-         {MIDIFUNC_CC, MIDIFUNC_CC}, // Button MIDI Function 0 = Note, 1 = CC, 2 = MMC, 3 = Program Change
-         {MIDI_CH_1, MIDI_CH_1}, // Button MIDI Channel 0 - 15
-         {62, 62}, // Button MIDI Note 0 - 127
-         {100, 100}, // Button MIDI Velocity 0 - 127
-         {44, 112}, // Button MIDI CC 0 - 127
-         {127, 127}, // Button MIDI CC ON Value 0 - 127
-         {0, 0}, // Button MIDI CC OFF Value 0 - 127
-         {MMC_STOP, MMC_STOP} // Button MIDI MMC 0 - 13
-    },
-    { // Button 4
-         13,  // GPIO Pin
-         {true, true}, // Button Release
-         {BTN_PUSH, BTN_PUSH},// Button Function 0 = Push, 1 = Toggle
-         {false, true}, // Button Long Press
-         {BTN_OFF, BTN_OFF}, // Button State 0 = Off, 1 = On
-         {CRGB::Aquamarine, CRGB::Aquamarine}, // Button Color 0 = Red, 1 = Green, 2 = Blue, 3 = Yellow, 4 = Purple, 5 = Cyan, 6 = White
-         {MIDIFUNC_CC, MIDIFUNC_CC}, // Button MIDI Function 0 = Note, 1 = CC, 2 = MMC, 3 = Program Change
-         {MIDI_CH_1, MIDI_CH_1}, // Button MIDI Channel 0 - 15
-         {62, 62}, // Button MIDI Note 0 - 127
-         {100, 100}, // Button MIDI Velocity 0 - 127
-         {45, 64}, // Button MIDI CC 0 - 127
-         {127, 127}, // Button MIDI CC ON Value 0 - 127
-         {0, 0}, // Button MIDI CC OFF Value 0 - 127
-         {MMC_STOP, MMC_STOP} // Button MIDI MMC 0 - 13
-    },
-    { // Button 5
-         14,  // GPIO Pin
-         {false, false}, // Button Release
-         {BTN_PUSH, BTN_PUSH},// Button Function 0 = Push, 1 = Toggle
-         {false, false}, // Button Long Press
-         {BTN_OFF, BTN_OFF}, // Button State 0 = Off, 1 = On
-         {CRGB::Blue, CRGB::Blue}, // Button Color 0 = Red, 1 = Green, 2 = Blue, 3 = Yellow, 4 = Purple, 5 = Cyan, 6 = White
-         {MIDIFUNC_CC, MIDIFUNC_CC}, // Button MIDI Function 0 = Note, 1 = CC, 2 = MMC, 3 = Program Change
-         {MIDI_CH_1, MIDI_CH_1}, // Button MIDI Channel 0 - 15
-         {62, 62}, // Button MIDI Note 0 - 127
-         {100, 100}, // Button MIDI Velocity 0 - 127
-         {41, 41}, // Button MIDI CC 0 - 127
-         {127, 127}, // Button MIDI CC ON Value 0 - 127
-         {0, 0}, // Button MIDI CC OFF Value 0 - 127
-         {MMC_STOP, MMC_STOP} // Button MIDI MMC 0 - 13
-    },
+  { // Button 1
+     10,  // GPIO Pin
+     {false, false, false, false}, // Button Release
+     {BTN_PUSH, BTN_PUSH, BTN_PUSH, BTN_PUSH},// Button Function 0 = Push, 1 = Toggle
+     {false, false, false, false}, // Button Long Press
+     {BTN_OFF, BTN_OFF, BTN_OFF, BTN_OFF}, // Button State 0 = Off, 1 = On
+     {CRGB::Red, CRGB::Red, CRGB::Red, CRGB::Red}, // Button Color 0 = Red, 1 = Green, 2 = Blue, 3 = Yellow, 4 = Purple, 5 = Cyan, 6 = White
+     {MIDIFUNC_CC, MIDIFUNC_CC, MIDIFUNC_CC, MIDIFUNC_CC}, // Button MIDI Function 0 = Note, 1 = CC, 2 = MMC, 3 = Program Change
+     {MIDI_CH_1, MIDI_CH_1, MIDI_CH_1, MIDI_CH_1}, // Button MIDI Channel 0 - 15
+     {60, 60, 60, 60}, // Button MIDI Note 0 - 127
+     {100, 100,100, 100}, // Button MIDI Velocity 0 - 127
+     {43, 111, 43, 111}, // Button MIDI CC 0 - 127
+     {127, 127, 127, 127}, // Button MIDI CC ON Value 0 - 127
+     {0, 0, 0, 0}, // Button MIDI CC OFF Value 0 - 127
+     {MMC_REWIND, MMC_REWIND, MMC_REWIND, MMC_REWIND} // Button MIDI MMC 0 - 13
+  },
+  { // Button 2
+     11,  // GPIO Pin
+     {false, false, false, false}, // Button Release
+     {BTN_PUSH, BTN_PUSH, BTN_PUSH, BTN_PUSH},// Button Function 0 = Push, 1 = Toggle
+     {false, false, false, false}, // Button Long Press
+     {BTN_OFF, BTN_OFF, BTN_OFF, BTN_OFF}, // Button State 0 = Off, 1 = On
+     {CRGB::Yellow, CRGB::Yellow, CRGB::Yellow, CRGB::Yellow}, // Button Color 0 = Red, 1 = Green, 2 = Blue, 3 = Yellow, 4 = Purple, 5 = Cyan, 6 = White
+     {MIDIFUNC_CC, MIDIFUNC_CC, MIDIFUNC_CC, MIDIFUNC_CC}, // Button MIDI Function 0 = Note, 1 = CC, 2 = MMC, 3 = Program Change
+     {MIDI_CH_1, MIDI_CH_1, MIDI_CH_1, MIDI_CH_1}, // Button MIDI Channel 0 - 15
+     {61, 61, 61, 61}, // Button MIDI Note 0 - 127
+     {100, 100, 100, 100}, // Button MIDI Velocity 0 - 127
+     {42, 42, 42, 42}, // Button MIDI CC 0 - 127
+     {127, 127, 127, 127}, // Button MIDI CC ON Value 0 - 127
+     {0, 0, 0, 0}, // Button MIDI CC OFF Value 0 - 127
+     {MMC_STOP, MMC_STOP, MMC_STOP, MMC_STOP} // Button MIDI MMC 0 - 13
+  },
+  { // Button 3
+     12,  // GPIO Pin
+     {false, false, false, false}, // Button Release
+     {BTN_PUSH, BTN_PUSH, BTN_PUSH, BTN_PUSH},// Button Function 0 = Push, 1 = Toggle
+     {false, false, false, false}, // Button Long Press
+     {BTN_OFF, BTN_OFF, BTN_OFF, BTN_OFF}, // Button State 0 = Off, 1 = On
+     {CRGB::Cyan, CRGB::Cyan, CRGB::Cyan, CRGB::Cyan}, // Button Color 0 = Red, 1 = Green, 2 = Blue, 3 = Yellow, 4 = Purple, 5 = Cyan, 6 = White
+     {MIDIFUNC_CC, MIDIFUNC_CC, MIDIFUNC_CC, MIDIFUNC_CC}, // Button MIDI Function 0 = Note, 1 = CC, 2 = MMC, 3 = Program Change
+     {MIDI_CH_1, MIDI_CH_1, MIDI_CH_1, MIDI_CH_1}, // Button MIDI Channel 0 - 15
+     {62, 62, 62, 62}, // Button MIDI Note 0 - 127
+     {100, 100, 100, 100}, // Button MIDI Velocity 0 - 127
+     {44, 112, 44, 112}, // Button MIDI CC 0 - 127
+     {127, 127, 127, 127}, // Button MIDI CC ON Value 0 - 127
+     {0, 0, 0, 0}, // Button MIDI CC OFF Value 0 - 127
+     {MMC_STOP, MMC_STOP, MMC_STOP, MMC_STOP} // Button MIDI MMC 0 - 13
+  },
+  { // Button 4
+     13,  // GPIO Pin
+     {true, true, true, true}, // Button Release
+     {BTN_PUSH, BTN_PUSH, BTN_PUSH, BTN_PUSH},// Button Function 0 = Push, 1 = Toggle
+     {false, true, false, true}, // Button Long Press
+     {BTN_OFF, BTN_OFF, BTN_OFF, BTN_OFF}, // Button State 0 = Off, 1 = On
+     {CRGB::Aquamarine, CRGB::Aquamarine, CRGB::Aquamarine, CRGB::Aquamarine}, // Button Color 0 = Red, 1 = Green, 2 = Blue, 3 = Yellow, 4 = Purple, 5 = Cyan, 6 = White
+     {MIDIFUNC_CC, MIDIFUNC_CC, MIDIFUNC_CC, MIDIFUNC_CC}, // Button MIDI Function 0 = Note, 1 = CC, 2 = MMC, 3 = Program Change
+     {MIDI_CH_1, MIDI_CH_1, MIDI_CH_1, MIDI_CH_1}, // Button MIDI Channel 0 - 15
+     {62, 62, 62, 62}, // Button MIDI Note 0 - 127
+     {100, 100, 100, 100}, // Button MIDI Velocity 0 - 127
+     {45, 64, 45, 64}, // Button MIDI CC 0 - 127
+     {127, 127, 127, 127}, // Button MIDI CC ON Value 0 - 127
+     {0, 0, 0, 0}, // Button MIDI CC OFF Value 0 - 127
+     {MMC_STOP, MMC_STOP, MMC_STOP, MMC_STOP} // Button MIDI MMC 0 - 13
+  },
+  { // Button 5
+     14,  // GPIO Pin
+     {false, false, false, false}, // Button Release
+     {BTN_PUSH, BTN_PUSH, BTN_PUSH, BTN_PUSH},// Button Function 0 = Push, 1 = Toggle
+     {false, false, false, false}, // Button Long Press
+     {BTN_OFF, BTN_OFF, BTN_OFF, BTN_OFF}, // Button State 0 = Off, 1 = On
+     {CRGB::Blue, CRGB::Blue, CRGB::Blue, CRGB::Blue}, // Button Color 0 = Red, 1 = Green, 2 = Blue, 3 = Yellow, 4 = Purple, 5 = Cyan, 6 = White
+     {MIDIFUNC_CC, MIDIFUNC_CC, MIDIFUNC_CC, MIDIFUNC_CC}, // Button MIDI Function 0 = Note, 1 = CC, 2 = MMC, 3 = Program Change
+     {MIDI_CH_1, MIDI_CH_1, MIDI_CH_1, MIDI_CH_1}, // Button MIDI Channel 0 - 15
+     {62, 62, 62, 62}, // Button MIDI Note 0 - 127
+     {100, 100, 100, 100}, // Button MIDI Velocity 0 - 127
+     {41, 41, 41, 41}, // Button MIDI CC 0 - 127
+     {127, 127, 127, 127}, // Button MIDI CC ON Value 0 - 127
+     {0, 0, 0, 0}, // Button MIDI CC OFF Value 0 - 127
+     {MMC_STOP, MMC_STOP, MMC_STOP, MMC_STOP} // Button MIDI MMC 0 - 13
+  },
 };
 
 
@@ -145,7 +144,32 @@ myButton* getMyButton(int pin) {
     }
 }
 
+// helper function to get the button configuration based on the GPIO pin and the active map
+
+
+void saveActiveMap(uint8_t active_map) {
+    prefs.begin("active_map"); // Open NVS namespace "Settings" in RW mode
+    prefs.putUInt("active_map", active_map); // Store the active map
+    prefs.end(); // Close NVS
+    Serial.printf("Save Active Map: %d\n", active_map);
+    if (__active_map %2 == 0) {
+      myWS28XXLED[0] = CRGB::Green;
+      __oldLedColor = CRGB::Green;
+    } else {
+      myWS28XXLED[0] = CRGB::Purple;
+      __oldLedColor = CRGB::Purple;
+    }
+    if(!__isConnected) myWS28XXLED[0] = CRGB::Red;
+    FastLED.show();
+}
+
 // WEB UI Callbacks
+
+void selectActiveMap(Control* sender, int value) {
+    uint8_t active_map = static_cast<uint8_t>(String(sender->value).toInt());
+    __active_map = active_map;
+    saveActiveMap(__active_map);
+}
 
 void switchShowPasswords(Control* sender, int type) {
 
@@ -305,6 +329,12 @@ void saveSettings() {
     
 }
 
+
+void updateUiActiveMap( uint8_t active_map){
+    char str[10];
+    sprintf(str, "%d", active_map); // Convert the number to a string
+    ESPUI.updateControlValue(activeMapChooser, str); // Update the control value
+}
 
 // Button 1 - x Web UI Callbacks ---------
 void selectBtnMapFnc(Control* sender, int value) {
@@ -673,19 +703,20 @@ void handleEvent(AceButton* button, uint8_t eventType, uint8_t /*buttonState*/) 
         break;
       case AceButton::kEventLongPressed:
         // Button 2 is used to change the active map
+        // Switch between 2 maps. Map 1 and Map 2 or Map 3 and Map 4 and so on.
+        // This is only an Quick access to change the active map via long button press
+        // To change the active map to higer or lower maps we use Web ui or midi input commands
+        // for example midi program change. the value of program change is the active map
         if(pin == 11) {
-          if (__active_map == 0 && __isConnected) {
-            __active_map = 1;
-            myWS28XXLED[0] = CRGB::Purple;
-            __oldLedColor = CRGB::Purple;
-            FastLED.show();
-          } else if (__active_map == 1 ) {
-            __active_map = 0;
-            myWS28XXLED[0] = CRGB::Green;
-            __oldLedColor = CRGB::Green;
-            if(!__isConnected) myWS28XXLED[0] = CRGB::Red;
-            FastLED.show();
+          if (__active_map %2 == 0 && __isConnected) {
+            __active_map = __active_map + 1;
+          } else {
+            __active_map = __active_map -1;
+            if(__active_map > NUBER_OF_MAPS) __active_map = 0; // this prevent uint8_t overflow from 0 to 255
           }
+          saveActiveMap(__active_map);
+          updateUiActiveMap(__active_map);
+
           return;
         }
         myWS28XXLED[0] = tmpBtncolor;
@@ -725,11 +756,12 @@ void connected() {
   // device is BLE MIDI connected
   log_i("Connected");
   __isConnected = true;
-  if (__active_map == 0) {
+  if (__active_map % 2 == 0) {
     myWS28XXLED[0] = CRGB::Green;
     FastLED.show();
     __oldLedColor = CRGB::Green;
-  } else if (__active_map == 1 ) {
+  } else
+  {
     myWS28XXLED[0] = CRGB::Purple;
     __oldLedColor = CRGB::Purple;
     FastLED.show();
@@ -833,6 +865,18 @@ void setup() {
   } else {
     log_d("Settings found, loading settings");
     prefs.getBytes("Settings", &myBtnMap, sizeof(myBtnMap));
+  }
+  
+  prefs.end(); // close the Settings Namespace
+
+  prefs.begin("active_map");  //Open namespace Settings
+  if (not prefs.isKey("active_map")) {
+    Serial.println("active_map not found, saving default active_map");
+    prefs.putUInt("active_map", __active_map);
+  } else {
+    log_d("active_map found, loading map");
+    __active_map = prefs.getUInt("active_map");
+    Serial.printf("active_map: %d\n", __active_map);
   }
   
   prefs.end(); // close the Settings Namespace
@@ -998,7 +1042,18 @@ void setup() {
     uint16_t tab3 = ESPUI.addControl(ControlType::Tab, "Button 3", "Button 3");
     uint16_t tab4 = ESPUI.addControl(ControlType::Tab, "Button 4", "Button 4");
     uint16_t tab5 = ESPUI.addControl(ControlType::Tab, "Button 5", "Button 5");
+    uint16_t tab6 = ESPUI.addControl(ControlType::Tab, "Active Map", "Active Map");
     uint16_t tab7 = ESPUI.addControl(ControlType::Tab, "Settings", "Settings");
+
+    // Active Map Chooser
+    char activeMapString[10];
+    sprintf(activeMapString, "%d", __active_map); // Convert the number to a string
+    activeMapChooser = ESPUI.addControl(ControlType::Select, "Active Map:", activeMapString, ControlColor::Emerald, tab6, &selectActiveMap);
+    ESPUI.addControl(ControlType::Option, "Map 1", "0", ControlColor::Dark, activeMapChooser);
+    ESPUI.addControl(ControlType::Option, "Map 2", "1", ControlColor::Dark, activeMapChooser);
+    ESPUI.addControl(ControlType::Option, "Map 3", "2", ControlColor::Dark, activeMapChooser);
+    ESPUI.addControl(ControlType::Option, "Map 4", "3", ControlColor::Dark, activeMapChooser);
+    
 
     // Wlan Settings and Bluethooth Settings
     bleNameTxtField = ESPUI.addControl(ControlType::Text, "Bluethooth Name:", midiDeviceName.c_str(), ControlColor::Dark, tab7, &textCallBlueThoothName);
@@ -1048,6 +1103,8 @@ void setup() {
       __selectUiBtn[hw_B][0] = ESPUI.addControl(ControlType::Select, "Select Map:", "", ControlColor::Emerald, thistab, &selectBtnMapFnc);
       ESPUI.addControl(ControlType::Option, "Map 1", "0", ControlColor::Dark, __selectUiBtn[hw_B][0]);
       ESPUI.addControl(ControlType::Option, "Map 2", "1", ControlColor::Dark, __selectUiBtn[hw_B][0]);
+      ESPUI.addControl(ControlType::Option, "Map 3", "2", ControlColor::Dark, __selectUiBtn[hw_B][0]);
+      ESPUI.addControl(ControlType::Option, "Map 4", "3", ControlColor::Dark, __selectUiBtn[hw_B][0]);
 
       char convertstr[10];
       sprintf(convertstr, "%d", myBtnMap[hw_B].btnMidiChannel[__active_map_ui_btn[hw_B]]); // Convert the number to a string
@@ -1111,6 +1168,7 @@ void setup() {
       static char stylecol1[60];
       sprintf(stylecol1, "border-bottom: #999 3px solid; background-color: #%06X;", color );   
       ESPUI.setPanelStyle(__selectUiBtn[hw_B][10], stylecol1);
+     
     }
 
     ESPUI.begin("Little Helper Configuration");

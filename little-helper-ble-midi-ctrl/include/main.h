@@ -11,6 +11,8 @@
 #define MIDIFUNC_SYSEX 2
 #define MIDIFUNC_PC 3
 
+#define NUBER_OF_MAPS 4
+
 
 
 String  midiDeviceName = "LITTLE_HELPER";
@@ -21,8 +23,7 @@ String ap_ssid = "LittleHelperAP";
 String ap_password = "12345678";
 String hostname = "littlehelper";
 
-uint8_t __HW_BUTTONS = 5; // Anzahl der Hardware Buttons
-uint16_t button1;
+uint8_t __HW_BUTTONS = 5; // Number of HW Buttons;
 
 uint16_t status;
 
@@ -33,6 +34,7 @@ uint16_t wlanApSsidTxtField;
 uint16_t wlanApPasswordTxtField;
 uint16_t hostnameTxtField;
 uint16_t ledBrightnessTxtField;
+uint16_t activeMapChooser;
 
 bool __configurator = false;
 
@@ -128,19 +130,19 @@ enum my_midi_channel {
 struct myButton
 {
   uint8_t btnGpio; // GPIO Pin bleibt unverändert
-  bool needRelease[2]; // Button Release als Array
-  uint8_t btnFunction[2]; // Button Function als Array
-  bool btnLongpress[2]; // Button Longpress als Array
-  uint8_t btnState[2]; // Button State als Array
-  uint32_t btnColor[2]; // Button Color als Array
-  uint8_t btnMidiFunction[2]; // Button MIDI Function als Array
-  uint8_t btnMidiChannel[2]; // Button MIDI Channel als Array
-  uint8_t btnMidiNote[2]; // Button MIDI Note als Array
-  uint8_t btnMidiVelocity[2]; // Button MIDI Velocity als Array
-  uint8_t btnMidiCC[2]; // Button MIDI CC als Array
-  uint8_t btnMidiCCValueStateOn[2]; // Button MIDI Value State On als Array
-  uint8_t btnMidiCCValueStateOff[2]; // Button MIDI Value State Off als Array
-  uint8_t btnMidiMMC[2]; // Button MIDI MMC als Array
+  bool needRelease[NUBER_OF_MAPS]; // Button Release als Array
+  uint8_t btnFunction[NUBER_OF_MAPS]; // Button Function als Array
+  bool btnLongpress[NUBER_OF_MAPS]; // Button Longpress als Array
+  uint8_t btnState[NUBER_OF_MAPS]; // Button State als Array
+  uint32_t btnColor[NUBER_OF_MAPS]; // Button Color als Array
+  uint8_t btnMidiFunction[NUBER_OF_MAPS]; // Button MIDI Function als Array
+  uint8_t btnMidiChannel[NUBER_OF_MAPS]; // Button MIDI Channel als Array
+  uint8_t btnMidiNote[NUBER_OF_MAPS]; // Button MIDI Note als Array
+  uint8_t btnMidiVelocity[NUBER_OF_MAPS]; // Button MIDI Velocity als Array
+  uint8_t btnMidiCC[NUBER_OF_MAPS]; // Button MIDI CC als Array
+  uint8_t btnMidiCCValueStateOn[NUBER_OF_MAPS]; // Button MIDI Value State On als Array
+  uint8_t btnMidiCCValueStateOff[NUBER_OF_MAPS]; // Button MIDI Value State Off als Array
+  uint8_t btnMidiMMC[NUBER_OF_MAPS]; // Button MIDI MMC als Array
 };
 
 
