@@ -147,11 +147,11 @@ myButton* getMyButton(int pin) {
 // helper function to get the button configuration based on the GPIO pin and the active map
 
 
-void saveActiveMap(uint8_t active_map) {
+void saveActiveMap() {
     prefs.begin("active_map"); // Open NVS namespace "Settings" in RW mode
-    prefs.putUInt("active_map", active_map); // Store the active map
+    prefs.putUInt("active_map", __active_map); // Store the active map
     prefs.end(); // Close NVS
-    Serial.printf("Save Active Map: %d\n", active_map);
+    Serial.printf("Save Active Map: %d\n", __active_map);
     if (__active_map %2 == 0) {
       myWS28XXLED[0] = CRGB::Green;
       __oldLedColor = CRGB::Green;
@@ -168,7 +168,7 @@ void saveActiveMap(uint8_t active_map) {
 void selectActiveMap(Control* sender, int value) {
     uint8_t active_map = static_cast<uint8_t>(String(sender->value).toInt());
     __active_map = active_map;
-    saveActiveMap(__active_map);
+    saveActiveMap();
 }
 
 void switchShowPasswords(Control* sender, int type) {
@@ -330,9 +330,9 @@ void saveSettings() {
 }
 
 
-void updateUiActiveMap( uint8_t active_map){
+void updateUiActiveMap(){
     char str[10];
-    sprintf(str, "%d", active_map); // Convert the number to a string
+    sprintf(str, "%d", __active_map); // Convert the number to a string
     ESPUI.updateControlValue(activeMapChooser, str); // Update the control value
 }
 
@@ -714,8 +714,8 @@ void handleEvent(AceButton* button, uint8_t eventType, uint8_t /*buttonState*/) 
             __active_map = __active_map -1;
             if(__active_map > NUBER_OF_MAPS) __active_map = 0; // this prevent uint8_t overflow from 0 to 255
           }
-          saveActiveMap(__active_map);
-          updateUiActiveMap(__active_map);
+          saveActiveMap();
+          updateUiActiveMap();
 
           return;
         }
@@ -782,6 +782,13 @@ void disconected() {
 
 }
 
+/**
+ * @brief onProgramChange callback
+ * 
+ * @param channel 
+ * @param program 
+ * @param timestamp 
+ */
 void onProgramChange(uint8_t channel, uint8_t program, uint16_t timestamp){
   // program change received
   Serial.printf("Program Change: Channel: %d, Program: %d, Timestamp: %d\n", channel, program, timestamp);
@@ -790,8 +797,8 @@ void onProgramChange(uint8_t channel, uint8_t program, uint16_t timestamp){
   }
 
   __active_map = program;
-  saveActiveMap(__active_map);
-  updateUiActiveMap(__active_map);
+  saveActiveMap();
+  updateUiActiveMap();
 }
 
 void setup() {
