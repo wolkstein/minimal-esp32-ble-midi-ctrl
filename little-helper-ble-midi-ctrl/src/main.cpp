@@ -22,6 +22,7 @@
 #include <FastLED.h>
 #include <AceButton.h>
 #include <Preferences.h>
+//#include "esp32-hal-log.h"
 #include "esp_log.h"
 
 #include <DNSServer.h>
@@ -641,7 +642,7 @@ void handleEvent(AceButton* button, uint8_t eventType, uint8_t /*buttonState*/) 
     uint8_t btnMidiCC = myBtn->btnMidiCC[active_mapper]; // 0 - 127 MIDI CC
     uint8_t btnMidiCCValueStateOn = myBtn->btnMidiCCValueStateOn[active_mapper]; // 0 - 127 MIDI CC Value State On
     uint8_t btnMidiCCValueStateOff = myBtn->btnMidiCCValueStateOff[active_mapper]; // 0 - 127 MIDI CC Value State Off
-    uint8_t btnMidiMMC = myBtn->btnMidiCCValueStateOff[active_mapper]; // 0 - 13 MIDI MMC
+    uint8_t btnMidiMMC = myBtn->btnMidiMMC[active_mapper]; // 0 - 13 MIDI MMC
 
     CRGB tmpBtncolor = (CRGB::HTMLColorCode)btnColor;
 
@@ -672,8 +673,53 @@ void handleEvent(AceButton* button, uint8_t eventType, uint8_t /*buttonState*/) 
         else if(btnMidiFunction == MIDI_CC && !needRelease){ // CC on need short press event
           BLEMidiServer.controlChange(btnMidiChannel, btnMidiCC, btnMidiCCValueStateOn);
           myBtn->btnState[active_mapper] = BTN_ON;
-        } 
-        else if(btnMidiFunction == MIDI_MMC && !needRelease) return; // need implementation
+        }
+        else if(btnMidiFunction == MIDI_MMC && !needRelease){
+          Serial.printf("MMC: %u\n", btnMidiMMC);
+          switch (btnMidiMMC)
+          {
+          case MMC_STOP:
+          BLEMidiServer.mmcStop();
+            BLEMidiServer.mmcStop();
+            break;
+          case MMC_PLAY:
+            BLEMidiServer.mmcPlay();
+            break;
+          case MMC_DEFERRED_PLAY:
+            BLEMidiServer.mmcDeferredPlay();
+            break;
+          case MMC_FAST_FORWARD:
+            BLEMidiServer.mmcFastForward();
+            break;
+          case MMC_REWIND:
+            BLEMidiServer.mmcRewind();
+            break;
+          case MMC_RECORD_STROBE:
+            BLEMidiServer.mmcRecordStrobe();
+            break;
+          case MMC_RECORD_EXIT:
+            BLEMidiServer.mmcRecordExit();
+            break;
+          case MMC_RECORD_PAUSE:
+            BLEMidiServer.mmcRecordPause();
+            break;
+          case MMC_PAUSE:
+            BLEMidiServer.mmcPause();
+            break;
+          case MMC_EJECT:
+            BLEMidiServer.mmcEject();
+            break;
+          case MMC_CHASE:
+            BLEMidiServer.mmcChase();
+            break;
+          case MMC_RESET:
+            BLEMidiServer.mmcReset();
+            break;
+          default:
+            break;
+          }
+          myBtn->btnState[active_mapper] = BTN_ON;
+        }
         else if(btnMidiFunction == MIDI_PROGRAMCHANGE && !needRelease) return; // need implementation
 
         myWS28XXLED[0] = tmpBtncolor;
@@ -692,7 +738,50 @@ void handleEvent(AceButton* button, uint8_t eventType, uint8_t /*buttonState*/) 
           BLEMidiServer.controlChange(btnMidiChannel, btnMidiCC, btnMidiCCValueStateOn);
           myBtn->btnState[active_mapper] = BTN_OFF;
         }
-        else if(btnMidiFunction == MIDI_MMC && needRelease) return; // need implementation
+        else if(btnMidiFunction == MIDI_MMC && needRelease){
+          switch (btnMidiMMC)
+          {
+          case MMC_STOP:
+            BLEMidiServer.mmcStop();
+            break;
+          case MMC_PLAY:
+            BLEMidiServer.mmcPlay();
+            break;
+          case MMC_DEFERRED_PLAY:
+            BLEMidiServer.mmcDeferredPlay();
+            break;
+          case MMC_FAST_FORWARD:
+            BLEMidiServer.mmcFastForward();
+            break;
+          case MMC_REWIND:
+            BLEMidiServer.mmcRewind();
+            break;
+          case MMC_RECORD_STROBE:
+            BLEMidiServer.mmcRecordStrobe();
+            break;
+          case MMC_RECORD_EXIT:
+            BLEMidiServer.mmcRecordExit();
+            break;
+          case MMC_RECORD_PAUSE:
+            BLEMidiServer.mmcRecordPause();
+            break;
+          case MMC_PAUSE:
+            BLEMidiServer.mmcPause();
+            break;
+          case MMC_EJECT:
+            BLEMidiServer.mmcEject();
+            break;
+          case MMC_CHASE:
+            BLEMidiServer.mmcChase();
+            break;
+          case MMC_RESET:
+            BLEMidiServer.mmcReset();
+            break;
+          default:
+            break;
+          }
+          myBtn->btnState[active_mapper] = BTN_OFF;
+        }
         else if(btnMidiFunction == MIDI_PROGRAMCHANGE && needRelease) return; // need implementation
         myWS28XXLED[0] = __oldLedColor;
         FastLED.show();
@@ -820,9 +909,13 @@ void setup() {
       break;
     }
   }
-  // Set log level
-  esp_log_level_set("*", ESP_LOG_NONE);
-  log_i("Starting up");
+
+
+// Set log level
+// test serveral log levels without success something is broken in the library
+// there is no output on the serial monitor with all log levels.
+ //esp_log_level_set("*", ESP_LOG_INFO);
+  log_i("Starting up with Loglevel Info");
 
   // Reset only Midi Settings
   if(digitalRead(10) == LOW && digitalRead(11) == LOW) {
