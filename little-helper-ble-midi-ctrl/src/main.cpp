@@ -43,6 +43,10 @@ CRGB myWS28XXLED[NUM_LEDS];
 
 CRGB __oldLedColor;
 
+uint8_t __numBlincs = 1;
+uint32_t __oldNumBlinktime = 0;
+uint32_t __oldBlinktime = 0;
+
 // Button Structure now with n Maps, first we try 4 Maps
 myButton myBtnMap[5] = { // 5 Buttons 4 Maps Map 1 und Map 2 are short press values, Map 3 and Map 4 are long press values
   { // Button 1
@@ -149,6 +153,7 @@ myButton* getMyButton(int pin) {
 
 
 void saveActiveMap() {
+  __numBlincs = (__active_map + 1) * 2;
     prefs.begin("active_map"); // Open NVS namespace "Settings" in RW mode
     prefs.putUInt("active_map", __active_map); // Store the active map
     prefs.end(); // Close NVS
@@ -169,6 +174,7 @@ void saveActiveMap() {
 void selectActiveMap(Control* sender, int value) {
     uint8_t active_map = static_cast<uint8_t>(String(sender->value).toInt());
     __active_map = active_map;
+    __numBlincs = (__active_map + 1) * 2;
     saveActiveMap();
 }
 
@@ -389,17 +395,21 @@ void selectBtnMapFnc(Control* sender, int value) {
     sprintf(str, "%d", localvalue); // Convert the number to a string
     ESPUI.updateControlValue(__selectUiBtn[active_btn][6], str); // Update the control value
 
-    localvalue = myBtnMap[active_btn].btnMidiVelocity[value_t]; // Get the MidiVelocity value from the settings
+    localvalue = myBtnMap[active_btn].btnMidiMMC[value_t]; // Get the MidiNote value from the settings
     sprintf(str, "%d", localvalue); // Convert the number to a string
     ESPUI.updateControlValue(__selectUiBtn[active_btn][7], str); // Update the control value
 
-    localvalue = myBtnMap[active_btn].btnFunction[value_t]; // Get the Function value from the settings
+    localvalue = myBtnMap[active_btn].btnMidiVelocity[value_t]; // Get the MidiVelocity value from the settings
     sprintf(str, "%d", localvalue); // Convert the number to a string
     ESPUI.updateControlValue(__selectUiBtn[active_btn][8], str); // Update the control value
 
-    localvalue = myBtnMap[active_btn].needRelease[value_t]; // Get the NeedRelease value from the settings
+    localvalue = myBtnMap[active_btn].btnFunction[value_t]; // Get the Function value from the settings
     sprintf(str, "%d", localvalue); // Convert the number to a string
     ESPUI.updateControlValue(__selectUiBtn[active_btn][9], str); // Update the control value
+
+    localvalue = myBtnMap[active_btn].needRelease[value_t]; // Get the NeedRelease value from the settings
+    sprintf(str, "%d", localvalue); // Convert the number to a string
+    ESPUI.updateControlValue(__selectUiBtn[active_btn][10], str); // Update the control value
 
     localvalue = myBtnMap[active_btn].btnColor[value_t]; // Get the Color value from the settings
 
@@ -411,7 +421,7 @@ void selectBtnMapFnc(Control* sender, int value) {
       }
     }
     sprintf(str, "%d", colorval); // Convert the number to a string
-    ESPUI.updateControlValue(__selectUiBtn[active_btn][10], str); // Update the control value
+    ESPUI.updateControlValue(__selectUiBtn[active_btn][11], str); // Update the control value
 
 }
 
@@ -521,13 +531,30 @@ void selectBtnMidiNoteCalback(Control* sender, int value) {
     saveSettings();
 }
 
-void selectBtnNoteVelocityCalback(Control* sender, int value) {
+void selectBtnMMCFnc(Control* sender, int value) {
     
     uint8_t value_t = static_cast<uint8_t>(String(sender->value).toInt());
 
     int active_btn = 0;
     for(int i = 0; i < __HW_BUTTONS; i++) {
       if(__selectUiBtn[i][7] == sender->id) {
+        active_btn = i;
+        break;
+      }
+    }
+
+    log_d("Select: ID: %d, Value: %s, Value as int %d\n", sender->id, sender->value, value_t);
+    myBtnMap[active_btn].btnMidiMMC[__active_map_ui_btn[active_btn]] = value_t;
+    saveSettings();  
+}
+
+void selectBtnNoteVelocityCalback(Control* sender, int value) {
+    
+    uint8_t value_t = static_cast<uint8_t>(String(sender->value).toInt());
+
+    int active_btn = 0;
+    for(int i = 0; i < __HW_BUTTONS; i++) {
+      if(__selectUiBtn[i][8] == sender->id) {
         active_btn = i;
         break;
       }
@@ -544,7 +571,7 @@ void selectBtnBehaveFncCalback(Control* sender, int value) {
 
     int active_btn = 0;
     for(int i = 0; i < __HW_BUTTONS; i++) {
-      if(__selectUiBtn[i][8] == sender->id) {
+      if(__selectUiBtn[i][9] == sender->id) {
         active_btn = i;
         break;
       }
@@ -563,7 +590,7 @@ void selectBtnTransitinCalback(Control* sender, int value) {
 
     int active_btn = 0;
     for(int i = 0; i < __HW_BUTTONS; i++) {
-      if(__selectUiBtn[i][9] == sender->id) {
+      if(__selectUiBtn[i][10] == sender->id) {
         active_btn = i;
         break;
       }
@@ -580,7 +607,7 @@ void selectBtnColorCalback(Control *sender, int type) {
 
     int active_btn = 0;
     for(int i = 0; i < __HW_BUTTONS; i++) {
-      if(__selectUiBtn[i][10] == sender->id) {
+      if(__selectUiBtn[i][11] == sender->id) {
         active_btn = i;
         break;
       }
@@ -888,6 +915,41 @@ void onProgramChange(uint8_t channel, uint8_t program, uint16_t timestamp){
   __active_map = program;
   saveActiveMap();
   updateUiActiveMap();
+}
+
+void blinkActiveMaps(){
+  
+  bool numblinkfirst = false;
+  float blikBrightness = float(__BRIGHTNESS);
+  if( millis() - __oldBlinktime > 5000){
+    //Serial.printf("kk, %d %d %d \n", millis(), __numBlincs, __oldBlinktime);
+    if(__numBlincs > 0){
+
+      if(__numBlincs %2 == 0){
+        blikBrightness = float(__BRIGHTNESS / 3.0f);
+        if(__BRIGHTNESS < 2) blikBrightness = 0;
+      }
+
+      numblinkfirst = true;
+      if(millis() - __oldNumBlinktime > 200){
+        __numBlincs--;
+        //Serial.printf("Blinki : %u\n", __numBlincs);
+        FastLED.setBrightness(blikBrightness);
+        FastLED.show();
+        __oldNumBlinktime = millis();
+      }
+
+    }
+    else
+    {
+      numblinkfirst = false;
+    }
+    
+    if(!numblinkfirst){
+        __oldBlinktime = millis();
+        __numBlincs = (__active_map + 1) * 2;
+    }
+  }
 }
 
 void setup() {
@@ -1251,18 +1313,34 @@ void setup() {
       ESPUI.addControl(Min, "", "0", None, __selectUiBtn[hw_B][6]);
       ESPUI.addControl(Max, "", "127", None, __selectUiBtn[hw_B][6]);
 
+
+      sprintf(convertstr, "%d", myBtnMap[hw_B].btnMidiMMC[__active_map_ui_btn[hw_B]]); // Convert the number to a string
+      __selectUiBtn[hw_B][7] = ESPUI.addControl(ControlType::Select, "MMC Function:", convertstr, ControlColor::Dark, thistab, &selectBtnMMCFnc);
+      ESPUI.addControl(ControlType::Option, "MMC_STOP", "1", ControlColor::Dark, __selectUiBtn[hw_B][7]);
+      ESPUI.addControl(ControlType::Option, "MMC_PLAY", "2", ControlColor::Dark, __selectUiBtn[hw_B][7]);
+      ESPUI.addControl(ControlType::Option, "MMC_DEFERRED_PLAY", "3", ControlColor::Dark, __selectUiBtn[hw_B][7]);
+      ESPUI.addControl(ControlType::Option, "MMC_FAST_FORWARD", "4", ControlColor::Dark, __selectUiBtn[hw_B][7]);      
+      ESPUI.addControl(ControlType::Option, "MMC_REWIND", "5", ControlColor::Dark, __selectUiBtn[hw_B][7]);
+      ESPUI.addControl(ControlType::Option, "MMC_RECORD_STROBE", "6", ControlColor::Dark, __selectUiBtn[hw_B][7]);
+      ESPUI.addControl(ControlType::Option, "MMC_RECORD_EXIT", "7", ControlColor::Dark, __selectUiBtn[hw_B][7]);
+      ESPUI.addControl(ControlType::Option, "MMC_RECORD_PAUSE", "8", ControlColor::Dark, __selectUiBtn[hw_B][7]);
+      ESPUI.addControl(ControlType::Option, "MMC_PAUSE", "9", ControlColor::Dark, __selectUiBtn[hw_B][7]);
+      ESPUI.addControl(ControlType::Option, "MMC_EJECT", "10", ControlColor::Dark, __selectUiBtn[hw_B][7]);
+      ESPUI.addControl(ControlType::Option, "MMC_CHASE", "11", ControlColor::Dark, __selectUiBtn[hw_B][7]);
+      ESPUI.addControl(ControlType::Option, "MMC_RESET", "13", ControlColor::Dark, __selectUiBtn[hw_B][7]);       
+
       sprintf(convertstr, "%d", myBtnMap[hw_B].btnMidiVelocity[__active_map_ui_btn[hw_B]]); // Convert the number to a string
-      __selectUiBtn[hw_B][7] = ESPUI.addControl(ControlType::Number, "Midi Note Velocity 0 - 127:", convertstr, ControlColor::Dark, thistab, &selectBtnNoteVelocityCalback);
-      ESPUI.addControl(Min, "", "0", None, __selectUiBtn[hw_B][7]);
-      ESPUI.addControl(Max, "", "127", None, __selectUiBtn[hw_B][7]);
+      __selectUiBtn[hw_B][8] = ESPUI.addControl(ControlType::Number, "Midi Note Velocity 0 - 127:", convertstr, ControlColor::Dark, thistab, &selectBtnNoteVelocityCalback);
+      ESPUI.addControl(Min, "", "0", None, __selectUiBtn[hw_B][8]);
+      ESPUI.addControl(Max, "", "127", None, __selectUiBtn[hw_B][8]);
 
-      __selectUiBtn[hw_B][8] = ESPUI.addControl(ControlType::Select, "Button behave: Midi Note only", "", ControlColor::Dark, thistab, &selectBtnBehaveFncCalback);
-      ESPUI.addControl(ControlType::Option, "Push", "0", ControlColor::Dark, __selectUiBtn[hw_B][8]);
-      ESPUI.addControl(ControlType::Option, "Toggle", "1", ControlColor::Dark, __selectUiBtn[hw_B][8]);
-
-      __selectUiBtn[hw_B][9] = ESPUI.addControl(ControlType::Select, "Button Transition: Midi Note excluded", "", ControlColor::Dark, thistab, &selectBtnTransitinCalback);
+      __selectUiBtn[hw_B][9] = ESPUI.addControl(ControlType::Select, "Button behave: Midi Note only", "", ControlColor::Dark, thistab, &selectBtnBehaveFncCalback);
       ESPUI.addControl(ControlType::Option, "Push", "0", ControlColor::Dark, __selectUiBtn[hw_B][9]);
-      ESPUI.addControl(ControlType::Option, "Release", "1", ControlColor::Dark, __selectUiBtn[hw_B][9]);
+      ESPUI.addControl(ControlType::Option, "Toggle", "1", ControlColor::Dark, __selectUiBtn[hw_B][9]);
+
+      __selectUiBtn[hw_B][10] = ESPUI.addControl(ControlType::Select, "Button Transition: Midi Note excluded", "", ControlColor::Dark, thistab, &selectBtnTransitinCalback);
+      ESPUI.addControl(ControlType::Option, "Push", "0", ControlColor::Dark, __selectUiBtn[hw_B][10]);
+      ESPUI.addControl(ControlType::Option, "Release", "1", ControlColor::Dark, __selectUiBtn[hw_B][10]);
 
       uint32_t color = myBtnMap[hw_B].btnColor[__active_map_ui_btn[hw_B]];
       int colorval = 0;
@@ -1273,16 +1351,18 @@ void setup() {
         }
       }
       sprintf(convertstr, "%d", colorval); // Convert the number to a string  
-      __selectUiBtn[hw_B][10] = ESPUI.addControl(ControlType::Slider, "Button Color:", convertstr, ControlColor::Dark, thistab, &selectBtnColorCalback);
-      ESPUI.addControl(Min, "", "0", None, __selectUiBtn[hw_B][10]);
-      ESPUI.addControl(Max, "", "139", None, __selectUiBtn[hw_B][10]);
+      __selectUiBtn[hw_B][11] = ESPUI.addControl(ControlType::Slider, "Button Color:", convertstr, ControlColor::Dark, thistab, &selectBtnColorCalback);
+      ESPUI.addControl(Min, "", "0", None, __selectUiBtn[hw_B][11]);
+      ESPUI.addControl(Max, "", "139", None, __selectUiBtn[hw_B][11]);
       static char stylecol1[60];
       sprintf(stylecol1, "border-bottom: #999 3px solid; background-color: #%06X;", color );   
-      ESPUI.setPanelStyle(__selectUiBtn[hw_B][10], stylecol1);
+      ESPUI.setPanelStyle(__selectUiBtn[hw_B][11], stylecol1);
      
     }
 
     ESPUI.begin("Little Helper Configuration");
+
+    __numBlincs = (__active_map + 1) * 2;
 
   }
 
@@ -1318,7 +1398,9 @@ void loop() {
     }
   }
 
+  blinkActiveMaps();
   delay(1);
+
 }
 
 

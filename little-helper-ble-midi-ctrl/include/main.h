@@ -41,7 +41,7 @@ bool __configurator = false;
 #define WS28XX_LED_PIN 33 // GPIO 33
 #define NUM_LEDS  1
 
-uint8_t __BRIGHTNESS = 100;
+uint8_t __BRIGHTNESS = 85;
 
 //struct my_config_names
 uint8_t __active_map = 0; // 0 = map 1, 1 = map 2 ... usw.
@@ -49,13 +49,13 @@ uint8_t __active_map_ui_btn[5] = {0, 0, 0, 0, 0};
 
 bool __isConnected = false;
 
-uint16_t __selectUiBtn[5][11]  = {
-  // selectBtn1Map, selectBtn1MidiChannel, selectBtn1MidiFunction, selectBtn1CCFunction, selectBtn1CCValueMax, selectBtn1CCValueMin, selectBtn1MidiNote, selectBtn1NoteVelocity
-  {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-  {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-  {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-  {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-  {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
+uint16_t __selectUiBtn[5][12]  = {
+  // selectBtn1Map, selectBtn1MidiChannel, selectBtn1MidiFunction, selectBtn1CCFunction, selectBtn1MMCFunction, selectBtn1CCValueMax, selectBtn1CCValueMin, selectBtn1MidiNote, selectBtn1NoteVelocity
+  {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+  {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+  {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+  {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+  {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
 };
 
 enum my_mmc_t {
