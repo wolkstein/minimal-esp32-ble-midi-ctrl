@@ -42,9 +42,9 @@ DNSServer dnsServer;
 
 // OTA Update globals
 // Constants for server details
-const char* SERVER = "https://github.com"; // Your server address
+const char* SERVER = "https://raw.githubusercontent.com"; // Your server address
 const int SERVER_PORT = 443; // Typically 443 for HTTPS
-const char* PATH = "/wolkstein/minimal-esp32-ble-midi-ctrl/raw/main/bin/s3miniV"; // Path to the firmware
+const char* PATH = "/wolkstein/minimal-esp32-ble-midi-ctrl/main/bin/s3miniV"; // Path to the firmware
 
 bool __ota_update_running = false;
 
