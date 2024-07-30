@@ -733,15 +733,6 @@ void handleEvent(AceButton* button, uint8_t eventType, uint8_t /*buttonState*/) 
           case MMC_PAUSE:
             BLEMidiServer.mmcPause();
             break;
-          case MMC_EJECT:
-            BLEMidiServer.mmcEject();
-            break;
-          case MMC_CHASE:
-            BLEMidiServer.mmcChase();
-            break;
-          case MMC_RESET:
-            BLEMidiServer.mmcReset();
-            break;
           default:
             break;
           }
@@ -794,15 +785,6 @@ void handleEvent(AceButton* button, uint8_t eventType, uint8_t /*buttonState*/) 
             break;
           case MMC_PAUSE:
             BLEMidiServer.mmcPause();
-            break;
-          case MMC_EJECT:
-            BLEMidiServer.mmcEject();
-            break;
-          case MMC_CHASE:
-            BLEMidiServer.mmcChase();
-            break;
-          case MMC_RESET:
-            BLEMidiServer.mmcReset();
             break;
           default:
             break;
@@ -1313,21 +1295,17 @@ void setup() {
       ESPUI.addControl(Min, "", "0", None, __selectUiBtn[hw_B][6]);
       ESPUI.addControl(Max, "", "127", None, __selectUiBtn[hw_B][6]);
 
-
       sprintf(convertstr, "%d", myBtnMap[hw_B].btnMidiMMC[__active_map_ui_btn[hw_B]]); // Convert the number to a string
       __selectUiBtn[hw_B][7] = ESPUI.addControl(ControlType::Select, "MMC Function:", convertstr, ControlColor::Dark, thistab, &selectBtnMMCFnc);
-      ESPUI.addControl(ControlType::Option, "MMC_STOP", "1", ControlColor::Dark, __selectUiBtn[hw_B][7]);
-      ESPUI.addControl(ControlType::Option, "MMC_PLAY", "2", ControlColor::Dark, __selectUiBtn[hw_B][7]);
-      ESPUI.addControl(ControlType::Option, "MMC_DEFERRED_PLAY", "3", ControlColor::Dark, __selectUiBtn[hw_B][7]);
-      ESPUI.addControl(ControlType::Option, "MMC_FAST_FORWARD", "4", ControlColor::Dark, __selectUiBtn[hw_B][7]);      
-      ESPUI.addControl(ControlType::Option, "MMC_REWIND", "5", ControlColor::Dark, __selectUiBtn[hw_B][7]);
-      ESPUI.addControl(ControlType::Option, "MMC_RECORD_STROBE", "6", ControlColor::Dark, __selectUiBtn[hw_B][7]);
-      ESPUI.addControl(ControlType::Option, "MMC_RECORD_EXIT", "7", ControlColor::Dark, __selectUiBtn[hw_B][7]);
-      ESPUI.addControl(ControlType::Option, "MMC_RECORD_PAUSE", "8", ControlColor::Dark, __selectUiBtn[hw_B][7]);
-      ESPUI.addControl(ControlType::Option, "MMC_PAUSE", "9", ControlColor::Dark, __selectUiBtn[hw_B][7]);
-      ESPUI.addControl(ControlType::Option, "MMC_EJECT", "10", ControlColor::Dark, __selectUiBtn[hw_B][7]);
-      ESPUI.addControl(ControlType::Option, "MMC_CHASE", "11", ControlColor::Dark, __selectUiBtn[hw_B][7]);
-      ESPUI.addControl(ControlType::Option, "MMC_RESET", "13", ControlColor::Dark, __selectUiBtn[hw_B][7]);       
+      ESPUI.addControl(ControlType::Option, "STOP", "1", ControlColor::Dark, __selectUiBtn[hw_B][7]);
+      ESPUI.addControl(ControlType::Option, "PLAY", "2", ControlColor::Dark, __selectUiBtn[hw_B][7]);
+      ESPUI.addControl(ControlType::Option, "DEFERRED PLAY", "3", ControlColor::Dark, __selectUiBtn[hw_B][7]);
+      ESPUI.addControl(ControlType::Option, "FAST FORWARD", "4", ControlColor::Dark, __selectUiBtn[hw_B][7]);      
+      ESPUI.addControl(ControlType::Option, "REWIND", "5", ControlColor::Dark, __selectUiBtn[hw_B][7]);
+      ESPUI.addControl(ControlType::Option, "RECORD STROBE", "6", ControlColor::Dark, __selectUiBtn[hw_B][7]);
+      ESPUI.addControl(ControlType::Option, "RECORD EXIT", "7", ControlColor::Dark, __selectUiBtn[hw_B][7]);
+      ESPUI.addControl(ControlType::Option, "RECORD PAUSE", "8", ControlColor::Dark, __selectUiBtn[hw_B][7]);
+      ESPUI.addControl(ControlType::Option, "PAUSE", "9", ControlColor::Dark, __selectUiBtn[hw_B][7]);      
 
       sprintf(convertstr, "%d", myBtnMap[hw_B].btnMidiVelocity[__active_map_ui_btn[hw_B]]); // Convert the number to a string
       __selectUiBtn[hw_B][8] = ESPUI.addControl(ControlType::Number, "Midi Note Velocity 0 - 127:", convertstr, ControlColor::Dark, thistab, &selectBtnNoteVelocityCalback);
@@ -1362,11 +1340,9 @@ void setup() {
 
     ESPUI.begin("Little Helper Configuration");
 
-    __numBlincs = (__active_map + 1) * 2;
-
   }
 
-
+  __numBlincs = (__active_map + 1) * 2;
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -1379,6 +1355,7 @@ void setup() {
   // BLEMidiServer.setNoteOffCallback(onNoteOff);
   // BLEMidiServer.setControlChangeCallback(onControlChange);
   BLEMidiServer.setProgramChangeCallback(onProgramChange);
+
 }
 
 void loop() {

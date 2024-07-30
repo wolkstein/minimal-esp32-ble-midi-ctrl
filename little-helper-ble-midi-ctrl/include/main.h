@@ -68,9 +68,6 @@ enum my_mmc_t {
   MMC_RECORD_EXIT   = 0x07,
   MMC_RECORD_PAUSE  = 0x08,
   MMC_PAUSE         = 0x09,
-  MMC_EJECT         = 0x0A,
-  MMC_CHASE         = 0x0B,
-  MMC_RESET         = 0x0D,
 };
 
 enum my_btn_function {
