@@ -30,9 +30,25 @@
 
 #include <WiFi.h>
 
+// ota network requirements
+#include <HTTPClient.h>
+#include <WiFiClientSecure.h>
+#include <Update.h>
+
 const byte DNS_PORT = 53;
 IPAddress apIP(192, 168, 8, 1);
 DNSServer dnsServer;
+
+
+// OTA Update globals
+// Constants for server details
+const char* SERVER = "https://github.com"; // Your server address
+const int SERVER_PORT = 443; // Typically 443 for HTTPS
+const char* PATH = "/wolkstein/minimal-esp32-ble-midi-ctrl/raw/main/bin/s3miniV"; // Path to the firmware
+
+bool __ota_update_running = false;
+
+unsigned int __FW_VERSION = 1; // Firmware Version only Major Versions number
 
 Preferences prefs;
 
@@ -149,9 +165,104 @@ myButton* getMyButton(int pin) {
     }
 }
 
+
+
+// OTA Function
+void otaUpdate(Control* sender, int type) {
+  // static const unsigned long CHECK_INTERVAL = 6000; // Time interval between update checks in milliseconds
+  // static unsigned long previousMillis = 0;
+  // unsigned long currentMillis = millis();
+
+  // // Check if it's time to check for an update
+  // if (currentMillis - previousMillis < CHECK_INTERVAL) {
+  //   return;
+  // }
+  // previousMillis = currentMillis;
+  if (type == B_UP) // we need only push down event
+  {
+    return;
+  }
+
+  if (__ota_update_running) {
+    Serial.println("OTA update already running.");
+    return;
+  }
+  
+  __ota_update_running = true;
+  WiFiClientSecure wifiClientSSL;
+  wifiClientSSL.setInsecure(); // Not recommended for production, better to handle certificates properly
+
+  HTTPClient https;
+  char updateURL[100];
+  snprintf(updateURL, sizeof(updateURL), "%s%s%d.bin", SERVER, PATH, __FW_VERSION + 1);
+
+  Serial.print("Checking for update file: ");
+  Serial.println(updateURL);
+
+  https.begin(wifiClientSSL, updateURL); // Begin connection
+
+  int httpCode = https.GET(); // Make the GET request
+
+  Serial.print("Update status code: ");
+  Serial.println(httpCode);
+
+  if (httpCode != HTTP_CODE_OK) {
+    Serial.println("Failed to fetch update.");
+    https.end();
+    __ota_update_running = false;
+    return;
+  }
+
+  int contentLength = https.getSize();
+  if (contentLength <= 0) {
+    Serial.println("Invalid content length. Can't continue with update.");
+    https.end();
+    __ota_update_running = false;
+    return;
+  }
+
+  Serial.print("Server returned update file of size ");
+  Serial.print(contentLength);
+  Serial.println(" bytes");
+
+  // Prepare for the update
+  if (!Update.begin(contentLength)) {
+    Serial.println("Not enough space to begin OTA");
+    https.end();
+    __ota_update_running = false;
+    return;
+  }
+
+  // Download and write the update
+  WiFiClient *stream = https.getStreamPtr();
+  size_t written = Update.writeStream(*stream);
+  if (written != contentLength) {
+    Serial.println("Failed to write update");
+    https.end();
+    __ota_update_running = false;
+    return;
+  }
+
+  // Apply the update
+  if (!Update.end(true)) {
+    Serial.println("Error Occurred. Error #: " + String(Update.getError()));
+    https.end();
+    __ota_update_running = false;
+    return;
+  }
+
+  Serial.println("OTA Done!");
+  Serial.printf("update fw version: %d\n", __FW_VERSION + 1);
+  __FW_VERSION++;
+  prefs.begin("fwversion");  //Open namespace Settings
+  prefs.putUInt("fwversion", __FW_VERSION);
+  prefs.end(); // close the Settings Namespace
+  Serial.println("Rebooting...");
+  ESP.restart();
+}
+// ~ OTA ~
+
 // helper function to get the button configuration based on the GPIO pin and the active map
-
-
 void saveActiveMap() {
   __numBlincs = (__active_map + 1) * 2;
     prefs.begin("active_map"); // Open NVS namespace "Settings" in RW mode
@@ -1010,10 +1121,19 @@ void setup() {
     
   }
 
+  prefs.begin("fwversion");  //Open namespace Settings
+  if (not prefs.isKey("fwversion")) {
+    Serial.println("firmware version not found, saving current version nr.");
+    prefs.putUInt("fwversion", __FW_VERSION);
+  } else {
+    log_d("firmware version found, loading version number");
+    __FW_VERSION = prefs.getUInt("fwversion");
+    Serial.printf("FW Version: %d\n", __FW_VERSION);
+  }
+  prefs.end(); // close the Settings Namespace
 
   prefs.begin("Settings");  //Open namespace Settings
-
-  
+ 
   if (not prefs.isKey("Settings")) {
     log_d("Settings not found, saving default settings");
     prefs.putBytes("Settings", &myBtnMap, sizeof(myBtnMap));
@@ -1033,7 +1153,6 @@ void setup() {
     __active_map = prefs.getUInt("active_map");
     Serial.printf("active_map: %d\n", __active_map);
   }
-  
   prefs.end(); // close the Settings Namespace
   
 
@@ -1221,6 +1340,11 @@ void setup() {
     hostnameTxtField = ESPUI.addControl(ControlType::Text, "Hostname:", hostname.c_str(), ControlColor::Dark, tab7, &textCallHostname);
     ESPUI.addControl(ControlType::Switcher, "Show Passwords", "", ControlColor::Alizarin, tab7, &switchShowPasswords);
 
+    // OTA Update
+    char fwupdatestr[10];
+    sprintf(fwupdatestr, "Update: %d to %d" , __FW_VERSION, __FW_VERSION + 1); // Convert the number to a string
+    ESPUI.addControl(ControlType::Button, "Firmware Update", fwupdatestr, ControlColor::Alizarin, tab7, &otaUpdate);
+
     // Led Brightness
     ledBrightnessTxtField = ESPUI.addControl(ControlType::Slider, "LED Brightness:", String(__BRIGHTNESS).c_str(), ControlColor::Dark, tab7, &textCallLedBrightness);
     ESPUI.addControl(Min, "", "0", None, ledBrightnessTxtField);
@@ -1377,7 +1501,6 @@ void loop() {
 
   blinkActiveMaps();
   delay(1);
-  
 }
 
 
