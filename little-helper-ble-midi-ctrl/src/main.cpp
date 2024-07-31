@@ -57,6 +57,8 @@ DNSServer dnsServer;
 
 unsigned int __FW_VERSION = 1; // Firmware Version only Major Versions number
 bool __DO_UPDATE = false;
+bool __UPDATE_FAILURE = false;
+int __UPDATE_ERROR_CODE = -1;
 
 Preferences prefs;
 
@@ -187,6 +189,16 @@ void otaUpdate(Control* sender, int type) {
 
 void justotaUpdate() {
 
+  // reset firmware update flag
+  prefs.begin("doupdate");  //Open namespace Settings
+  prefs.putBool("doupdate", false);
+  prefs.end(); // close the Settings Namespace
+
+  __UPDATE_FAILURE = true; // set this true, while this function is running
+  prefs.begin("updatefail");  //Open namespace Settings
+  prefs.putBool("updatefail", __UPDATE_FAILURE);
+  prefs.end(); // close the Settings Namespace
+
   if (__ota_update_running) {
     Serial.println("OTA update already running.");
     return;
@@ -214,8 +226,15 @@ void justotaUpdate() {
     Serial.println("Failed to fetch update.");
     https.end();
     __ota_update_running = false;
+    __UPDATE_ERROR_CODE = httpCode;
+    prefs.begin("updateerrorcode");  //Open namespace Settings
+    prefs.putInt("updateerrorcode", __UPDATE_ERROR_CODE);
+    prefs.end(); // close the Settings Namespace 
+    ESP.restart();
     return;
   }
+
+
 
   int contentLength = https.getSize();
   if (contentLength <= 0) {
@@ -252,9 +271,11 @@ void justotaUpdate() {
   uint8_t buff[128] = { 0 }; // Größe des Buffers anpassen
   size_t len = 0; // Variable to store the length of data available for reading
 
+  bool toggleLed = false;
   while (https.connected() && (written < contentLength)) {
+
       len = stream->available();
-      delay(10); // Kleine Verzögerung, um dem Stream Zeit zu geben, Daten zu sammeln
+      delay(2); // Kleine Verzögerung, um dem Stream Zeit zu geben, Daten zu sammeln
 
       if (len > 0) {
           int c = stream->readBytes(buff, ((len < sizeof(buff)) ? len : sizeof(buff)));
@@ -269,6 +290,15 @@ void justotaUpdate() {
           Serial.printf("len: %d, written: %d\n", len, written);
           yield(); // Ermöglicht das Ausführen von Hintergrundaufgaben, verhindert WDT-Reset
       }
+
+      if(toggleLed) {
+        myWS28XXLED[0] = CRGB::Purple;
+        FastLED.show();
+      } else {
+        myWS28XXLED[0] = CRGB::Black;
+        FastLED.show();
+      }
+      toggleLed = !toggleLed;
   }
 
   if (written == contentLength) {
@@ -279,13 +309,19 @@ void justotaUpdate() {
       Serial.println("OTA done!");
       if (Update.isFinished()) {
           Serial.println("Update successfully completed. Rebooting.");
+          __UPDATE_FAILURE = false; // set this true, while this function is running
+          prefs.begin("updatefail");  //Open namespace Settings
+          prefs.putBool("updatefail", __UPDATE_FAILURE);
+          prefs.end(); // close the Settings Namespace
+
+          __UPDATE_ERROR_CODE = -1;
+          prefs.begin("updateerrorcode");  //Open namespace Settings
+          prefs.putInt("updateerrorcode", __UPDATE_ERROR_CODE);
+          prefs.end(); // close the Settings Namespace 
 
           Serial.println("OTA Done!");
           Serial.printf("update fw version: %d\n", __FW_VERSION + 1);
           __FW_VERSION++;
-          prefs.begin("doupdate");  //Open namespace Settings
-          prefs.putBool("doupdate", false);
-          prefs.end(); // close the Settings Namespace
           prefs.begin("fwversion");  //Open namespace Settings
           prefs.putUInt("fwversion", __FW_VERSION);
           prefs.end(); // close the Settings Namespace
@@ -1163,6 +1199,29 @@ void setup() {
     
   }
 
+  prefs.begin("updateerrorcode");  //Open namespace Settings
+  if (not prefs.isKey("updateerrorcode")) {
+    Serial.println("do updateerrorcode not found, saving updateerrorcode");
+    prefs.putInt("updateerrorcode", __UPDATE_ERROR_CODE);
+  } else {
+    log_d("updateerrorcode found, loading");
+    __UPDATE_ERROR_CODE = prefs.getInt("updateerrorcode");
+    Serial.printf("Fail Errorcode: %d\n", __UPDATE_ERROR_CODE);
+  }
+  prefs.end(); // close the Settings Namespace 
+
+
+  prefs.begin("updatefail");  //Open namespace Settings
+  if (not prefs.isKey("updatefail")) {
+    Serial.println("do updatefail not found, saving updatefail");
+    prefs.putBool("updatefail", __UPDATE_FAILURE);
+  } else {
+    log_d("update fail found, loading");
+    __UPDATE_FAILURE = prefs.getBool("updatefail");
+    Serial.printf("Fail Update: %d\n", __UPDATE_FAILURE);
+  }
+  prefs.end(); // close the Settings Namespace 
+
   prefs.begin("doupdate");  //Open namespace Settings
   if (not prefs.isKey("doupdate")) {
     Serial.println("do update not found, saving doupdate");
@@ -1410,7 +1469,11 @@ void setup() {
       // OTA Update
       #ifdef USE_OTA
       char fwupdatestr[10];
-      sprintf(fwupdatestr, "Update: %d to %d" , __FW_VERSION, __FW_VERSION + 1); // Convert the number to a string
+      if(__UPDATE_FAILURE && __UPDATE_ERROR_CODE == 404){
+        sprintf(fwupdatestr, "No Update foud"); // Convert the number to a string
+      }
+      else if(__UPDATE_FAILURE) sprintf(fwupdatestr, "Update Fail, retry"); // Convert the number to a string
+      else sprintf(fwupdatestr, "Update: %d to %d" , __FW_VERSION, __FW_VERSION + 1); // Convert the number to a string
       ESPUI.addControl(ControlType::Button, "Firmware Update", fwupdatestr, ControlColor::Alizarin, tab7, &otaUpdate);
       #endif
 
@@ -1530,6 +1593,7 @@ void setup() {
         ESPUI.setPanelStyle(__selectUiBtn[hw_B][11], stylecol1);
       
       }
+      
 
       ESPUI.begin("Little Helper Configuration");
     }
