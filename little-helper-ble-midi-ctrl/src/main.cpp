@@ -55,7 +55,7 @@ DNSServer dnsServer;
 
 
 
-unsigned int __FW_VERSION = 2; // Firmware Version only Major Versions number
+unsigned int __FW_VERSION = 3; // Firmware Version only Major Versions number
 bool __DO_UPDATE = false;
 bool __UPDATE_FAILURE = false;
 int __UPDATE_ERROR_CODE = -1;
@@ -359,6 +359,9 @@ void saveActiveMap() {
 }
 
 // WEB UI Callbacks
+void nothing(Control* sender, int type) {
+    // Do nothing
+}
 
 void selectActiveMap(Control* sender, int value) {
     uint8_t active_map = static_cast<uint8_t>(String(sender->value).toInt());
@@ -1456,6 +1459,7 @@ void setup() {
       
 
       // Wlan Settings and Bluethooth Settings
+
       bleNameTxtField = ESPUI.addControl(ControlType::Text, "Bluethooth Name:", midiDeviceName.c_str(), ControlColor::Dark, tab7, &textCallBlueThoothName);
       wlanSsidNameTxtField = ESPUI.addControl(ControlType::Text, "Wlan SSID:", ssid.c_str(), ControlColor::Dark, tab7, &textCallSsidName);
       wlanPasswordTxtField = ESPUI.addControl(ControlType::Text, "Wlan Password:", password.c_str(), ControlColor::Dark, tab7, &textCallWlanPassword);
@@ -1468,12 +1472,16 @@ void setup() {
 
       // OTA Update
       #ifdef USE_OTA
+      char fwv[3];
+      sprintf(fwv, "%d", __FW_VERSION);
+      ESPUI.addControl(ControlType::Label, "Current Firmware", fwv, ControlColor::Alizarin, tab7, &nothing);
+
       char fwupdatestr[10];
       if(__UPDATE_FAILURE && __UPDATE_ERROR_CODE == 404){
         sprintf(fwupdatestr, "No Update foud"); // Convert the number to a string
       }
       else if(__UPDATE_FAILURE) sprintf(fwupdatestr, "Update Fail, retry"); // Convert the number to a string
-      else sprintf(fwupdatestr, "Update: %d to %d" , __FW_VERSION, __FW_VERSION + 1); // Convert the number to a string
+      else sprintf(fwupdatestr, "Try Update"); // Convert the number to a string
       ESPUI.addControl(ControlType::Button, "Firmware Update", fwupdatestr, ControlColor::Alizarin, tab7, &otaUpdate);
       #endif
 
@@ -1594,8 +1602,7 @@ void setup() {
       
       }
       
-
-      ESPUI.begin("Little Helper Configuration");
+      ESPUI.begin("Little Helper Web UI");
     }
   }
 
