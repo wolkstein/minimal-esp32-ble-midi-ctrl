@@ -55,7 +55,7 @@ DNSServer dnsServer;
 
 
 
-unsigned int __FW_VERSION = 3; // Firmware Version only Major Versions number
+unsigned int __FW_VERSION = 4; // Firmware Version only Major Versions number
 bool __DO_UPDATE = false;
 bool __UPDATE_FAILURE = false;
 int __UPDATE_ERROR_CODE = -1;
@@ -287,7 +287,7 @@ void justotaUpdate() {
           
 
           written += c;
-          Serial.printf("len: %d, written: %d\n", len, written);
+          //Serial.printf("len: %d, written: %d\n", len, written);
           yield(); // Ermöglicht das Ausführen von Hintergrundaufgaben, verhindert WDT-Reset
       }
 
