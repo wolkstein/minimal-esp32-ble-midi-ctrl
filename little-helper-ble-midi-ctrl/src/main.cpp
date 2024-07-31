@@ -16,6 +16,7 @@
  * This code is licensed under the GNU General Public License version 3 (GPL-3.0).
  */
 
+#define USE_OTA
 #include "main.h"
 #include <Arduino.h>
 #include <BLEMidi.h>
@@ -30,23 +31,29 @@
 
 #include <WiFi.h>
 
-// ota network requirements
-#include <HTTPClient.h>
-#include <WiFiClientSecure.h>
-#include <Update.h>
+// // ota network requirements
+#ifdef USE_OTA
+  #include <HTTPClient.h>
+  #include <WiFiClientSecure.h>
+  #include <Update.h>
+#endif
+
 
 const byte DNS_PORT = 53;
 IPAddress apIP(192, 168, 8, 1);
 DNSServer dnsServer;
 
 
-// OTA Update globals
-// Constants for server details
-const char* SERVER = "https://raw.githubusercontent.com"; // Your server address
-const int SERVER_PORT = 443; // Typically 443 for HTTPS
-const char* PATH = "/wolkstein/minimal-esp32-ble-midi-ctrl/main/bin/s3miniV"; // Path to the firmware
+// // OTA Update globals
+// // Constants for server details
+#ifdef USE_OTA
+  const char* SERVER = "https://raw.githubusercontent.com"; // Your server address
+  const int SERVER_PORT = 443; // Typically 443 for HTTPS
+  const char* PATH = "/wolkstein/minimal-esp32-ble-midi-ctrl/main/bin/s3miniV"; // Path to the firmware
+  bool __ota_update_running = false;
+#endif
 
-bool __ota_update_running = false;
+
 
 unsigned int __FW_VERSION = 1; // Firmware Version only Major Versions number
 
@@ -166,8 +173,7 @@ myButton* getMyButton(int pin) {
 }
 
 
-
-// OTA Function
+#ifdef USE_OTA
 void otaUpdate(Control* sender, int type) {
   // static const unsigned long CHECK_INTERVAL = 6000; // Time interval between update checks in milliseconds
   // static unsigned long previousMillis = 0;
@@ -226,40 +232,67 @@ void otaUpdate(Control* sender, int type) {
   Serial.println(" bytes");
 
   // Prepare for the update
-  if (!Update.begin(contentLength)) {
-    Serial.println("Not enough space to begin OTA");
-    https.end();
-    __ota_update_running = false;
-    return;
+  Serial.print("Free heap before OTA: ");
+  Serial.println(ESP.getFreeHeap());
+
+
+  if (!Update.begin(contentLength, U_SPIFFS, 15, 0, NULL)) {
+      Serial.println("Not enough space to begin OTA");
+      https.end();
+      __ota_update_running = false;
+      return;
+  } else {
+      Serial.println("OTA Update started");
   }
 
-  // Download and write the update
+  delay(1000); // Delay to allow the serial buffer to flush
+
+  size_t written = 0; // Variable to store how many bytes have been written
   WiFiClient *stream = https.getStreamPtr();
-  size_t written = Update.writeStream(*stream);
-  if (written != contentLength) {
-    Serial.println("Failed to write update");
-    https.end();
-    __ota_update_running = false;
-    return;
+  while (https.connected() && (written < contentLength)) {
+      size_t len = stream->available();
+      if (len) {
+          uint8_t buff[512];
+          int c = stream->readBytes(buff, ((len < sizeof(buff)) ? len : sizeof(buff)));
+          if (Update.write(buff, c) != c) {
+              Serial.println("Error writing to flash. Aborting OTA.");
+              Update.abort();
+              break;
+          }
+          written += c;
+      }
+      yield(); // Allow background tasks to run, preventing WDT reset
   }
 
-  // Apply the update
-  if (!Update.end(true)) {
-    Serial.println("Error Occurred. Error #: " + String(Update.getError()));
-    https.end();
-    __ota_update_running = false;
-    return;
+  if (written == contentLength) {
+      Serial.println("Written : " + String(written) + " successfully");
   }
+  if (Update.end()) {
+      Serial.println("OTA done!");
+      if (Update.isFinished()) {
+          Serial.println("Update successfully completed. Rebooting.");
 
-  Serial.println("OTA Done!");
-  Serial.printf("update fw version: %d\n", __FW_VERSION + 1);
-  __FW_VERSION++;
-  prefs.begin("fwversion");  //Open namespace Settings
-  prefs.putUInt("fwversion", __FW_VERSION);
-  prefs.end(); // close the Settings Namespace
-  Serial.println("Rebooting...");
-  ESP.restart();
+          Serial.println("OTA Done!");
+          Serial.printf("update fw version: %d\n", __FW_VERSION + 1);
+          __FW_VERSION++;
+          prefs.begin("fwversion");  //Open namespace Settings
+          prefs.putUInt("fwversion", __FW_VERSION);
+          prefs.end(); // close the Settings Namespace
+          Serial.println("Rebooting...");
+          ESP.restart();
+
+          ESP.restart();
+      } else {
+          Serial.println("Update not finished? Something went wrong!");
+          __ota_update_running = false;
+      }
+  } else {
+      Serial.println("Error Occurred. Error #: " + String(Update.getError()));
+      __ota_update_running = false;
+  }
 }
+#endif
+
 // ~ OTA ~
 
 // helper function to get the button configuration based on the GPIO pin and the active map
@@ -1277,6 +1310,8 @@ void setup() {
             timeout--;
         } while (timeout && WiFi.status() != WL_CONNECTED);
 
+        Serial.printf("Local Ip Address: %s\n", WiFi.localIP().toString().c_str());
+
         // not connected -> create hotspot
         if (WiFi.status() != WL_CONNECTED)
         {
@@ -1341,9 +1376,11 @@ void setup() {
     ESPUI.addControl(ControlType::Switcher, "Show Passwords", "", ControlColor::Alizarin, tab7, &switchShowPasswords);
 
     // OTA Update
+    #ifdef USE_OTA
     char fwupdatestr[10];
     sprintf(fwupdatestr, "Update: %d to %d" , __FW_VERSION, __FW_VERSION + 1); // Convert the number to a string
     ESPUI.addControl(ControlType::Button, "Firmware Update", fwupdatestr, ControlColor::Alizarin, tab7, &otaUpdate);
+    #endif
 
     // Led Brightness
     ledBrightnessTxtField = ESPUI.addControl(ControlType::Slider, "LED Brightness:", String(__BRIGHTNESS).c_str(), ControlColor::Dark, tab7, &textCallLedBrightness);
