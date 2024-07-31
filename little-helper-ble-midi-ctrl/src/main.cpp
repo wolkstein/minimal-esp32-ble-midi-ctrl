@@ -56,6 +56,7 @@ DNSServer dnsServer;
 
 
 unsigned int __FW_VERSION = 1; // Firmware Version only Major Versions number
+bool __DO_UPDATE = false;
 
 Preferences prefs;
 
@@ -174,20 +175,18 @@ myButton* getMyButton(int pin) {
 
 
 #ifdef USE_OTA
-void otaUpdate(Control* sender, int type) {
-  // static const unsigned long CHECK_INTERVAL = 6000; // Time interval between update checks in milliseconds
-  // static unsigned long previousMillis = 0;
-  // unsigned long currentMillis = millis();
 
-  // // Check if it's time to check for an update
-  // if (currentMillis - previousMillis < CHECK_INTERVAL) {
-  //   return;
-  // }
-  // previousMillis = currentMillis;
-  if (type == B_UP) // we need only push down event
-  {
-    return;
-  }
+void otaUpdate(Control* sender, int type) {
+  // set an boot variable into nvs to check next time boot.
+  prefs.begin("doupdate");  //Open namespace Settings
+  prefs.putBool("doupdate", true);
+  prefs.end(); // close the Settings Namespace
+
+  ESPUI.updateControlValue(sender, "Update requested need Reeboot");
+}
+
+void justotaUpdate() {
+  __DO_UPDATE = true;
 
   if (__ota_update_running) {
     Serial.println("OTA update already running.");
@@ -245,28 +244,38 @@ void otaUpdate(Control* sender, int type) {
       Serial.println("OTA Update started");
   }
 
-  delay(1000); // Delay to allow the serial buffer to flush
-
   size_t written = 0; // Variable to store how many bytes have been written
   WiFiClient *stream = https.getStreamPtr();
+  Serial.println("stream-angefordert");
+  int schleifeaussen = 0;
+  https.setTimeout(60000); // 12 Sekunden Timeout
+
+  uint8_t buff[128] = { 0 }; // Größe des Buffers anpassen
+  size_t len = 0; // Variable to store the length of data available for reading
+
   while (https.connected() && (written < contentLength)) {
-      size_t len = stream->available();
-      if (len) {
-          uint8_t buff[512];
+      len = stream->available();
+      delay(10); // Kleine Verzögerung, um dem Stream Zeit zu geben, Daten zu sammeln
+
+      if (len > 0) {
           int c = stream->readBytes(buff, ((len < sizeof(buff)) ? len : sizeof(buff)));
           if (Update.write(buff, c) != c) {
               Serial.println("Error writing to flash. Aborting OTA.");
               Update.abort();
-              break;
+              return; // Verlässt die Funktion oder Schleife
           }
+          
+
           written += c;
+          Serial.printf("len: %d, written: %d\n", len, written);
+          yield(); // Ermöglicht das Ausführen von Hintergrundaufgaben, verhindert WDT-Reset
       }
-      yield(); // Allow background tasks to run, preventing WDT reset
   }
 
   if (written == contentLength) {
       Serial.println("Written : " + String(written) + " successfully");
   }
+
   if (Update.end()) {
       Serial.println("OTA done!");
       if (Update.isFinished()) {
@@ -275,12 +284,13 @@ void otaUpdate(Control* sender, int type) {
           Serial.println("OTA Done!");
           Serial.printf("update fw version: %d\n", __FW_VERSION + 1);
           __FW_VERSION++;
+          prefs.begin("doupdate");  //Open namespace Settings
+          prefs.putBool("doupdate", false);
+          prefs.end(); // close the Settings Namespace
           prefs.begin("fwversion");  //Open namespace Settings
           prefs.putUInt("fwversion", __FW_VERSION);
           prefs.end(); // close the Settings Namespace
           Serial.println("Rebooting...");
-          ESP.restart();
-
           ESP.restart();
       } else {
           Serial.println("Update not finished? Something went wrong!");
@@ -1154,6 +1164,17 @@ void setup() {
     
   }
 
+  prefs.begin("doupdate");  //Open namespace Settings
+  if (not prefs.isKey("doupdate")) {
+    Serial.println("do update not found, saving doupdate");
+    prefs.putBool("doupdate", __DO_UPDATE);
+  } else {
+    log_d("do update found, loading");
+    __DO_UPDATE = prefs.getBool("doupdate");
+    Serial.printf("Do Update: %d\n", __DO_UPDATE);
+  }
+  prefs.end(); // close the Settings Namespace 
+
   prefs.begin("fwversion");  //Open namespace Settings
   if (not prefs.isKey("fwversion")) {
     Serial.println("firmware version not found, saving current version nr.");
@@ -1283,17 +1304,23 @@ void setup() {
   log_d("warte 1s");
   delay(1000);
   //----------------------------------------------------------------
-  if(digitalRead(13) == LOW && digitalRead(14) == LOW) {
+  if((digitalRead(13) == LOW && digitalRead(14) == LOW) || __DO_UPDATE) {
     myWS28XXLED[0] = CRGB::Blue;
+    if(__DO_UPDATE) myWS28XXLED[0] = CRGB::Yellow;
     FastLED.show();
-    log_d("Start in AP Mode");
-    __configurator = true;
-
-    ESPUI.setVerbosity(Verbosity::VerboseJSON);
+    log_d("Start Wifi");
+    if(!__DO_UPDATE){
+      __configurator = true;
+      ESPUI.setVerbosity(Verbosity::VerboseJSON);
+    }
+    else
+    {
+      __configurator = false;
+    }
 
     WiFi.setHostname(hostname.c_str());
 
-    if(digitalRead(12) == HIGH) {
+    if(digitalRead(12) == HIGH || __DO_UPDATE) {
       // try to connect to existing network
       WiFi.begin(ssid.c_str(), password.c_str());
       log_d("\n\nTry to connect to existing network");
@@ -1312,8 +1339,11 @@ void setup() {
 
         Serial.printf("Local Ip Address: %s\n", WiFi.localIP().toString().c_str());
 
+        if(WiFi.status() != WL_CONNECTED && __DO_UPDATE){
+          Serial.println("Configure Local network first!");
+        }
         // not connected -> create hotspot
-        if (WiFi.status() != WL_CONNECTED)
+        if (WiFi.status() != WL_CONNECTED && !__DO_UPDATE)
         {
             log_d("\n\nCreating hotspot");
 
@@ -1336,171 +1366,173 @@ void setup() {
         }
     }
 
-    dnsServer.start(DNS_PORT, "LittleHelper", apIP);
+    if(!__DO_UPDATE){
 
-    log_d("\n\nWiFi parameters:");
-    log_d("Mode: ");
-    log_d("%S\n", WiFi.getMode() == WIFI_AP ? "Station" : "Client");
-    log_d("IP address: ");
-    log_d("%S\n", WiFi.getMode() == WIFI_AP ? WiFi.softAPIP() : WiFi.localIP());
+      dnsServer.start(DNS_PORT, "LittleHelper", apIP);
 
-    ESPUI.setVerbosity(Verbosity::Quiet);
+      log_d("\n\nWiFi parameters:");
+      log_d("Mode: ");
+      log_d("%S\n", WiFi.getMode() == WIFI_AP ? "Station" : "Client");
+      log_d("IP address: ");
+      log_d("%S\n", WiFi.getMode() == WIFI_AP ? WiFi.softAPIP() : WiFi.localIP());
 
-    uint16_t tab1 = ESPUI.addControl(ControlType::Tab, "Button 1", "Button 1");
-    uint16_t tab2 = ESPUI.addControl(ControlType::Tab, "Button 2", "Button 2");
-    uint16_t tab3 = ESPUI.addControl(ControlType::Tab, "Button 3", "Button 3");
-    uint16_t tab4 = ESPUI.addControl(ControlType::Tab, "Button 4", "Button 4");
-    uint16_t tab5 = ESPUI.addControl(ControlType::Tab, "Button 5", "Button 5");
-    uint16_t tab6 = ESPUI.addControl(ControlType::Tab, "Active Map", "Active Map");
-    uint16_t tab7 = ESPUI.addControl(ControlType::Tab, "Settings", "Settings");
+      ESPUI.setVerbosity(Verbosity::Quiet);
 
-    // Active Map Chooser
-    char activeMapString[10];
-    sprintf(activeMapString, "%d", __active_map); // Convert the number to a string
-    activeMapChooser = ESPUI.addControl(ControlType::Select, "Active Map:", activeMapString, ControlColor::Emerald, tab6, &selectActiveMap);
-    ESPUI.addControl(ControlType::Option, "Map 1", "0", ControlColor::Dark, activeMapChooser);
-    ESPUI.addControl(ControlType::Option, "Map 2", "1", ControlColor::Dark, activeMapChooser);
-    ESPUI.addControl(ControlType::Option, "Map 3", "2", ControlColor::Dark, activeMapChooser);
-    ESPUI.addControl(ControlType::Option, "Map 4", "3", ControlColor::Dark, activeMapChooser);
-    
+      uint16_t tab1 = ESPUI.addControl(ControlType::Tab, "Button 1", "Button 1");
+      uint16_t tab2 = ESPUI.addControl(ControlType::Tab, "Button 2", "Button 2");
+      uint16_t tab3 = ESPUI.addControl(ControlType::Tab, "Button 3", "Button 3");
+      uint16_t tab4 = ESPUI.addControl(ControlType::Tab, "Button 4", "Button 4");
+      uint16_t tab5 = ESPUI.addControl(ControlType::Tab, "Button 5", "Button 5");
+      uint16_t tab6 = ESPUI.addControl(ControlType::Tab, "Active Map", "Active Map");
+      uint16_t tab7 = ESPUI.addControl(ControlType::Tab, "Settings", "Settings");
 
-    // Wlan Settings and Bluethooth Settings
-    bleNameTxtField = ESPUI.addControl(ControlType::Text, "Bluethooth Name:", midiDeviceName.c_str(), ControlColor::Dark, tab7, &textCallBlueThoothName);
-    wlanSsidNameTxtField = ESPUI.addControl(ControlType::Text, "Wlan SSID:", ssid.c_str(), ControlColor::Dark, tab7, &textCallSsidName);
-    wlanPasswordTxtField = ESPUI.addControl(ControlType::Text, "Wlan Password:", password.c_str(), ControlColor::Dark, tab7, &textCallWlanPassword);
-    ESPUI.setInputType(wlanPasswordTxtField, "password");
-    wlanApSsidTxtField = ESPUI.addControl(ControlType::Text, "Access Point SSID:", ap_ssid.c_str(), ControlColor::Dark, tab7, &textCallAPSsidName);
-    wlanApPasswordTxtField = ESPUI.addControl(ControlType::Text, "Access Point Password:", ap_password.c_str(), ControlColor::Dark, tab7, &textCallAPPassword);
-    ESPUI.setInputType(wlanApPasswordTxtField, "password");
-    hostnameTxtField = ESPUI.addControl(ControlType::Text, "Hostname:", hostname.c_str(), ControlColor::Dark, tab7, &textCallHostname);
-    ESPUI.addControl(ControlType::Switcher, "Show Passwords", "", ControlColor::Alizarin, tab7, &switchShowPasswords);
+      // Active Map Chooser
+      char activeMapString[10];
+      sprintf(activeMapString, "%d", __active_map); // Convert the number to a string
+      activeMapChooser = ESPUI.addControl(ControlType::Select, "Active Map:", activeMapString, ControlColor::Emerald, tab6, &selectActiveMap);
+      ESPUI.addControl(ControlType::Option, "Map 1", "0", ControlColor::Dark, activeMapChooser);
+      ESPUI.addControl(ControlType::Option, "Map 2", "1", ControlColor::Dark, activeMapChooser);
+      ESPUI.addControl(ControlType::Option, "Map 3", "2", ControlColor::Dark, activeMapChooser);
+      ESPUI.addControl(ControlType::Option, "Map 4", "3", ControlColor::Dark, activeMapChooser);
+      
 
-    // OTA Update
-    #ifdef USE_OTA
-    char fwupdatestr[10];
-    sprintf(fwupdatestr, "Update: %d to %d" , __FW_VERSION, __FW_VERSION + 1); // Convert the number to a string
-    ESPUI.addControl(ControlType::Button, "Firmware Update", fwupdatestr, ControlColor::Alizarin, tab7, &otaUpdate);
-    #endif
+      // Wlan Settings and Bluethooth Settings
+      bleNameTxtField = ESPUI.addControl(ControlType::Text, "Bluethooth Name:", midiDeviceName.c_str(), ControlColor::Dark, tab7, &textCallBlueThoothName);
+      wlanSsidNameTxtField = ESPUI.addControl(ControlType::Text, "Wlan SSID:", ssid.c_str(), ControlColor::Dark, tab7, &textCallSsidName);
+      wlanPasswordTxtField = ESPUI.addControl(ControlType::Text, "Wlan Password:", password.c_str(), ControlColor::Dark, tab7, &textCallWlanPassword);
+      ESPUI.setInputType(wlanPasswordTxtField, "password");
+      wlanApSsidTxtField = ESPUI.addControl(ControlType::Text, "Access Point SSID:", ap_ssid.c_str(), ControlColor::Dark, tab7, &textCallAPSsidName);
+      wlanApPasswordTxtField = ESPUI.addControl(ControlType::Text, "Access Point Password:", ap_password.c_str(), ControlColor::Dark, tab7, &textCallAPPassword);
+      ESPUI.setInputType(wlanApPasswordTxtField, "password");
+      hostnameTxtField = ESPUI.addControl(ControlType::Text, "Hostname:", hostname.c_str(), ControlColor::Dark, tab7, &textCallHostname);
+      ESPUI.addControl(ControlType::Switcher, "Show Passwords", "", ControlColor::Alizarin, tab7, &switchShowPasswords);
 
-    // Led Brightness
-    ledBrightnessTxtField = ESPUI.addControl(ControlType::Slider, "LED Brightness:", String(__BRIGHTNESS).c_str(), ControlColor::Dark, tab7, &textCallLedBrightness);
-    ESPUI.addControl(Min, "", "0", None, ledBrightnessTxtField);
-    ESPUI.addControl(Max, "", "255", None, ledBrightnessTxtField);
+      // OTA Update
+      #ifdef USE_OTA
+      char fwupdatestr[10];
+      sprintf(fwupdatestr, "Update: %d to %d" , __FW_VERSION, __FW_VERSION + 1); // Convert the number to a string
+      ESPUI.addControl(ControlType::Button, "Firmware Update", fwupdatestr, ControlColor::Alizarin, tab7, &otaUpdate);
+      #endif
 
-    // Buttons in a for loop
-    
-    for (size_t hw_B = 0; hw_B < __HW_BUTTONS; hw_B++) // HW Buttons * Ui Button Functions
-    {
-      uint16_t thistab = 0;
-      switch ( hw_B )
+      // Led Brightness
+      ledBrightnessTxtField = ESPUI.addControl(ControlType::Slider, "LED Brightness:", String(__BRIGHTNESS).c_str(), ControlColor::Dark, tab7, &textCallLedBrightness);
+      ESPUI.addControl(Min, "", "0", None, ledBrightnessTxtField);
+      ESPUI.addControl(Max, "", "255", None, ledBrightnessTxtField);
+
+      // Buttons in a for loop
+      
+      for (size_t hw_B = 0; hw_B < __HW_BUTTONS; hw_B++) // HW Buttons * Ui Button Functions
       {
-        case 0:
-          thistab = tab1;
-          break;
-        case 1:
-          thistab = tab2;
-          break;
-        case 2:
-          thistab = tab3;
-          break;
-        case 3:
-          thistab = tab4;
-          break;
-        case 4:
-          thistab = tab5;
-          break;
-        default:
-          break;
-      }
-      //HW Button 1
-      // __selectUiBtn[5][8]
-      // [5] = HW Button 1 -5
-      // [8] = Ui Button 1 - 8
-      __selectUiBtn[hw_B][0] = ESPUI.addControl(ControlType::Select, "Select Map:", "", ControlColor::Emerald, thistab, &selectBtnMapFnc);
-      ESPUI.addControl(ControlType::Option, "Map 1", "0", ControlColor::Dark, __selectUiBtn[hw_B][0]);
-      ESPUI.addControl(ControlType::Option, "Map 2", "1", ControlColor::Dark, __selectUiBtn[hw_B][0]);
-      ESPUI.addControl(ControlType::Option, "Map 3", "2", ControlColor::Dark, __selectUiBtn[hw_B][0]);
-      ESPUI.addControl(ControlType::Option, "Map 4", "3", ControlColor::Dark, __selectUiBtn[hw_B][0]);
-
-      char convertstr[10];
-      sprintf(convertstr, "%d", myBtnMap[hw_B].btnMidiChannel[__active_map_ui_btn[hw_B]]); // Convert the number to a string
-      __selectUiBtn[hw_B][1] = ESPUI.addControl(ControlType::Number, "Midi Channel 0 - 15:", convertstr, ControlColor::Dark, thistab, &selectBtnMidiChannelCalback);
-      ESPUI.addControl(Min, "", "0", None, __selectUiBtn[hw_B][1]);
-      ESPUI.addControl(Max, "", "15", None, __selectUiBtn[hw_B][1]);
-
-      sprintf(convertstr, "%d", myBtnMap[hw_B].btnMidiFunction[__active_map_ui_btn[hw_B]]); // Convert the number to a string
-      __selectUiBtn[hw_B][2] = ESPUI.addControl(ControlType::Select, "Midi Function:", convertstr, ControlColor::Dark, thistab, &selectBtnMidiFnc);
-      // Button MIDI Function 0 = Note, 1 = CC, 2 = MMC, 3 = Program Change
-      ESPUI.addControl(ControlType::Option, "Note", "0", ControlColor::Dark, __selectUiBtn[hw_B][2]);
-      ESPUI.addControl(ControlType::Option, "CC", "1", ControlColor::Dark, __selectUiBtn[hw_B][2]);
-      ESPUI.addControl(ControlType::Option, "MMC", "2", ControlColor::Dark, __selectUiBtn[hw_B][2]);
-      ESPUI.addControl(ControlType::Option, "PC", "3", ControlColor::Dark, __selectUiBtn[hw_B][2]);
-
-      sprintf(convertstr, "%d", myBtnMap[hw_B].btnMidiCC[__active_map_ui_btn[hw_B]]); // Convert the number to a string
-      __selectUiBtn[hw_B][3] = ESPUI.addControl(ControlType::Number, "Midi CC 0 - 127:", convertstr, ControlColor::Dark, thistab, &selectBtnMidiCCFunctionCalback);
-      ESPUI.addControl(Min, "", "0", None, __selectUiBtn[hw_B][3]);
-      ESPUI.addControl(Max, "", "127", None, __selectUiBtn[hw_B][3]);
-
-      sprintf(convertstr, "%d", myBtnMap[hw_B].btnMidiCCValueStateOn[__active_map_ui_btn[hw_B]]); // Convert the number to a string
-      __selectUiBtn[hw_B][4] = ESPUI.addControl(ControlType::Number, "Midi CC Value On 0 - 127:", convertstr, ControlColor::Dark, thistab, &selectBtnCCValueMaxCalback);
-      ESPUI.addControl(Min, "", "0", None, __selectUiBtn[hw_B][4]);
-      ESPUI.addControl(Max, "", "127", None, __selectUiBtn[hw_B][4]);
-
-      sprintf(convertstr, "%d", myBtnMap[hw_B].btnMidiCCValueStateOff[__active_map_ui_btn[hw_B]]); // Convert the number to a string
-      __selectUiBtn[hw_B][5] = ESPUI.addControl(ControlType::Number, "Midi CC Value Off 0 - 127:", convertstr, ControlColor::Dark, thistab, &selectBtnCCValueMinCalback);
-      ESPUI.addControl(Min, "", "0", None, __selectUiBtn[hw_B][5]);
-      ESPUI.addControl(Max, "", "127", None, __selectUiBtn[hw_B][5]);
-
-      sprintf(convertstr, "%d", myBtnMap[hw_B].btnMidiNote[__active_map_ui_btn[hw_B]]); // Convert the number to a string
-      __selectUiBtn[hw_B][6] = ESPUI.addControl(ControlType::Number, "Midi Note 0 - 127:", convertstr, ControlColor::Dark, thistab, &selectBtnMidiNoteCalback);
-      ESPUI.addControl(Min, "", "0", None, __selectUiBtn[hw_B][6]);
-      ESPUI.addControl(Max, "", "127", None, __selectUiBtn[hw_B][6]);
-
-      sprintf(convertstr, "%d", myBtnMap[hw_B].btnMidiMMC[__active_map_ui_btn[hw_B]]); // Convert the number to a string
-      __selectUiBtn[hw_B][7] = ESPUI.addControl(ControlType::Select, "MMC Function:", convertstr, ControlColor::Dark, thistab, &selectBtnMMCFnc);
-      ESPUI.addControl(ControlType::Option, "STOP", "1", ControlColor::Dark, __selectUiBtn[hw_B][7]);
-      ESPUI.addControl(ControlType::Option, "PLAY", "2", ControlColor::Dark, __selectUiBtn[hw_B][7]);
-      ESPUI.addControl(ControlType::Option, "DEFERRED PLAY", "3", ControlColor::Dark, __selectUiBtn[hw_B][7]);
-      ESPUI.addControl(ControlType::Option, "FAST FORWARD", "4", ControlColor::Dark, __selectUiBtn[hw_B][7]);      
-      ESPUI.addControl(ControlType::Option, "REWIND", "5", ControlColor::Dark, __selectUiBtn[hw_B][7]);
-      ESPUI.addControl(ControlType::Option, "RECORD STROBE", "6", ControlColor::Dark, __selectUiBtn[hw_B][7]);
-      ESPUI.addControl(ControlType::Option, "RECORD EXIT", "7", ControlColor::Dark, __selectUiBtn[hw_B][7]);
-      ESPUI.addControl(ControlType::Option, "RECORD PAUSE", "8", ControlColor::Dark, __selectUiBtn[hw_B][7]);
-      ESPUI.addControl(ControlType::Option, "PAUSE", "9", ControlColor::Dark, __selectUiBtn[hw_B][7]);      
-
-      sprintf(convertstr, "%d", myBtnMap[hw_B].btnMidiVelocity[__active_map_ui_btn[hw_B]]); // Convert the number to a string
-      __selectUiBtn[hw_B][8] = ESPUI.addControl(ControlType::Number, "Midi Note Velocity 0 - 127:", convertstr, ControlColor::Dark, thistab, &selectBtnNoteVelocityCalback);
-      ESPUI.addControl(Min, "", "0", None, __selectUiBtn[hw_B][8]);
-      ESPUI.addControl(Max, "", "127", None, __selectUiBtn[hw_B][8]);
-
-      __selectUiBtn[hw_B][9] = ESPUI.addControl(ControlType::Select, "Button behave: Midi Note only", "", ControlColor::Dark, thistab, &selectBtnBehaveFncCalback);
-      ESPUI.addControl(ControlType::Option, "Push", "0", ControlColor::Dark, __selectUiBtn[hw_B][9]);
-      ESPUI.addControl(ControlType::Option, "Toggle", "1", ControlColor::Dark, __selectUiBtn[hw_B][9]);
-
-      __selectUiBtn[hw_B][10] = ESPUI.addControl(ControlType::Select, "Button Transition: Midi Note excluded", "", ControlColor::Dark, thistab, &selectBtnTransitinCalback);
-      ESPUI.addControl(ControlType::Option, "Push", "0", ControlColor::Dark, __selectUiBtn[hw_B][10]);
-      ESPUI.addControl(ControlType::Option, "Release", "1", ControlColor::Dark, __selectUiBtn[hw_B][10]);
-
-      uint32_t color = myBtnMap[hw_B].btnColor[__active_map_ui_btn[hw_B]];
-      int colorval = 0;
-      for(int i = 0; i < 141; i++) {
-        if(__btnLookUpTable[i] == color) {
-          colorval = i;
-          break;
+        uint16_t thistab = 0;
+        switch ( hw_B )
+        {
+          case 0:
+            thistab = tab1;
+            break;
+          case 1:
+            thistab = tab2;
+            break;
+          case 2:
+            thistab = tab3;
+            break;
+          case 3:
+            thistab = tab4;
+            break;
+          case 4:
+            thistab = tab5;
+            break;
+          default:
+            break;
         }
+        //HW Button 1
+        // __selectUiBtn[5][8]
+        // [5] = HW Button 1 -5
+        // [8] = Ui Button 1 - 8
+        __selectUiBtn[hw_B][0] = ESPUI.addControl(ControlType::Select, "Select Map:", "", ControlColor::Emerald, thistab, &selectBtnMapFnc);
+        ESPUI.addControl(ControlType::Option, "Map 1", "0", ControlColor::Dark, __selectUiBtn[hw_B][0]);
+        ESPUI.addControl(ControlType::Option, "Map 2", "1", ControlColor::Dark, __selectUiBtn[hw_B][0]);
+        ESPUI.addControl(ControlType::Option, "Map 3", "2", ControlColor::Dark, __selectUiBtn[hw_B][0]);
+        ESPUI.addControl(ControlType::Option, "Map 4", "3", ControlColor::Dark, __selectUiBtn[hw_B][0]);
+
+        char convertstr[10];
+        sprintf(convertstr, "%d", myBtnMap[hw_B].btnMidiChannel[__active_map_ui_btn[hw_B]]); // Convert the number to a string
+        __selectUiBtn[hw_B][1] = ESPUI.addControl(ControlType::Number, "Midi Channel 0 - 15:", convertstr, ControlColor::Dark, thistab, &selectBtnMidiChannelCalback);
+        ESPUI.addControl(Min, "", "0", None, __selectUiBtn[hw_B][1]);
+        ESPUI.addControl(Max, "", "15", None, __selectUiBtn[hw_B][1]);
+
+        sprintf(convertstr, "%d", myBtnMap[hw_B].btnMidiFunction[__active_map_ui_btn[hw_B]]); // Convert the number to a string
+        __selectUiBtn[hw_B][2] = ESPUI.addControl(ControlType::Select, "Midi Function:", convertstr, ControlColor::Dark, thistab, &selectBtnMidiFnc);
+        // Button MIDI Function 0 = Note, 1 = CC, 2 = MMC, 3 = Program Change
+        ESPUI.addControl(ControlType::Option, "Note", "0", ControlColor::Dark, __selectUiBtn[hw_B][2]);
+        ESPUI.addControl(ControlType::Option, "CC", "1", ControlColor::Dark, __selectUiBtn[hw_B][2]);
+        ESPUI.addControl(ControlType::Option, "MMC", "2", ControlColor::Dark, __selectUiBtn[hw_B][2]);
+        ESPUI.addControl(ControlType::Option, "PC", "3", ControlColor::Dark, __selectUiBtn[hw_B][2]);
+
+        sprintf(convertstr, "%d", myBtnMap[hw_B].btnMidiCC[__active_map_ui_btn[hw_B]]); // Convert the number to a string
+        __selectUiBtn[hw_B][3] = ESPUI.addControl(ControlType::Number, "Midi CC 0 - 127:", convertstr, ControlColor::Dark, thistab, &selectBtnMidiCCFunctionCalback);
+        ESPUI.addControl(Min, "", "0", None, __selectUiBtn[hw_B][3]);
+        ESPUI.addControl(Max, "", "127", None, __selectUiBtn[hw_B][3]);
+
+        sprintf(convertstr, "%d", myBtnMap[hw_B].btnMidiCCValueStateOn[__active_map_ui_btn[hw_B]]); // Convert the number to a string
+        __selectUiBtn[hw_B][4] = ESPUI.addControl(ControlType::Number, "Midi CC Value On 0 - 127:", convertstr, ControlColor::Dark, thistab, &selectBtnCCValueMaxCalback);
+        ESPUI.addControl(Min, "", "0", None, __selectUiBtn[hw_B][4]);
+        ESPUI.addControl(Max, "", "127", None, __selectUiBtn[hw_B][4]);
+
+        sprintf(convertstr, "%d", myBtnMap[hw_B].btnMidiCCValueStateOff[__active_map_ui_btn[hw_B]]); // Convert the number to a string
+        __selectUiBtn[hw_B][5] = ESPUI.addControl(ControlType::Number, "Midi CC Value Off 0 - 127:", convertstr, ControlColor::Dark, thistab, &selectBtnCCValueMinCalback);
+        ESPUI.addControl(Min, "", "0", None, __selectUiBtn[hw_B][5]);
+        ESPUI.addControl(Max, "", "127", None, __selectUiBtn[hw_B][5]);
+
+        sprintf(convertstr, "%d", myBtnMap[hw_B].btnMidiNote[__active_map_ui_btn[hw_B]]); // Convert the number to a string
+        __selectUiBtn[hw_B][6] = ESPUI.addControl(ControlType::Number, "Midi Note 0 - 127:", convertstr, ControlColor::Dark, thistab, &selectBtnMidiNoteCalback);
+        ESPUI.addControl(Min, "", "0", None, __selectUiBtn[hw_B][6]);
+        ESPUI.addControl(Max, "", "127", None, __selectUiBtn[hw_B][6]);
+
+        sprintf(convertstr, "%d", myBtnMap[hw_B].btnMidiMMC[__active_map_ui_btn[hw_B]]); // Convert the number to a string
+        __selectUiBtn[hw_B][7] = ESPUI.addControl(ControlType::Select, "MMC Function:", convertstr, ControlColor::Dark, thistab, &selectBtnMMCFnc);
+        ESPUI.addControl(ControlType::Option, "STOP", "1", ControlColor::Dark, __selectUiBtn[hw_B][7]);
+        ESPUI.addControl(ControlType::Option, "PLAY", "2", ControlColor::Dark, __selectUiBtn[hw_B][7]);
+        ESPUI.addControl(ControlType::Option, "DEFERRED PLAY", "3", ControlColor::Dark, __selectUiBtn[hw_B][7]);
+        ESPUI.addControl(ControlType::Option, "FAST FORWARD", "4", ControlColor::Dark, __selectUiBtn[hw_B][7]);      
+        ESPUI.addControl(ControlType::Option, "REWIND", "5", ControlColor::Dark, __selectUiBtn[hw_B][7]);
+        ESPUI.addControl(ControlType::Option, "RECORD STROBE", "6", ControlColor::Dark, __selectUiBtn[hw_B][7]);
+        ESPUI.addControl(ControlType::Option, "RECORD EXIT", "7", ControlColor::Dark, __selectUiBtn[hw_B][7]);
+        ESPUI.addControl(ControlType::Option, "RECORD PAUSE", "8", ControlColor::Dark, __selectUiBtn[hw_B][7]);
+        ESPUI.addControl(ControlType::Option, "PAUSE", "9", ControlColor::Dark, __selectUiBtn[hw_B][7]);      
+
+        sprintf(convertstr, "%d", myBtnMap[hw_B].btnMidiVelocity[__active_map_ui_btn[hw_B]]); // Convert the number to a string
+        __selectUiBtn[hw_B][8] = ESPUI.addControl(ControlType::Number, "Midi Note Velocity 0 - 127:", convertstr, ControlColor::Dark, thistab, &selectBtnNoteVelocityCalback);
+        ESPUI.addControl(Min, "", "0", None, __selectUiBtn[hw_B][8]);
+        ESPUI.addControl(Max, "", "127", None, __selectUiBtn[hw_B][8]);
+
+        __selectUiBtn[hw_B][9] = ESPUI.addControl(ControlType::Select, "Button behave: Midi Note only", "", ControlColor::Dark, thistab, &selectBtnBehaveFncCalback);
+        ESPUI.addControl(ControlType::Option, "Push", "0", ControlColor::Dark, __selectUiBtn[hw_B][9]);
+        ESPUI.addControl(ControlType::Option, "Toggle", "1", ControlColor::Dark, __selectUiBtn[hw_B][9]);
+
+        __selectUiBtn[hw_B][10] = ESPUI.addControl(ControlType::Select, "Button Transition: Midi Note excluded", "", ControlColor::Dark, thistab, &selectBtnTransitinCalback);
+        ESPUI.addControl(ControlType::Option, "Push", "0", ControlColor::Dark, __selectUiBtn[hw_B][10]);
+        ESPUI.addControl(ControlType::Option, "Release", "1", ControlColor::Dark, __selectUiBtn[hw_B][10]);
+
+        uint32_t color = myBtnMap[hw_B].btnColor[__active_map_ui_btn[hw_B]];
+        int colorval = 0;
+        for(int i = 0; i < 141; i++) {
+          if(__btnLookUpTable[i] == color) {
+            colorval = i;
+            break;
+          }
+        }
+        sprintf(convertstr, "%d", colorval); // Convert the number to a string  
+        __selectUiBtn[hw_B][11] = ESPUI.addControl(ControlType::Slider, "Button Color:", convertstr, ControlColor::Dark, thistab, &selectBtnColorCalback);
+        ESPUI.addControl(Min, "", "0", None, __selectUiBtn[hw_B][11]);
+        ESPUI.addControl(Max, "", "139", None, __selectUiBtn[hw_B][11]);
+        static char stylecol1[60];
+        sprintf(stylecol1, "border-bottom: #999 3px solid; background-color: #%06X;", color );   
+        ESPUI.setPanelStyle(__selectUiBtn[hw_B][11], stylecol1);
+      
       }
-      sprintf(convertstr, "%d", colorval); // Convert the number to a string  
-      __selectUiBtn[hw_B][11] = ESPUI.addControl(ControlType::Slider, "Button Color:", convertstr, ControlColor::Dark, thistab, &selectBtnColorCalback);
-      ESPUI.addControl(Min, "", "0", None, __selectUiBtn[hw_B][11]);
-      ESPUI.addControl(Max, "", "139", None, __selectUiBtn[hw_B][11]);
-      static char stylecol1[60];
-      sprintf(stylecol1, "border-bottom: #999 3px solid; background-color: #%06X;", color );   
-      ESPUI.setPanelStyle(__selectUiBtn[hw_B][11], stylecol1);
-     
+
+      ESPUI.begin("Little Helper Configuration");
     }
-
-    ESPUI.begin("Little Helper Configuration");
-
   }
 
   __numBlincs = (__active_map + 1) * 2;
@@ -1535,6 +1567,8 @@ void loop() {
         oldTime = millis();
     }
   }
+
+  if(__DO_UPDATE) justotaUpdate();
 
   blinkActiveMaps();
   delay(1);
