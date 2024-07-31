@@ -186,7 +186,6 @@ void otaUpdate(Control* sender, int type) {
 }
 
 void justotaUpdate() {
-  __DO_UPDATE = true;
 
   if (__ota_update_running) {
     Serial.println("OTA update already running.");
@@ -235,7 +234,7 @@ void justotaUpdate() {
   Serial.println(ESP.getFreeHeap());
 
 
-  if (!Update.begin(contentLength, U_SPIFFS, 15, 0, NULL)) {
+  if (!Update.begin(contentLength, U_FLASH, 15, 0, NULL)) {
       Serial.println("Not enough space to begin OTA");
       https.end();
       __ota_update_running = false;
@@ -1176,6 +1175,7 @@ void setup() {
   prefs.end(); // close the Settings Namespace 
 
   prefs.begin("fwversion");  //Open namespace Settings
+  //prefs.putUInt("fwversion", 1);// uncomment to reset internel firmware version
   if (not prefs.isKey("fwversion")) {
     Serial.println("firmware version not found, saving current version nr.");
     prefs.putUInt("fwversion", __FW_VERSION);
