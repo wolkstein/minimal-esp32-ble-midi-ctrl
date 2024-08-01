@@ -55,7 +55,7 @@ DNSServer dnsServer;
 
 
 
-unsigned int __FW_VERSION = 4; // Firmware Version only Major Versions number
+unsigned int __FW_VERSION = 5; // Firmware Version only Major Versions number
 bool __DO_UPDATE = false;
 bool __UPDATE_FAILURE = false;
 int __UPDATE_ERROR_CODE = -1;
@@ -174,7 +174,6 @@ myButton* getMyButton(int pin) {
         default: return nullptr; // oder einen gültigen Standardwert zurückgeben
     }
 }
-
 
 #ifdef USE_OTA
 
@@ -1473,7 +1472,7 @@ void setup() {
       // OTA Update
       #ifdef USE_OTA
       char fwv[3];
-      sprintf(fwv, "%d", __FW_VERSION);
+      sprintf(fwv, "s3miniV%d", __FW_VERSION);
       ESPUI.addControl(ControlType::Label, "Current Firmware", fwv, ControlColor::Alizarin, tab7, &nothing);
 
       char fwupdatestr[10];
