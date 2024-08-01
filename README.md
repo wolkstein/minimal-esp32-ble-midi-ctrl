@@ -94,11 +94,12 @@ cp DAW_MIDI_MAPS/ArdourAndHarrisonMixbus/midi_mapsLittle_Helper.map ~/.config/ar
 ![ Btn Tabs 1 - 5 ](doc/webinterface-btn1-5.png)
 
 ---
-## Simple Manuel
+## Simple Manual
 
-### First Wifi Connection and Settings
+### First Wi-Fi Connection and Settings
 
-#### To connect to Build in access point, follow these steps:
+#### To connect to the built-in access point, follow these steps:
+
 
 1. Power on your ESP32 BLE MIDI controller while pressing Btn 4 and 5
 2. Wait til LED becomes Blue
