@@ -233,8 +233,6 @@ void justotaUpdate() {
     return;
   }
 
-
-
   int contentLength = https.getSize();
   if (contentLength <= 0) {
     Serial.println("Invalid content length. Can't continue with update.");
@@ -338,7 +336,6 @@ void justotaUpdate() {
 #endif
 
 // ~ OTA ~
-
 // helper function to get the button configuration based on the GPIO pin and the active map
 void saveActiveMap() {
   __numBlincs = (__active_map + 1) * 2;
