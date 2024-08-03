@@ -1410,8 +1410,10 @@ void setup() {
             WiFi.softAPConfig(apIP, apIP, IPAddress(255, 255, 255, 0));
 
             char local_ap_ssid[25];
+            char local_ap_password[30];
             snprintf(local_ap_ssid, 26, "%S-%08X", ap_ssid.c_str(), ESP.getEfuseMac());
-            WiFi.softAP(local_ap_ssid, ap_password.c_str());
+            snprintf(local_ap_password, 31, "%S", ap_password.c_str() );
+            WiFi.softAP(local_ap_ssid, local_ap_password);
 
             timeout = 5;
 
