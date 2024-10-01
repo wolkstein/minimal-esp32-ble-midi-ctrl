@@ -55,7 +55,7 @@ DNSServer dnsServer;
 
 
 
-unsigned int __FW_VERSION = 5; // Firmware Version only Major Versions number
+unsigned int __FW_VERSION = 6; // Firmware Version only Major Versions number
 bool __DO_UPDATE = false;
 bool __UPDATE_FAILURE = false;
 int __UPDATE_ERROR_CODE = -1;
@@ -1137,7 +1137,7 @@ void setup() {
   while (!Serial) {
   delay(1000);
     timoutcounter++;
-    if (timoutcounter > 10) {
+    if (timoutcounter > 1) {
       break;
     }
   }
@@ -1359,8 +1359,8 @@ void setup() {
   buttonConfig->setFeature(ButtonConfig::kFeatureRepeatPress);
   buttonConfig->setFeature(ButtonConfig::kFeatureSuppressAfterLongPress); 
 
-  log_d("warte 1s");
-  delay(1000);
+  log_d("warte 0.1s");
+  delay(100);
   //----------------------------------------------------------------
   if((digitalRead(13) == LOW && digitalRead(14) == LOW) || __DO_UPDATE) {
     myWS28XXLED[0] = CRGB::Blue;
