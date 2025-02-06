@@ -55,7 +55,7 @@ DNSServer dnsServer;
 
 
 
-unsigned int __FW_VERSION = 6; // Firmware Version only Major Versions number
+unsigned int __FW_VERSION = 7; // Firmware Version only Major Versions number
 bool __DO_UPDATE = false;
 bool __UPDATE_FAILURE = false;
 int __UPDATE_ERROR_CODE = -1;
