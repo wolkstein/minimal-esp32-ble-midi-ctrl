@@ -55,7 +55,7 @@ DNSServer dnsServer;
 
 
 
-unsigned int __FW_VERSION = 7; // Firmware Version only Major Versions number
+unsigned int __FW_VERSION = 8; // Firmware Version only Major Versions number
 bool __DO_UPDATE = false;
 bool __UPDATE_FAILURE = false;
 int __UPDATE_ERROR_CODE = -1;
@@ -886,8 +886,20 @@ void handleEvent(AceButton* button, uint8_t eventType, uint8_t /*buttonState*/) 
           }
         }
         else if(btnMidiFunction == MIDI_CC && !needRelease){ // CC on need short press event
-          BLEMidiServer.controlChange(btnMidiChannel, btnMidiCC, btnMidiCCValueStateOn);
-          myBtn->btnState[active_mapper] = BTN_ON;
+          if(btnFunction == BTN_PUSH){ // Push Button
+            BLEMidiServer.controlChange(btnMidiChannel, btnMidiCC, btnMidiCCValueStateOn);
+            myBtn->btnState[active_mapper] = BTN_ON;
+          }
+          if(btnFunction == BTN_TOGGLE){ // Toggle Button
+            if(btnState == BTN_OFF){
+              BLEMidiServer.controlChange(btnMidiChannel, btnMidiCC, btnMidiCCValueStateOn);
+              myBtn->btnState[active_mapper] = BTN_ON;
+            }
+            else if(btnState == BTN_ON){
+              BLEMidiServer.controlChange(btnMidiChannel, btnMidiCC, btnMidiCCValueStateOff);
+              myBtn->btnState[active_mapper] = BTN_OFF;
+            }
+          }
         }
         else if(btnMidiFunction == MIDI_MMC && !needRelease){
           Serial.printf("MMC: %u\n", btnMidiMMC);
