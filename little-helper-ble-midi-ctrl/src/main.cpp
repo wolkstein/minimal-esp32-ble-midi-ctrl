@@ -26,11 +26,12 @@
 
 void setup(){
   Serial.begin(57600);
+  delay(2000);
   while(!Serial);
   
 }
 
-void main(){
-  Serial.printf("Hello World at:%d\n",millis());
+void loop(){
+  Serial.printf("Hello World at:%d\n",10);
   delay(1000);
 }
