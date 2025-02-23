@@ -49,13 +49,13 @@ DNSServer dnsServer;
 #ifdef USE_OTA
   const char* SERVER = "https://raw.githubusercontent.com"; // Your server address
   const int SERVER_PORT = 443; // Typically 443 for HTTPS
-  const char* PATH = "/wolkstein/minimal-esp32-ble-midi-ctrl/main/bin/s3miniV"; // Path to the firmware
+  const char* PATH = "/wolkstein/minimal-esp32-ble-midi-ctrl/main/bin/s3CortV"; // Path to the firmware
   bool __ota_update_running = false;
 #endif
 
 
 
-unsigned int __FW_VERSION = 8; // Firmware Version only Major Versions number
+unsigned int __FW_VERSION = 1; // Firmware Version only Major Versions number
 bool __DO_UPDATE = false;
 bool __UPDATE_FAILURE = false;
 int __UPDATE_ERROR_CODE = -1;
@@ -72,6 +72,8 @@ CRGB __oldLedColor;
 uint8_t __numBlincs = 1;
 uint32_t __oldNumBlinktime = 0;
 uint32_t __oldBlinktime = 0;
+
+bool __isTuner = false;
 
 // Button Structure now with n Maps, first we try 4 Maps
 myButton myBtnMap[5] = { // 5 Buttons 4 Maps Map 1 und Map 2 are short press values, Map 3 and Map 4 are long press values
@@ -123,7 +125,7 @@ myButton myBtnMap[5] = { // 5 Buttons 4 Maps Map 1 und Map 2 are short press val
      {0, 0, 0, 0}, // Button MIDI CC OFF Value 0 - 127
      {MMC_STOP, MMC_STOP, MMC_STOP, MMC_STOP} // Button MIDI MMC 0 - 13
   },
-  { // Button 4
+  { // Button 4 // Quad Cortex Next Preset
      13,  // GPIO Pin
      {true, true, true, true}, // Button Release
      {BTN_PUSH, BTN_PUSH, BTN_PUSH, BTN_PUSH},// Button Function 0 = Push, 1 = Toggle
@@ -134,12 +136,12 @@ myButton myBtnMap[5] = { // 5 Buttons 4 Maps Map 1 und Map 2 are short press val
      {MIDI_CH_1, MIDI_CH_1, MIDI_CH_1, MIDI_CH_1}, // Button MIDI Channel 0 - 15
      {62, 62, 62, 62}, // Button MIDI Note 0 - 127
      {100, 100, 100, 100}, // Button MIDI Velocity 0 - 127
-     {45, 64, 45, 64}, // Button MIDI CC 0 - 127
-     {127, 127, 127, 127}, // Button MIDI CC ON Value 0 - 127
+     {32, 32, 32, 32}, // Button MIDI CC 0 - 127
+     {0, 0, 0, 0}, // Button MIDI CC ON Value 0 - 127
      {0, 0, 0, 0}, // Button MIDI CC OFF Value 0 - 127
      {MMC_STOP, MMC_STOP, MMC_STOP, MMC_STOP} // Button MIDI MMC 0 - 13
   },
-  { // Button 5
+  { // Button 5 // Quad Cortex Prev Preset
      14,  // GPIO Pin
      {false, false, false, false}, // Button Release
      {BTN_PUSH, BTN_PUSH, BTN_PUSH, BTN_PUSH},// Button Function 0 = Push, 1 = Toggle
@@ -150,8 +152,8 @@ myButton myBtnMap[5] = { // 5 Buttons 4 Maps Map 1 und Map 2 are short press val
      {MIDI_CH_1, MIDI_CH_1, MIDI_CH_1, MIDI_CH_1}, // Button MIDI Channel 0 - 15
      {62, 62, 62, 62}, // Button MIDI Note 0 - 127
      {100, 100, 100, 100}, // Button MIDI Velocity 0 - 127
-     {41, 41, 41, 41}, // Button MIDI CC 0 - 127
-     {127, 127, 127, 127}, // Button MIDI CC ON Value 0 - 127
+     {32, 32, 32, 32}, // Button MIDI CC 0 - 127
+     {0, 0, 0, 0}, // Button MIDI CC ON Value 0 - 127
      {0, 0, 0, 0}, // Button MIDI CC OFF Value 0 - 127
      {MMC_STOP, MMC_STOP, MMC_STOP, MMC_STOP} // Button MIDI MMC 0 - 13
   },
@@ -289,10 +291,10 @@ void justotaUpdate() {
       }
 
       if(toggleLed) {
-        myWS28XXLED[0] = CRGB::Purple;
+        myWS28XXLED[7] = CRGB::Purple;
         FastLED.show();
       } else {
-        myWS28XXLED[0] = CRGB::Black;
+        myWS28XXLED[7] = CRGB::Black;
         FastLED.show();
       }
       toggleLed = !toggleLed;
@@ -344,13 +346,13 @@ void saveActiveMap() {
     prefs.end(); // Close NVS
     Serial.printf("Save Active Map: %d\n", __active_map);
     if (__active_map %2 == 0) {
-      myWS28XXLED[0] = CRGB::Green;
+      myWS28XXLED[7] = CRGB::Green;
       __oldLedColor = CRGB::Green;
     } else {
-      myWS28XXLED[0] = CRGB::Purple;
+      myWS28XXLED[7] = CRGB::Purple;
       __oldLedColor = CRGB::Purple;
     }
-    if(!__isConnected) myWS28XXLED[0] = CRGB::Red;
+    if(!__isConnected) myWS28XXLED[7] = CRGB::Red;
     FastLED.show();
 }
 
@@ -505,7 +507,8 @@ void textCallLedBrightness(Control* sender, int type) {
 
 
     __BRIGHTNESS = sender->value.toInt();
-    FastLED.setBrightness(__BRIGHTNESS);
+    // brightness to 50% of user brightness
+    FastLED.setBrightness(__BRIGHTNESS / 3);
     FastLED.show();
 
     prefs.begin("wifi", false); // Open NVS namespace "wifi" in RW mode
@@ -826,6 +829,15 @@ void selectBtnColorCalback(Control *sender, int type) {
 void handleEvent(AceButton* button, uint8_t eventType, uint8_t /*buttonState*/) { 
     
     uint8_t pin = button->getPin();
+    // led 7 = btn 11, led 12 = btn 10, led2 = btn 12
+    int tmp_led = 0;
+    if(pin == 11){
+      tmp_led = 7;
+    } else if(pin == 10){
+      tmp_led = 12;
+    } else if(pin == 12){
+      tmp_led = 2;
+    }
 
     myButton* myBtn = getMyButton(pin);
     if (myBtn != nullptr) {
@@ -839,6 +851,9 @@ void handleEvent(AceButton* button, uint8_t eventType, uint8_t /*buttonState*/) 
     if(eventType == AceButton::kEventLongPressed) {
       logpressevent = true;
     }
+
+    FastLED.setBrightness(__BRIGHTNESS);
+    FastLED.show();
 
     uint8_t active_mapper = __active_map;
     // 4 Maps for each Button Map1 = Short Press, Map2 = Short Press, Map3 = Long Press, Map4 = Long Press
@@ -868,7 +883,16 @@ void handleEvent(AceButton* button, uint8_t eventType, uint8_t /*buttonState*/) 
         log_i("handleEvent(): BTN: %d Pressed", pin);
         log_d("BTN: %d Pressed, Map:%d\n ", pin, __active_map);
 
-
+        // Tuner is on, disable tuner
+        if(pin == 10 && __isTuner){
+            BLEMidiServer.controlChange(btnMidiChannel, 45, 0);
+            myBtn->btnState[active_mapper] = BTN_ON;
+            __isTuner = false;
+            myWS28XXLED[12] = CRGB::Black;
+            FastLED.setBrightness(__BRIGHTNESS / 3);
+            FastLED.show();   
+            return;  
+        }
         if(btnMidiFunction == MIDI_NOTE) { // Note on need short press event
           if(btnFunction == BTN_PUSH){ // Push Button
             BLEMidiServer.noteOn(btnMidiChannel, btnMidiNote, btnMidiVelocity);
@@ -938,14 +962,25 @@ void handleEvent(AceButton* button, uint8_t eventType, uint8_t /*buttonState*/) 
           }
           myBtn->btnState[active_mapper] = BTN_ON;
         }
-        else if(btnMidiFunction == MIDI_PROGRAMCHANGE && !needRelease) return; // need implementation
+        else if(btnMidiFunction == MIDI_PROGRAMCHANGE && !needRelease){
+          FastLED.setBrightness(__BRIGHTNESS / 3);
+          FastLED.show(); 
+          return; // need implementation
+        }
 
-        myWS28XXLED[0] = tmpBtncolor;
+ 
+
+        
+        myWS28XXLED[tmp_led] = tmpBtncolor;
         FastLED.show();
         break;
       case AceButton::kEventReleased:
         log_i("handleEvent(): BTN: %d Released", pin);
         log_d("BTN: %d Released, Map:%d\n ", pin, __active_map);
+           
+        FastLED.setBrightness(__BRIGHTNESS / 3);
+        FastLED.show();
+
         if(btnMidiFunction == MIDI_NOTE){ // Note on need short press event
           if(btnFunction == BTN_PUSH){ // Push Button
             BLEMidiServer.noteOff(btnMidiChannel, btnMidiNote, 0 ); // Note off
@@ -992,7 +1027,7 @@ void handleEvent(AceButton* button, uint8_t eventType, uint8_t /*buttonState*/) 
           myBtn->btnState[active_mapper] = BTN_OFF;
         }
         else if(btnMidiFunction == MIDI_PROGRAMCHANGE && needRelease) return; // need implementation
-        myWS28XXLED[0] = __oldLedColor;
+        myWS28XXLED[tmp_led] = __oldLedColor;
         FastLED.show();
         break;
       case AceButton::kEventDoubleClicked:
@@ -1017,8 +1052,22 @@ void handleEvent(AceButton* button, uint8_t eventType, uint8_t /*buttonState*/) 
 
           return;
         }
-        myWS28XXLED[0] = tmpBtncolor;
+
+        myWS28XXLED[tmp_led] = tmpBtncolor;
         FastLED.show();
+
+        // Fix Longpressevent to enable tuner mode on CC 45 127 = on
+        if(pin == 10) {
+          if(!__isTuner){
+            BLEMidiServer.controlChange(btnMidiChannel, 45, 127);
+            myBtn->btnState[active_mapper] = BTN_ON;
+            __isTuner = true;
+            myWS28XXLED[12] = CRGB::Purple;
+            FastLED.show();
+            return;
+          }
+        }
+
         log_i("handleEvent(): BTN: %d LongPressed", pin);
         log_d("BTN: %d LongPressed, Map:%d\n ", pin, __active_map);
         if(btnLongpress){
@@ -1032,12 +1081,15 @@ void handleEvent(AceButton* button, uint8_t eventType, uint8_t /*buttonState*/) 
 
         break;
       case AceButton::kEventLongReleased:
+        if(pin == 10 && __isTuner){ 
+            return;  
+        }
         // we can disable the note every time the button is logpress released even MidiFuction is not Note
         BLEMidiServer.noteOff(btnMidiChannel, btnMidiNote, 0 );
         
         log_i("handleEvent(): BTN: %d LongReleased", pin);
         log_d("BTN: %d LongReleased, Map:%d\n ", pin, __active_map);
-        myWS28XXLED[0] = __oldLedColor;
+        myWS28XXLED[tmp_led] = __oldLedColor;
         FastLED.show();
         break;
       default:
@@ -1054,13 +1106,14 @@ void connected() {
   // device is BLE MIDI connected
   log_i("Connected");
   __isConnected = true;
+  FastLED.setBrightness(__BRIGHTNESS / 3);
   if (__active_map % 2 == 0) {
-    myWS28XXLED[0] = CRGB::Green;
+    myWS28XXLED[7] = CRGB::Green;
     FastLED.show();
     __oldLedColor = CRGB::Green;
   } else
   {
-    myWS28XXLED[0] = CRGB::Purple;
+    myWS28XXLED[7] = CRGB::Purple;
     __oldLedColor = CRGB::Purple;
     FastLED.show();
   }
@@ -1074,7 +1127,8 @@ void disconected() {
   // device is BLE MIDI disconnected
   log_i("Disconnected");
   __isConnected = false;
-  myWS28XXLED[0] = CRGB::Red;
+  myWS28XXLED[7] = CRGB::Red;
+  FastLED.setBrightness(__BRIGHTNESS / 3);
   FastLED.show();
   __oldLedColor = CRGB::Red;
 
@@ -1100,15 +1154,15 @@ void onProgramChange(uint8_t channel, uint8_t program, uint16_t timestamp){
 }
 
 void blinkActiveMaps(){
-  
+  return;
   bool numblinkfirst = false;
-  float blikBrightness = float(__BRIGHTNESS);
+  float blikBrightness = float(__BRIGHTNESS/3);
   if( millis() - __oldBlinktime > 5000){
     //Serial.printf("kk, %d %d %d \n", millis(), __numBlincs, __oldBlinktime);
     if(__numBlincs > 0){
 
       if(__numBlincs %2 == 0){
-        blikBrightness = float(__BRIGHTNESS / 3.0f);
+        blikBrightness = float(__BRIGHTNESS);
         if(__BRIGHTNESS < 2) blikBrightness = 0;
       }
 
@@ -1140,7 +1194,7 @@ void setup() {
   // initialize WS28xx LED in GRB order
   FastLED.addLeds<WS2812B, WS28XX_LED_PIN, GRB>(myWS28XXLED, NUM_LEDS);
   FastLED.setBrightness(6);
-  myWS28XXLED[0] = CRGB::Red;
+  myWS28XXLED[7] = CRGB::Red;
   FastLED.show();
   __oldLedColor = CRGB::Red;
     
@@ -1345,7 +1399,7 @@ void setup() {
   
   prefs.end(); // Close NVS namespace "wifi"
   
-  FastLED.setBrightness(__BRIGHTNESS);
+  FastLED.setBrightness(__BRIGHTNESS / 3);
   FastLED.show();
 
   log_d("Testdate from settings: %d \n", myBtnMap[4].btnMidiCC[3]);
@@ -1375,8 +1429,8 @@ void setup() {
   delay(100);
   //----------------------------------------------------------------
   if((digitalRead(13) == LOW && digitalRead(14) == LOW) || __DO_UPDATE) {
-    myWS28XXLED[0] = CRGB::Blue;
-    if(__DO_UPDATE) myWS28XXLED[0] = CRGB::Yellow;
+    myWS28XXLED[7] = CRGB::Blue;
+    if(__DO_UPDATE) myWS28XXLED[7] = CRGB::Yellow;
     FastLED.show();
     log_d("Start Wifi");
     if(!__DO_UPDATE){
@@ -1483,7 +1537,7 @@ void setup() {
       // OTA Update
       #ifdef USE_OTA
       char fwv[3];
-      sprintf(fwv, "s3miniV%d", __FW_VERSION);
+      sprintf(fwv, "s3CortV%d", __FW_VERSION);
       ESPUI.addControl(ControlType::Label, "Current Firmware", fwv, ControlColor::Alizarin, tab7, &nothing);
 
       char fwupdatestr[10];

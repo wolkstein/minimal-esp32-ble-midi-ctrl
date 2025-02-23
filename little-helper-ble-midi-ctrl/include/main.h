@@ -39,7 +39,7 @@ uint16_t activeMapChooser;
 bool __configurator = false;
 
 #define WS28XX_LED_PIN 33 // GPIO 33
-#define NUM_LEDS  1
+#define NUM_LEDS  13
 
 uint8_t __BRIGHTNESS = 85;
 
