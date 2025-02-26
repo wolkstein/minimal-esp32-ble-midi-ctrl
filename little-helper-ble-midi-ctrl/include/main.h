@@ -5,7 +5,7 @@
 #ifndef MAIN_H // Makro-Wächter, um Mehrfachinklusionen zu verhindern
 #define MAIN_H
 
-
+String  midiDeviceName = "CORTEX-MIDI";
 #define WS28XX_LED_PIN 33 // GPIO 33
 #define NUM_LEDS  13
 
